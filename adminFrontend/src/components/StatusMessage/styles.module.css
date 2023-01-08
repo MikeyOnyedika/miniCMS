@@ -1,0 +1,31 @@
+.Message {
+    padding-inline: 2rem;
+    padding-block: 1rem;
+    border: none;
+    outline-width: 2px;
+    outline-style: solid;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 300ms ease-in;
+    transform: translate(0, 0);
+    color: var(--accent-clr);
+    font-size: 1.2rem;
+    max-width: 500px;
+}
+.Message *{
+    color: inherit;
+}
+
+
+.Message___success {
+    color: var(--primary-clr-dark); 
+    outline-color: #00FF0080;
+    background-color: #00FF00;
+}
+
+.Message___failed{
+    outline-color: #FF000080;
+    background-color: #FF0000;
+}

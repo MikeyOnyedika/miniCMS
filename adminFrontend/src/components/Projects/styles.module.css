@@ -1,0 +1,101 @@
+.Wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-inline: 1.2rem;
+  padding-block: 1rem;
+  gap: 1rem;
+  height: 100%;
+}
+
+.Heading {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+.Title {
+  color: var(--secondary-clr-dark);
+  text-align: center;
+  width: 100%;
+}
+
+.BackBtn {
+  background-color: var(--secondary-clr);
+  color: var(--accent-clr);
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.TableWrapper {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  width: 100%;
+  align-items: center;
+}
+
+.Table {
+  border: 1px solid var(--accent-clr);
+  border-collapse: collapse;
+  margin-block: 1rem;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.Table tr {
+  /* position: relative; */
+}
+
+.Td {
+  border: 1px solid var(--accent-clr);
+  padding: 0.5rem;
+  padding-top: 1rem;
+  word-wrap: break-word;
+  position: relative;
+}
+
+.Td a:visited {
+  color: blue;
+}
+
+.Td___lg {
+  width: 80%;
+}
+
+.Td.Td___lg > div {
+  display: flex;
+  padding: 0.5rem;
+}
+
+.Td.Td___lg > div > article {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+}
+
+.Td:not(.Td___lg) > div {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+  padding: 1em;
+}
+
+.ProjectInfoType {
+  font-weight: var(--fw-bold);
+}
+
+.ProjectInfoType p {
+  display: inline-block;
+  margin-right: 0.1vw;
+}
+
+article h3 {
+  font-weight: var(--fw-regular);
+}

@@ -1,0 +1,73 @@
+.Modal_Wrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: auto;
+    overflow-y: auto;
+    opacity: 1;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.Modal__Background {
+    width: 100%;
+  
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    opacity: 0.3;
+    z-index: 12;
+}
+
+.Modal {
+    max-width: 30rem;
+    margin-block: 10%;
+    background-color: white;
+    border-radius: 10px;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: repeat(1fr, 1);
+    gap: 1rem;
+    z-index: 13;
+    border: 2px solid var(--accent-clr);
+
+}
+
+.Modal__Title {
+    font-size: 1.4rem;
+}
+
+.Modal__MainContent {
+    font-size: 1.2rem;
+}
+
+.Modal__BtnGroup {
+    display: flex;
+    justify-content: space-between;
+}
+
+.Modal__BtnGroup button:nth-child(2) {
+    background-color: var(--error-clr);
+    color: var(--accent-clr);
+}
+
+.Modal__BtnGroup button:nth-child(2):hover {
+    color: var(--error-clr);
+    background-color: var(--primary-clr);
+    outline: 1px solid var(--error-clr);
+}
+
+
+
+.Modal__BtnGroup button {
+    color: var(--secondary-clr);
+    background-color: var(--accent-clr);
+}
+
+.Modal__BtnGroup button:hover {
+    color: var(--accent-clr);
+    background-color: var(--secondary-clr-dark);
+}
