@@ -103,5 +103,20 @@ async function getContentCollectionsModels() {
 	return models
 }
 
-module.exports = { parseFields, createModelFromTemplate, getContentCollectionsTemplates, getContentCollectionsModels }
+
+async function loadCollectionModels(app) {
+	let success = false
+	// create database models from the collection templates and hold them in the models object which is then set as an express variable so it can be accessed from other places in our app
+	try {
+		const models = await getContentCollectionsModels()
+		app.set("models", models)
+		success = true
+	} catch (err) {
+		console.log("Couldn't create models from templates: ", err.message)
+	}
+
+	return success
+}
+
+module.exports = { parseFields, createModelFromTemplate, getContentCollectionsTemplates, getContentCollectionsModels, loadCollectionModels }
 

@@ -1,11 +1,12 @@
-const { parseFields, createModelFromTemplate, getContentCollectionsTemplates } = require("../helpers/CollectionUtils")
+const { parseFields, createModelFromTemplate, getContentCollectionsTemplates, loadCollectionModels } = require("../helpers/CollectionUtils")
 const Collection = require("../models/collectionModel")
+const { getAppropriateModel } = require("../helpers/ContentCollectionUtils")
 
 
 async function getDbCollections(req, res) {
 	try {
 		const templates = await getContentCollectionsTemplates();
-		const collectionsByName = templates.map(col => col.name)
+		const collectionsByName = templates.map(col => ({ collectionName: col.name, collectionId: col._id }))
 		res.status(200).json({ success: true, data: { collections: [...collectionsByName] } })
 	} catch (err) {
 		res.status(404).json({ success: false, message: "Couldn't get collections" })
@@ -66,7 +67,34 @@ async function addCollection(req, res) {
 	}
 }
 
+async function deleteCollection(req, res) {
+	try {
+		const id = req.params.id
+		let models = req.app.get("models")
+		const collectionTemplateToDelete = await Collection.findById(id)
+		console.log(collectionTemplateToDelete.name)
+
+		// first delete the collection and all the documents stored in it using its model
+		const appropriateModel = getAppropriateModel(collectionTemplateToDelete.name, models)
+		if (appropriateModel === null) {
+			return res.status(400).json({ success: false, message: "No collection with the specified name exists" })
+		}
+		const result = await appropriateModel.collection.drop();
+		//  then delete the template for 
+		const deletedCollectionTemplate = await Collection.findByIdAndDelete(id)
+		// reload collection models so as to delete the model for the collection which the app still has in memory or die trying.
+		if (await loadCollectionModels(req.app) === false) {
+			process.exit(1)
+		}
+		res.status(200).json({ success: true, data: deletedCollectionTemplate })
+
+	} catch (err) {
+		res.status(500).json({ success: false, message: "Couldn't complete request" })
+	}
+}
+
 module.exports = {
 	getDbCollections,
-	addCollection
+	addCollection,
+	deleteCollection
 }
