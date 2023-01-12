@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const Admin = require("../models/adminModel");
 const { generateToken } = require('../helpers/generateToken');
-const {default: mongoose} = require("mongoose");
+const { default: mongoose } = require("mongoose");
 
 
 // @desc Register a new admin
@@ -12,7 +12,7 @@ const registerAdmin = async (req, res) => {
   if (!req.body.username || !req.body.password) {
     //return a response to user. The object you pass to the json() is totally up to you.
     // the return keyword is here so that the function doesn't continue running. You don't want to send a res.json() twice, that wouldn't make sense
-
+    
     return res
       .status(400)
       .json({ success: false, message: "Username or Password is empty" });

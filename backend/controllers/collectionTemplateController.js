@@ -28,20 +28,17 @@ async function addCollection(req, res) {
 			return res.status(400).json({ success: false, message: pFields })
 		}
 
-		// create an actual mongoose model from template
-		const newModel = createModelFromTemplate({ collectionName, pFields, config })
-
-		// add the model to the list of mongoose models available, so that it can be used to crud data from it's collection,
-		// when a client makes a request
-		req.app.get("models")[collectionName] = newModel
-
 		// save the template used to create the collection's model. Use the fields instead of pFields since pFields is parsed to use types that are actual mongoose schema types
-		console.log("templates before saving: ", fields)
 		const modelTemplate = await Collection.create({
 			name: collectionName,
 			fields,
 			config: { timestamps: config.includeTimeStamps || true }
 		})
+
+		// reinflate models from their template for all dynamic collection, that should also include the newly added template
+		if (await loadCollectionModels(req.app) === false) {
+			process.exit(1)
+		}
 
 		res.json({
 			success: true, data: {
@@ -72,7 +69,9 @@ async function deleteCollection(req, res) {
 		const id = req.params.id
 		let models = req.app.get("models")
 		const collectionTemplateToDelete = await Collection.findById(id)
-		console.log(collectionTemplateToDelete.name)
+		if (collectionTemplateToDelete === null) {
+			return res.status(200).json({ success: false, message: "No matching collection found. Collection may have already been deleted" })
+		}
 
 		// first delete the collection and all the documents stored in it using its model
 		const appropriateModel = getAppropriateModel(collectionTemplateToDelete.name, models)
@@ -80,7 +79,7 @@ async function deleteCollection(req, res) {
 			return res.status(400).json({ success: false, message: "No collection with the specified name exists" })
 		}
 		const result = await appropriateModel.collection.drop();
-		//  then delete the template for 
+		//  then delete the template for the model of that collection
 		const deletedCollectionTemplate = await Collection.findByIdAndDelete(id)
 		// reload collection models so as to delete the model for the collection which the app still has in memory or die trying.
 		if (await loadCollectionModels(req.app) === false) {
@@ -89,7 +88,7 @@ async function deleteCollection(req, res) {
 		res.status(200).json({ success: true, data: deletedCollectionTemplate })
 
 	} catch (err) {
-		res.status(500).json({ success: false, message: "Couldn't complete request" })
+		res.status(500).json({ success: false, message: "Couldn't complete deleting the collection: " + err.message })
 	}
 }
 

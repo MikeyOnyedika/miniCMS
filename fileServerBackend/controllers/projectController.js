@@ -14,7 +14,6 @@ async function saveImage(req, res) {
     const projectId = req.body.projectId;
     //see if this particular image's details is already saved in the database
     const matchFromDb = await Image.findOne({ projectId });
-    // console.log(matchFromDb)
     const fileName = req.file.filename;
     if (matchFromDb) {
       // prevent saving the same image if it gets uploaded twice
@@ -32,7 +31,6 @@ async function saveImage(req, res) {
             fileName
           )
         );
-        // console.log(del)
         return res.json({
           success: true,
           url: domainName + "projectDisplayPictures/" + matchFromDb.fileName,
@@ -97,8 +95,6 @@ async function saveImage(req, res) {
 // @method DELETE
 // @access Private
 async function deleteImage(req, res) {
-  console.log("deleteImage called");
-
   const url = req.body.url;
   if (!url) {
     return res
@@ -108,7 +104,6 @@ async function deleteImage(req, res) {
 
   // terminate if url was not generated on this server
   const urlParts = url.split(domainName);
-  console.log(urlParts);
   if (urlParts.length === 1) {
     return res.status(200).json({ success: true });
   }

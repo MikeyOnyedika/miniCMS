@@ -13,6 +13,34 @@ function containsOnlyObjects(fields) {
 	return true
 }
 
+// takes a string value that specifies the type of data that goes in the field and returns the corresponding mongoose schema type
+function parseFieldType(type) {
+	type = type.toLowerCase();
+	switch (type) {
+		case "string":
+			return mongoose.Schema.Types.String
+		case "number":
+			return mongoose.Schema.Types.Number
+		case "date":
+			return mongoose.Schema.Types.Date
+		case "buffer":
+			return mongoose.Schema.Types.Buffer
+		case "boolean":
+			return mongoose.Schema.Types.Boolean
+		case "objectid":
+			return mongoose.Schema.Types.ObjectId
+		case "array":
+		case "[]":
+			return mongoose.Schema.Types.Array
+		case "decimal128":
+			return mongoose.Schema.Types.Decimal128
+		case "mixed":
+			return mongoose.Schema.Types.Mixed
+		default:
+			throw new Error("'type' does not match any mongoose schema type")
+	}
+}
+
 // checks if the individual field has the necessary values 
 function parseFields(fields) {
 	const parsedFieldsObj = {}
@@ -30,18 +58,9 @@ function parseFields(fields) {
 		if (fieldValue.hasOwnProperty("type") === false) {
 			return "A field does not have a 'type' property, but this is required"
 		}
-		switch (fieldValue.type.toLowerCase()) {
-			case "string":
-				parsedFieldValue.type = mongoose.Schema.Types.String
-				break;
-			case "number":
-				parsedFieldValue.type = mongoose.Schema.Types.Number
-				break;
-			case "mixed":
-				parsedFieldValue.type = mongoose.Schema.Types.Mixed
-			default:
-				throw new Error("'type' does not match any mongoose schema type")
-		}
+
+		// map the string representing the type to an actual mongoose schema type
+		parsedFieldValue.type = parseFieldType(fieldValue.type)
 
 		//  check for 'required' property
 		if (fieldValue.hasOwnProperty("required") === true) {
@@ -108,6 +127,14 @@ async function loadCollectionModels(app) {
 	let success = false
 	// create database models from the collection templates and hold them in the models object which is then set as an express variable so it can be accessed from other places in our app
 	try {
+		//try garbage collecting the models before re-creating them afresh to update the dynamic collections
+		const allAppModels = Object.keys(mongoose.models)
+		for(let modelName of allAppModels){
+			if (modelName !== "Admin" && modelName !== "Collection"){
+				delete mongoose.models[modelName]
+			}
+		}
+
 		const models = await getContentCollectionsModels()
 		app.set("models", models)
 		success = true

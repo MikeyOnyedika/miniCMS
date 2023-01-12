@@ -231,21 +231,21 @@ function UserContentProvider({ children }) {
   }
 	
 
-	async function fetchUserContent(){
-		const resp = await getDbCollections()
-		// TODO: use the appropriate variable to fill the value for `status`
-		if (resp.success === false){
-			setStatusMessage({ status:  , message: resp.message})
-		}else{
-			await fetchProjects();
-		}
-	}
+	// async function fetchUserContent(){
+	// 	const resp = await getDbCollections()
+	// 	// TODO: use the appropriate variable to fill the value for `status`
+	// 	if (resp.success === false){
+	// 		setStatusMessage({ status:  , message: resp.message})
+	// 	}else{
+	// 		await fetchProjects();
+	// 	}
+	// }
 
-  useEffect(() => {
-    if (token) {
-		fetchUserContent()
-    }
-  }, [token]);
+  // useEffect(() => {
+  //   if (token) {
+	// 	  fetchUserContent()
+  //   }
+  // }, [token]);
 
   return (
     <UserContentContext.Provider

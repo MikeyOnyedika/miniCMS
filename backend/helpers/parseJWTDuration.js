@@ -19,7 +19,6 @@ function parseJWTDuration(durationString) {
     }
 
     const durationInSec = parts[0] * multiplier
-    console.log(durationInSec)
     return durationInSec
 }
 

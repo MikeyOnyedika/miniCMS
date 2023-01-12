@@ -33,7 +33,6 @@ async function startServer() {
     });
   });
 
-  console.log("starting server...")
   const PORT = 5000;
   app.listen(PORT, () => console.log("Server listening on port: " + PORT));
 }

@@ -39,14 +39,13 @@ async function addContentToCollection(req, res) {
 
 		// check whether any of the essential fields are missing in the request body
 		for (let field of fieldNames) {
-			if ((req.body.hasOwnProperty(field) === false || !req.body[field]) && field !== "_id") {
+			if ((req.body.hasOwnProperty(field) === false || req.body[field] === "" || req.body[field] == null) && field !== "_id") {
 				return res.status(400).json({ success: false, message: `${field} was not provided or it's value was empty` })
 			}
 		}
 
 		const newItem = await appropriateModel.create({ ...req.body })
 		res.status(201).json({ success: true, data: newItem })
-
 	} catch (err) {
 		let message;
 		if (err.message.includes("E11000 duplicate key")) {
