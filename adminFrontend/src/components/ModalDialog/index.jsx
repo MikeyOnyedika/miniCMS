@@ -1,5 +1,5 @@
 import Styles from './styles.module.css'
-import { useRef, useEffect, useState } from 'react'
+import { useRef,  useState } from 'react'
 const ModalDialog = ({ title, btnGroup, mainContent, hide }) => {
     const modalRef = useRef();
     const [fadeId, setFadeId] = useState("")

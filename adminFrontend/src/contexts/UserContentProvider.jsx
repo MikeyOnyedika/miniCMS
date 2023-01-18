@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useReducer } from 'react';
-import { useCallback, useState } from 'react';
-import { useEffect } from 'react';
+import {  useState } from 'react';
 import useBaseUrl from '../hooks/useBaseUrl';
 import { useSessionStorage } from '../hooks/useSessionStorage';
 import { useAuthContext } from './AuthProvider';
@@ -22,7 +21,7 @@ const projectsReducer = (state, action) => {
   } else if (action.type === 'DELETE_PROJECT') {
     return state.filter((item) => item.id !== action.payload);
   }
-	
+
   throw new Error('Action type for projects does not match any defined type');
 };
 
@@ -37,21 +36,21 @@ function UserContentProvider({ children }) {
     message: '',
   });
 
-	const [dbCollections, setDbCollections] = useState([])
+  const [dbCollections, setDbCollections] = useState([])
 
-  const [openModal, setOpenModal] = useSessionStorage("OPEN_MODAL",{
+  const [openModal, setOpenModal] = useSessionStorage("OPEN_MODAL", {
     open: false,
     mode: null,
   });
   const [currentProject, setCurrentProject] = useSessionStorage("CURRENT_PROJECT", {});
 
-  const { baseUrl } = useBaseUrl();
-  const { fileServerBase } = useBaseUrl();
+  const { CONTENT_URL_BASE } = useBaseUrl();
+  const { FILE_SERVER_BASE } = useBaseUrl();
 
   const { token } = useAuthContext();
 
   async function fetchProjects() {
-    const data = await (await fetch(baseUrl + 'content/projects')).json();
+    const data = await (await fetch(CONTENT_URL_BASE + '/projects')).json();
     if (data.success) {
       projectDispatch({ type: 'POPULATE', payload: data.data.projects });
     }
@@ -67,20 +66,25 @@ function UserContentProvider({ children }) {
   }
 
 
-  async function getDbCollections(){
-	  const errorMsg = "Error when trying to get database collections. Try again"
-	  try{
-		const response = await (await fetch(baseUrl + "dbcol")).json()	
-		
-		if (response.success === false){
-			return { success: false, message: errorMsg }  	
-		}
-		return response
+  async function getDbCollections() {
+    const errorMsg = "Error when trying to get database collections. Try again"
+    try {
+      const response = await (await fetch(CONTENT_URL_BASE, { 
+        headers: {
+          "Authorization": "Bearer " + token
+        }
+       })).json()
 
-	  }catch(err){
-		  return { success: false, message: errorMsg }
-	  }
-  } 
+      if (response.success === false) {
+        return { success: false, message: errorMsg }
+      }
+      setDbCollections(response.data)
+      return response
+
+    } catch (err) {
+      return { success: false, message: errorMsg }
+    }
+  }
 
 
 
@@ -98,7 +102,7 @@ function UserContentProvider({ children }) {
   ) {
     try {
       const newProject = await (
-        await fetch(baseUrl + 'content/projects', {
+        await fetch(CONTENT_URL_BASE + '/projects', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -138,7 +142,7 @@ function UserContentProvider({ children }) {
   ) {
     try {
       const response = await (
-        await fetch(`${baseUrl}content/projects/${id}`, {
+        await fetch(`${CONTENT_URL_BASE}/projects/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -167,7 +171,7 @@ function UserContentProvider({ children }) {
   async function deleteProject(id) {
     try {
       const data = await (
-        await fetch(`${baseUrl}content/projects/${id}`, {
+        await fetch(`${CONTENT_URL_BASE}/projects/${id}`, {
           method: 'DELETE',
           headers: {
             Authorization: 'Bearer ' + token,
@@ -186,7 +190,7 @@ function UserContentProvider({ children }) {
     formData.append('projectId', projectId);
     try {
       const response = await (
-        await fetch(`${fileServerBase}`, {
+        await fetch(`${FILE_SERVER_BASE}`, {
           method: 'POST',
           body: formData,
           headers: {
@@ -202,7 +206,7 @@ function UserContentProvider({ children }) {
 
   async function deleteFromCdn(url) {
     const response = await (
-      await fetch(fileServerBase, {
+      await fetch(FILE_SERVER_BASE, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -216,7 +220,7 @@ function UserContentProvider({ children }) {
 
   async function updateImageUrl(id, url) {
     const data = await (
-      await fetch(`${baseUrl}content/projects/${id}`, {
+      await fetch(`${CONTENT_URL_BASE}/projects/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -229,21 +233,21 @@ function UserContentProvider({ children }) {
     ).json();
     return data;
   }
-	
 
-	// async function fetchUserContent(){
-	// 	const resp = await getDbCollections()
-	// 	// TODO: use the appropriate variable to fill the value for `status`
-	// 	if (resp.success === false){
-	// 		setStatusMessage({ status:  , message: resp.message})
-	// 	}else{
-	// 		await fetchProjects();
-	// 	}
-	// }
+
+  // async function fetchUserContent(){
+  // 	const resp = await getDbCollections()
+  // 	// TODO: use the appropriate variable to fill the value for `status`
+  // 	if (resp.success === false){
+  // 		setStatusMessage({ status:  , message: resp.message})
+  // 	}else{
+  // 		await fetchProjects();
+  // 	}
+  // }
 
   // useEffect(() => {
   //   if (token) {
-	// 	  fetchUserContent()
+  // 	  fetchUserContent()
   //   }
   // }, [token]);
 
@@ -267,7 +271,7 @@ function UserContentProvider({ children }) {
         includeProjectToList,
         updateProjectInList,
         deleteProjectFromList,
-		getDbCollections
+        getDbCollections
       }}
     >
       {children}

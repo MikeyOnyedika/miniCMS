@@ -18,7 +18,7 @@ const JWT_EXPIRED = 'jwt expired'
 function AuthProvider({ children }) {
   const [token, setToken] = useLocalStorage(ADMIN_USER_TOKEN_KEY, '');
   const [adminUsername, setAdminUsername] = useSessionStorage(ADMIN_USERNAME_KEY, '');
-  const { baseUrl } = useBaseUrl();
+  const { AUTH_URL_BASE } = useBaseUrl();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   const [startTokenCheck, setStartTokenCheck] = useState(false)
@@ -109,7 +109,7 @@ function AuthProvider({ children }) {
   const getAdminInfo = async () => {
     try {
       const data = await (
-        await fetch(baseUrl + 'auth/@me', {
+        await fetch(AUTH_URL_BASE + '/@me', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ function AuthProvider({ children }) {
   const checkTokenAboutToExpire = async () => {
     try {
       const data = await (
-        await fetch(baseUrl + 'auth/checkToken', {
+        await fetch(AUTH_URL_BASE + '/checkToken', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ function AuthProvider({ children }) {
   async function refreshToken() {
     try {
       const data = await (
-        await fetch(baseUrl + 'auth/signNewToken', {
+        await fetch(AUTH_URL_BASE + '/signNewToken', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -170,7 +170,7 @@ function AuthProvider({ children }) {
 
   async function attemptLogin({ username, password }) {
     try {
-      const response = await fetch(baseUrl + 'auth/login', {
+      const response = await fetch(AUTH_URL_BASE + '/login', {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -210,7 +210,7 @@ function AuthProvider({ children }) {
         isOnline,
         refreshToken,
         setStartTokenCheck,
-		showCountdown 
+        showCountdown
       }}
     >
       {children}

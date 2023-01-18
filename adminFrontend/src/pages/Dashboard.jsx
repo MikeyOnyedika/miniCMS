@@ -10,7 +10,6 @@ function Dashboard({ isTokenValid }) {
   const { adminUsername, logoutAdmin, isOnline, setShowCountdown, showCountdown } = useAuthContext();
   const { statusMessage, setStatusMessage } = useUserContentContext();
 
-
   return (
     <>
       {showCountdown === true && (

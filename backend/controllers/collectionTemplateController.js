@@ -92,6 +92,7 @@ async function deleteCollection(req, res) {
 	}
 }
 
+
 module.exports = {
 	getDbCollections,
 	addCollection,
