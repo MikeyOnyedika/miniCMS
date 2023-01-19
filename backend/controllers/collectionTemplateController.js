@@ -7,6 +7,7 @@ async function getDbCollections(req, res) {
 	try {
 		const templates = await getContentCollectionsTemplates();
 		const collectionsByName = templates.map(col => ({ collectionName: col.name, collectionId: col._id }))
+		console.log(collectionsByName)
 		res.status(200).json({ success: true, data: { collections: [...collectionsByName] } })
 	} catch (err) {
 		res.status(404).json({ success: false, message: "Couldn't get collections" })

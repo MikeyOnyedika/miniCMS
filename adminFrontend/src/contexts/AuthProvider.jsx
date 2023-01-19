@@ -4,15 +4,12 @@ import useBaseUrl from '../hooks/useBaseUrl';
 import { useSessionStorage } from '../hooks/useSessionStorage';
 
 const AuthContext = React.createContext();
-
 export const useAuthContext = () => {
   return React.useContext(AuthContext);
 };
 
 const ADMIN_USER_TOKEN_KEY = 'adminUserToken';
 const ADMIN_USERNAME_KEY = 'adminUsername';
-
-
 const JWT_EXPIRED = 'jwt expired'
 
 function AuthProvider({ children }) {
@@ -20,7 +17,6 @@ function AuthProvider({ children }) {
   const [adminUsername, setAdminUsername] = useSessionStorage(ADMIN_USERNAME_KEY, '');
   const { AUTH_URL_BASE } = useBaseUrl();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-
   const [startTokenCheck, setStartTokenCheck] = useState(false)
   const [timerId, setTimerId] = useState("")
   const [showCountdown, setShowCountdown] = useState(false)

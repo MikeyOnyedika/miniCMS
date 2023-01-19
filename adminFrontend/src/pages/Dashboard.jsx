@@ -1,14 +1,11 @@
 import React from 'react';
 import { useAuthContext } from '../contexts/AuthProvider';
-import { useUserContentContext } from '../contexts/UserContentProvider';
 import { Outlet } from 'react-router-dom';
-import StatusMessage from '../components/StatusMessage';
 import CountdownToLogout from '../components/CountdownToLogout';
 
 function Dashboard({ isTokenValid }) {
   // accessing some global state from appropriate contexts
   const { adminUsername, logoutAdmin, isOnline, setShowCountdown, showCountdown } = useAuthContext();
-  const { statusMessage, setStatusMessage } = useUserContentContext();
 
   return (
     <>
@@ -61,25 +58,7 @@ function Dashboard({ isTokenValid }) {
             </p>
           </div>
         )}
-        {statusMessage.message && (
-          <div
-            style={{
-              position: 'fixed',
-              top: '5px',
-              left: '1rem',
-              right: '1rem',
-              display: 'flex',
-              justifyContent: 'center',
-              zIndex: '2222',
-            }}
-          >
-            <StatusMessage
-              status={statusMessage.status}
-              message={statusMessage.message}
-              setMessage={setStatusMessage}
-            />
-          </div>
-        )}
+       
         <Outlet />
       </main>
     </>
