@@ -28,12 +28,58 @@ describe("useFetch", () => {
         })
     })
 
-    test("should successfully return collections from a get", async () => {
+    test("should successfully return items from an endpoint", async () => {
         const { result } = renderHook(() => useFetch({ authToken: token, requestURL: MOCK_URL_BASE }))
         await act(async () => {
             const { get } = result.current
             const response = await get()
-            console.log("%o",response)
+            console.log("%o", response)
+            expect(response.success).toBe(true)
+        })
+    })
+
+
+    //     {
+    //     "collectionName": "customer",
+    //     "fields": {
+    //         "name": {
+    //             "type": "string",
+    //             "required": true,
+    //             "unique": true
+    //         },
+    //         "house-address": {
+    //             "type": "[]",
+    //             "required": true
+    //         }
+    //     },
+    //     "config": {
+    //         "includeTimeStamps": true
+    //     }
+    // }
+
+
+    test("should successfully add new item to an endpoint ", async () => {
+        const { result } = renderHook(() => useFetch({ authToken: token, requestURL: MOCK_URL_BASE }))
+        await act(async () => {
+            const { post } = result.current
+            const response = await post({ useToken: true, body: {
+                collectionName: "customer",
+                fields: {
+                    name: {
+                        type: "string",
+                        required: 'true',
+                        unique: true
+                    },
+                    "house-address": {
+                        type: "[]",
+                        required: true
+                    }
+                },
+                config: {
+                    includeTimeStamps: true
+                }
+            } })
+            console.log("%o", response)
             expect(response.success).toBe(true)
         })
     })
