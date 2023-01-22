@@ -1,6 +1,6 @@
 import { useUserCollections } from "../hooks/useUserCollections"
 import { useCollectionsContents } from '../hooks/useCollectionsContents'
-import useBaseUrl from '../hooks/useBaseUrl'
+import { USER_COLLECTION_URL_BASE } from '../utils/baseURL'
 import { createContext } from "react";
 import { useContext } from "react";
 import { useStatusMessage } from '../hooks/useStatusMessage'
@@ -12,7 +12,6 @@ export function useUserContentContext() {
 }
 
 function UserContentProvider({ children }) {
-    const { USER_COLLECTION_URL_BASE } = useBaseUrl()
     const { addStatusMessage, statusMessageQueue } = useStatusMessage();
     const { collections, addCollection, deleteCollection } = useUserCollections(USER_COLLECTION_URL_BASE, addStatusMessage);
     const { getCollectionContents, addCollectionContent, updateCollectionContent, deleteCollectionContent } = useCollectionsContents(USER_COLLECTION_URL_BASE, addStatusMessage);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
-import useBaseUrl from '../hooks/useBaseUrl';
+import { AUTH_URL_BASE } from '../utils/baseURL';
 import { useSessionStorage } from '../hooks/useSessionStorage';
 
 const AuthContext = React.createContext();
@@ -15,7 +15,6 @@ const JWT_EXPIRED = 'jwt expired'
 function AuthProvider({ children }) {
   const [token, setToken] = useLocalStorage(ADMIN_USER_TOKEN_KEY, '');
   const [adminUsername, setAdminUsername] = useSessionStorage(ADMIN_USERNAME_KEY, '');
-  const { AUTH_URL_BASE } = useBaseUrl();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [startTokenCheck, setStartTokenCheck] = useState(false)
   const [timerId, setTimerId] = useState("")
