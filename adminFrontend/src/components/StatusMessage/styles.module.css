@@ -10,22 +10,23 @@
     align-items: center;
     transition: all 300ms ease-in;
     transform: translate(0, 0);
-    color: var(--accent-clr);
+    color: var(--secondary-clr-light);
     font-size: 1.2rem;
     max-width: 500px;
 }
-.Message *{
+
+.Message * {
     color: inherit;
 }
 
 
 .Message___success {
-    color: var(--primary-clr-dark); 
+    color: var(--primary-clr-dark);
     outline-color: #00FF0080;
     background-color: #00FF00;
 }
 
-.Message___failed{
+.Message___failed {
     outline-color: #FF000080;
     background-color: #FF0000;
 }

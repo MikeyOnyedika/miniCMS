@@ -4,6 +4,7 @@ import { USER_COLLECTION_URL_BASE } from '../utils/baseURL'
 import { createContext } from "react";
 import { useContext } from "react";
 import { useStatusMessage } from '../hooks/useStatusMessage'
+import { useEffect } from "react";
 
 const UserContentContext = createContext();
 
@@ -13,13 +14,14 @@ export function useUserContentContext() {
 
 function UserContentProvider({ children }) {
     const { addStatusMessage, statusMessageQueue } = useStatusMessage();
-    const { collections, addCollection, deleteCollection } = useUserCollections(USER_COLLECTION_URL_BASE, addStatusMessage);
-    const { getCollectionContents, addCollectionContent, updateCollectionContent, deleteCollectionContent } = useCollectionsContents(USER_COLLECTION_URL_BASE, addStatusMessage);
+    const { collections, getCollections } = useUserCollections(USER_COLLECTION_URL_BASE, addStatusMessage);
+    const { getCollectionContents, addCollectionContent, updateCollectionContent, deleteCollectionContent, getStatus: getColConStatus, colContents } = useCollectionsContents(USER_COLLECTION_URL_BASE, addStatusMessage);
+
 
     return (
         <UserContentContext.Provider value={{
-            collections, addCollection, deleteCollection, getCollectionContents, getCollectionContents,
-            addCollectionContent, updateCollectionContent, deleteCollectionContent, addStatusMessage, statusMessageQueue
+            collections, getCollections, getCollectionContents,
+            addCollectionContent, updateCollectionContent, deleteCollectionContent, addStatusMessage, statusMessageQueue, getColConStatus, colContents
         }}>
             {children}
         </UserContentContext.Provider>

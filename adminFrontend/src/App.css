@@ -28,7 +28,8 @@ body {
     --primary-clr: white;
     --secondary-clr: hsl(220, 82%, 43%);
     --secondary-clr-dark: rgb(14, 56, 139);
-    --accent-clr: hsl(220, 82%, 93%);
+    --secondary-clr-light: hsl(220, 82%, 93%);
+    --accent-clr: #FF704A;
 
     --error-clr: #FF000080;
     --error-clr-outline: #FF0000;
@@ -43,13 +44,13 @@ header {
     padding-inline: 1.2rem;
     padding-block: 1rem;
     color: var(--secondary-clr);
-    background-color: var(--accent-clr);
-    box-shadow: var(--box-shadow);
+    background-color: var(--secondary-clr-light);
 }
 
 main {
     display: flex;
     flex-direction: column;
+    padding: 1rem;
 }
 
 
@@ -104,7 +105,7 @@ textarea {
     transition: all 200ms ease-in-out;
     padding: 0.5rem;
     border: none;
-    outline: 0px solid var(--accent-clr);
+    outline: 0px solid var(--secondary-clr-light);
 }
 
 
@@ -120,7 +121,7 @@ form>h2 {
 button {
     cursor: pointer;
     padding: 0.5rem;
-    background-color: var(--accent-clr);
+    background-color: var(--secondary-clr-light);
     color: var(--secondary-clr);
 }
 

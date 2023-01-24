@@ -1,0 +1,53 @@
+.Wrapper{
+    display: flex;
+    flex-direction: column;
+}
+
+.Wrapper  div:first-child{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+
+.CreateBtn, .DeleteBtn{
+     border-radius: 0.5rem;
+    padding-inline: 1rem;
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+    padding-block: 0.5rem;
+    gap: 0.5rem;
+}
+
+
+.CreateBtn{
+    text-decoration: none;
+    background-color: var(--accent-clr);
+    color: var(--primary-clr);
+    outline: solid var(--accent-clr) 1px ;
+}
+
+.CreateBtn:hover{
+    background-color:var(--primary-clr) ;
+    color: var(--accent-clr);
+}
+
+
+
+
+
+
+
+
+.DeleteBtn{
+    background-color: var(--error-clr-outline);
+    color: var(--primary-clr);
+    outline: solid var(--error-clr) 1px;
+}
+
+.DeleteBtn:hover{
+    color: var(--error-clr-outline);
+    background-color: var(--primary-clr);
+}

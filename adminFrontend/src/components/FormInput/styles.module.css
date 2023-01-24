@@ -1,0 +1,38 @@
+.FormGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.FormGroup___row {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.FormGroup input,
+.FormGroup select,
+.FormGroup textarea {
+    padding-inline: 0.2rem;
+    padding-block: 0.4rem;
+    font-size: 1rem;
+    transition: all 100ms ease-in-out;
+    border: none;
+    border-radius: 2px;
+    outline: solid rgb(80, 80, 80) 1px;
+}
+
+.FormGroup input[type=checkbox],
+.FormGroup input[type=radio] {
+    outline: none;
+}
+
+.FormGroup textarea {
+    width: 100%;
+    height: 10rem;
+    resize: none;
+}
+
+.FormGroup input[type=submit] {
+    cursor: pointer;
+}

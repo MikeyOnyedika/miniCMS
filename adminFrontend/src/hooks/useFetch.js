@@ -1,28 +1,32 @@
+import { useState } from 'react'
 import { ResponseType } from '../utils/httpConsts'
 
 export const useFetch = ({ requestURL, authToken }) => {
 
-    async function get(params) {
-        if (params == undefined) {
-            params = {}
-        }
+    const initialState = {
+        isLoading: false,
+        isError: false,
+        errorMsg: null
+    }
 
-        if (!params?.useToken) {
-            params.useToken = false
-        }
-        if (!params?.responseType) {
-            params.responseType = ResponseType.JSON
-        }
+    const [getStatus, setGetStatus] = useState(initialState)
+    const [postStatus, setPostStatus] = useState(initialState)
+    const [putStatus, setPutStatus] = useState(initialState)
+    const [delStatus, setDelStatus] = useState(initialState)
+    // TODO: fix the getstatus and of co of this hook
 
-        const { useToken, responseType } = params
-
+    async function get(colName = "", useToken = true, responseType = ResponseType.JSON) {
         const options = {
             method: 'GET',
             headers: {
-                Authentication: useToken === true ? `Bearer ${authToken}` : null
+                Authorization: useToken === true ? `Bearer ${authToken}` : null
             }
         }
-        const response = await _fetch({ url: requestURL, responseType, options })
+
+        setGetStatus({ isLoading: true, isError: false, errorMsg: null })
+        const response = await _fetch({ url: `${requestURL}/${colName}`, responseType, options })
+        setGetStatus(false)
+
         return response
     }
 
@@ -41,11 +45,13 @@ export const useFetch = ({ requestURL, authToken }) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authentication: useToken === true ? `Bearer ${authToken}` : null
+                Authorization: useToken === true ? `Bearer ${authToken}` : null
             },
             body: JSON.stringify(body)
         }
+        setIsPostLoading(true)
         const response = await _fetch({ url: requestURL, responseType, options })
+        setIsPostLoading(false)
         return response
     }
 
@@ -54,11 +60,13 @@ export const useFetch = ({ requestURL, authToken }) => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authentication: useToken === true ? `Bearer ${authToken}` : null
+                Authorization: useToken === true ? `Bearer ${authToken}` : null
             },
             body: JSON.stringify(updateBody)
         }
+        setIsPutLoading(true)
         const response = await _fetch({ url: `${requestURL}/${itemId}`, responseType, options })
+        setIsPutLoading(false)
         return response
     }
 
@@ -66,17 +74,19 @@ export const useFetch = ({ requestURL, authToken }) => {
         const options = {
             method: 'DELETE',
             headers: {
-                Authentication: useToken === true ? `Bearer ${authToken}` : null
+                Authorization: useToken === true ? `Bearer ${authToken}` : null
             }
         }
+        setIsDelLoading(true)
         const response = await _fetch({ url: `${requestURL}/${itemId}`, responseType, options })
+        setIsDelLoading(false)
         return response
     }
 
     async function _fetch({ url, responseType, options }) {
         try {
             const response = await fetch(url, options)
-            
+
             switch (responseType) {
                 case ResponseType.JSON:
                     return await response.json();
@@ -97,6 +107,6 @@ export const useFetch = ({ requestURL, authToken }) => {
     }
 
     return {
-        get, post, put, del
+        get, post, put, del, getStatus, postStatus, putStatus, delStatus
     }
 }

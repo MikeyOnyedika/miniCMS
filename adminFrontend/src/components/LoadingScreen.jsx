@@ -1,5 +1,5 @@
 import React from 'react'
-import {RingLoader} from 'react-spinners'
+import {BeatLoader, CircleLoader, RotateLoader} from 'react-spinners'
 
 const LoadingScreen = () => {
     return (
@@ -23,7 +23,7 @@ const LoadingScreen = () => {
             >
                 Please Wait...
             </p>
-            <RingLoader
+            <BeatLoader
                 color={'var(--secondary-clr)'}
                 loading={true}
                 cssOverride={{ backgroundColor: 'white' }}

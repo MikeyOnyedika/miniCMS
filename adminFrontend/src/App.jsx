@@ -3,14 +3,16 @@ import './App.css';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import { useAuthContext } from './contexts/AuthProvider';
-import ContentChooser from './components/ContentChooser';
-import Projects from './components/Projects';
-import ProjectModal from './components/ProjectsModal';
 import { useEffect } from 'react';
 import { TOKEN_STATE, useCheckToken } from './hooks/useCheckToken';
 import PageNotFound from './pages/PageNotFound';
 import LoadingScreen from './components/LoadingScreen';
 import ConditionalRoute from './components/ConditionalRoute';
+
+import { Collections } from './components/Collections'
+import { CreateCollection } from './components/CreateCollection'
+import { AddCollectionItem } from './components/AddCollectionItem'
+import { CollectionItems } from './components/CollectionItems'
 
 function App() {
   const { isCheckingToken, isTokenValid, retryCheckToken } = useCheckToken();
@@ -48,10 +50,10 @@ function App() {
               <Dashboard isTokenValid={isTokenValid} />
             </ConditionalRoute>)
         }>
-          <Route index element={<ContentChooser />} />
-          <Route path="projects" element={<Projects />} />
-          <Route path="projects/new" element={<ProjectModal />} />
-          <Route path="projects/edit" element={<ProjectModal />} />
+          <Route index element={<Collections />} />
+          <Route path='create' element={<CreateCollection />} />
+          <Route path=':collectionId' element={<CollectionItems />} />
+          <Route path=":collectionId/new" element={<AddCollectionItem />} />
         </Route>
 
         <Route path='*' element={<PageNotFound />} />

@@ -22,7 +22,7 @@ describe("useFetch", () => {
         const { result } = renderHook(() => useFetch({ authToken: token, requestURL: MOCK_URL_BASE }))
         await act(async () => {
             const { get } = result.current
-            const response = await get({ useToken: true })
+            const response = await get()
             console.log(response)
             expect(response).toBeDefined()
         })
@@ -37,25 +37,6 @@ describe("useFetch", () => {
             expect(response.success).toBe(true)
         })
     })
-
-
-    //     {
-    //     "collectionName": "customer",
-    //     "fields": {
-    //         "name": {
-    //             "type": "string",
-    //             "required": true,
-    //             "unique": true
-    //         },
-    //         "house-address": {
-    //             "type": "[]",
-    //             "required": true
-    //         }
-    //     },
-    //     "config": {
-    //         "includeTimeStamps": true
-    //     }
-    // }
 
 
     test("should successfully add new item to an endpoint ", async () => {

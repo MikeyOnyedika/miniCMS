@@ -1,13 +1,12 @@
 import { useFetch } from './useFetch'
 import { RequestState } from '../utils/httpConsts'
 import { useReducer } from "react"
-import { useEffect } from "react"
 import { useAuthContext } from '../contexts/AuthProvider'
 
 const initialState = {
     collections: [],
     isLoading: true,
-    isError: true,
+    isError: false,
     errorMsg: null
 }
 
@@ -17,6 +16,7 @@ const ACTION_TYPE = {
 }
 
 function reducerFunction(state, action) {
+    console.log("prevState: ", state)
     const actionType = action.type
     if (actionType === ACTION_TYPE.SET_ALL) {
         return { ...state, collections: [...action.payload], isLoading: false, isError: false }
@@ -30,20 +30,16 @@ function reducerFunction(state, action) {
 // this hook should manage the array of collections gotten from the database
 export function useUserCollections(url, addStatusMessage) {
     const { token } = useAuthContext()
-    const [collections, dispatch] = useReducer(reducerFunction, initialState)
-    console.log("url: ", url, "token: ", token)
-    const { get, post, put, del } = useFetch({ url, authToken: token })
 
-    useEffect(() => {
-        getCollections()
-    }, [])
+    const [collections, dispatch] = useReducer(reducerFunction, initialState)
+    const { get, post, put, del } = useFetch({ requestURL: url, authToken: token })
 
     async function getCollections() {
         try {
-            const response = await get({ useToken: true })
+            const response = await get()
             if (response.success === true) {
-                console.log("collections gotten: ", response.data)
-                dispatch({ type: ACTION_TYPE.SET_ALL, payload: data })
+                console.log("collections gotten: ", response.data.collections)
+                dispatch({ type: ACTION_TYPE.SET_ALL, payload: response.data.collections })
             } else {
                 dispatch({ type: ACTION_TYPE.SET_REQUEST_ERROR, payload: response.message })
                 addStatusMessage({ status: RequestState.FAILED, message: response.message })
@@ -54,6 +50,7 @@ export function useUserCollections(url, addStatusMessage) {
     }
 
     return {
-        collections
+        collections,
+        getCollections
     }
 }
