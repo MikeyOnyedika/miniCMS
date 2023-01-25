@@ -16,7 +16,7 @@ export const CollectionItems = () => {
   const col = collections.collections.find(col => col.collectionId === collectionId)
 
   useEffect(() => {
-    getCollectionContents()
+    getCollectionContents(col.collectionName)
   }, [])
 
 
@@ -38,15 +38,26 @@ export const CollectionItems = () => {
         </Link>
       </div>
 
-      <div>
+      <div className={Styles.ColConWrapper}>
         {
           getColConStatus.isLoading === true ? (
             <Loading />
           ) : getColConStatus.isError === false ? (
-            <p>hello</p>
-          ) : (
-            <h3>Sorry something went wrong: { getColConStatus.errorMsg }</h3>
+            colContents.length === 0 ? (
+              <p>No items added to this collection yet</p>
+            ) : (
+              colContents.map(row => {
+                const propValueArray = []
+                for (let i in row) {
+                  propValueArray.push(<p>{`${capitalize(i)}: ${row[i]}`}</p>)
+                }
+                return propValueArray
+              })
+            )
           )
+            : (
+              <h3>Sorry something went wrong: {getColConStatus.errorMsg}</h3>
+            )
 
         }
       </div>
@@ -56,6 +67,6 @@ export const CollectionItems = () => {
           <FaTrash /> delete
         </button>
       </div>
-    </section>
+    </section >
   )
 }

@@ -10,6 +10,11 @@
     gap: 1rem;
 }
 
+.ColConWrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 .CreateBtn, .DeleteBtn{
      border-radius: 0.5rem;

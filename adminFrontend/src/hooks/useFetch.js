@@ -25,7 +25,9 @@ export const useFetch = ({ requestURL, authToken }) => {
 
         setGetStatus({ isLoading: true, isError: false, errorMsg: null })
         const response = await _fetch({ url: `${requestURL}/${colName}`, responseType, options })
-        setGetStatus(false)
+        console.log(`request url: ${requestURL}/${colName}`)    
+        console.log(response)
+        setGetStatus({ isLoading: false, isError: !response.success, errorMsg: response.message })
 
         return response
     }
@@ -102,7 +104,7 @@ export const useFetch = ({ requestURL, authToken }) => {
                     throw new Error("Response Type provided does not match any known response type")
             }
         } catch (err) {
-            return { success: false, message: `{ ${err.message} }` }
+            return { success: false, message: `{ ${err} }` }
         }
     }
 

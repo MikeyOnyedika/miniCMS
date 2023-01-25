@@ -2,6 +2,7 @@ import { useReducer } from "react";
 import { USER_COLLECTION_URL_BASE } from "../utils/baseURL";
 import { useFetch } from "./useFetch";
 import { RequestState } from '../utils/httpConsts'
+import { useAuthContext } from '../contexts/AuthProvider'
 
 
 const initialState = {
@@ -35,15 +36,16 @@ function reducerFn(state, action) {
 
 export function useCollectionsContents(baseUrl, addStatusMessage) {
     const [state, dispatch] = useReducer(reducerFn, initialState)
-    const { get, post, put, del } = useFetch(baseUrl)
+    const { token } = useAuthContext()
+    const { get, post, put, del } = useFetch({ requestURL: baseUrl, authToken: token })
 
     async function getCollectionContents(colName) {
         try {
             dispatch({ type: ACTION_TYPE.START_GET_ALL })
             const response = await get(colName)
             if (response.success === true) {
-                console.log("collections gotten: ", response.data.collections)
-                dispatch({ type: ACTION_TYPE.SET_ALL, payload: response.data.collections })
+                console.log("collections gotten: ", response.data)
+                dispatch({ type: ACTION_TYPE.SET_ALL, payload: response.data })
             } else {
                 dispatch({ type: ACTION_TYPE.SET_REQUEST_ERROR, payload: response.message })
                 addStatusMessage({ status: RequestState.FAILED, message: response.message })
