@@ -1,6 +1,7 @@
 import React from 'react'
 import Styles from './styles.module.css'
-import { FaArrowLeft, FaTrash, FaPlus } from 'react-icons/fa'
+import { FaArrowLeft, FaTrash, FaPlus, FaEdit } from 'react-icons/fa'
+import { IconContext } from 'react-icons'
 import { useParams } from 'react-router-dom'
 import { useUserContentContext } from '../../contexts/UserContentProvider'
 import capitalize from '../../utils/capitalize'
@@ -26,7 +27,7 @@ export const CollectionItems = () => {
 
   return (
     <section className={Styles.Wrapper}>
-      <div>
+      <header>
         <div>
           <Link to={"/dashboard"}>
             <FaArrowLeft />
@@ -36,9 +37,9 @@ export const CollectionItems = () => {
         <Link className={Styles.CreateBtn} >
           <FaPlus /> new
         </Link>
-      </div>
+      </header>
 
-      <div className={Styles.ColConWrapper}>
+      <div className={Styles.ColConRowWrapper}>
         {
           getColConStatus.isLoading === true ? (
             <Loading />
@@ -46,13 +47,35 @@ export const CollectionItems = () => {
             colContents.length === 0 ? (
               <p>No items added to this collection yet</p>
             ) : (
-              colContents.map(row => {
-                const propValueArray = []
-                for (let i in row) {
-                  propValueArray.push(<p>{`${capitalize(i)}: ${row[i]}`}</p>)
-                }
-                return propValueArray
-              })
+              <>
+
+                {
+                  colContents.map(row => {
+                    console.log("row: ", row)
+                    const propValueArray = []
+                    for (let i in row) {
+                      propValueArray.push(<span><span><b>{i.toLocaleLowerCase()}:</b></span> <span>{row[i]}</span></span>)
+                    }
+                    
+                    return (
+                      <div className={Styles.ColConRow}>
+                        {propValueArray}
+                        <div className={Styles.ColConRow__SettingsPanelWrapper}>
+                          <div className={Styles.SettingsPanelWrapper__Background}></div>
+                          <div className={Styles.SettingsPanelWrapper__Panel}>
+                            <IconContext.Provider value={{ className: Styles.ColEditBtn }}>
+                              <FaEdit />
+                            </IconContext.Provider>
+                            <IconContext.Provider value={{  className: Styles.ColDeleteBtn}}>
+                              <FaTrash />
+                            </IconContext.Provider>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+
+              </>
             )
           )
             : (

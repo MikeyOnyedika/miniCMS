@@ -30,6 +30,7 @@ body {
     --secondary-clr-dark: rgb(14, 56, 139);
     --secondary-clr-light: hsl(220, 82%, 93%);
     --accent-clr: #FF704A;
+    --accent-clr-light: #ffd7cb;
 
     --error-clr: #FF000080;
     --error-clr-outline: #FF0000;
