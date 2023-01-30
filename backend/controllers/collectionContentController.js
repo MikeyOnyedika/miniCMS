@@ -7,8 +7,28 @@ async function getContentInCollection(req, res) {
 	if (appropriateModel === null) {
 		return res.status(400).json({ success: false, message: "No collection with the specified name exists" })
 	}
+
 	try {
-		const itemsInCollection = await appropriateModel.find({})
+		let itemsInCollection = await appropriateModel.find({}).lean()	
+		// rename _id to id, createdAt to created-at, updatedAt to last-update-at. Delete _v
+		itemsInCollection = itemsInCollection.map(item => {
+			item = { ...item }
+			const id = item._id
+			const createdAt = item.createdAt;
+			const lastUpdateAt = item.updatedAt;
+			delete item.__v
+			delete item._id
+			delete item.createdAt
+			delete item.updatedAt
+
+			item.id = id;
+			item['created-at'] = createdAt
+			item['last-update-at'] = lastUpdateAt
+
+			return item
+		})
+
+		console.log(itemsInCollection)
 		res.json({ success: true, data: itemsInCollection })
 	} catch (err) {
 		res.status(500).json({ success: false, message: "Couldn't complete request, try again" })
@@ -71,7 +91,7 @@ async function deleteContentFromCollection(req, res) {
 		res.status(201).json({ success: true, data: deletedItem })
 	} catch (err) {
 		res.status(500).json({ success: false, message: "Couldn't complete request. Try again" })
-	} 
+	}
 }
 
 

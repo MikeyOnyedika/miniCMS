@@ -2,28 +2,26 @@ import React from 'react';
 import { useAuthContext } from '../contexts/AuthProvider';
 import { Outlet } from 'react-router-dom';
 import CountdownToLogout from '../components/CountdownToLogout';
+import UserContentProvider, { useUserContentContext } from '../contexts/UserContentProvider';
 
 function Dashboard({ isTokenValid }) {
   // accessing some global state from appropriate contexts
   const { adminUsername, logoutAdmin, isOnline, setShowCountdown, showCountdown } = useAuthContext();
 
+
   return (
-    <>
+    <UserContentProvider>
       {showCountdown === true && (
         <CountdownToLogout hide={() => setShowCountdown(false)} />
       )}
 
 
-      <header style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1>Dashboard</h1>
+      <header>
+        <h1><a href='/'>Dashboard</a></h1>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <p>{adminUsername}</p>
+          <p style={{ color: "var(--accent-clr)", fontWeight: 'bold' }}>{adminUsername}</p>
           <button
-            style={{
-              backgroundColor: 'var(--primary-clr)',
-              color: 'var(--secondary-clr-dark)',
-              outline: '1px solid var(--secondary-clr)',
-            }}
+            className='logout'
             onClick={logoutAdmin}
           >
             Logout
@@ -58,10 +56,10 @@ function Dashboard({ isTokenValid }) {
             </p>
           </div>
         )}
-       
+
         <Outlet />
       </main>
-    </>
+    </UserContentProvider>
   );
 }
 

@@ -46,6 +46,8 @@ header {
     padding-block: 1rem;
     color: var(--secondary-clr);
     background-color: var(--secondary-clr-light);
+    align-items: center;
+    justify-content: space-between;
 }
 
 main {
@@ -54,6 +56,13 @@ main {
     padding: 1rem;
 }
 
+a{
+    text-decoration: none;
+}
+
+h1 > a{
+    color: var(--secondary-clr);
+}
 
 form {
     display: flex;
@@ -129,6 +138,24 @@ button {
 button:hover {
     background-color: var(--primary-clr);
     color: var(--secondary-clr-dark);
+}
+
+
+.logout{
+    background-color: var(--secondary-clr);
+    color: var(--primary-clr);
+    outline: solid var(--secondary-clr) 2px;
+    padding-inline: 1rem;
+    padding-block: 0.5rem;
+    font-size: 1rem;
+
+
+}
+
+.logout:hover{
+    background-color: var(--secondary-clr-light);
+    outline-color: var(--secondary-clr);
+    color: var(--secondary-clr);
 }
 
 

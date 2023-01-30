@@ -6,7 +6,7 @@ import { useAuthContext } from '../contexts/AuthProvider'
 
 
 const initialState = {
-    colContents: [],
+    colContents: null,
     getStatus: {
         isLoading: false,
         isError: false,

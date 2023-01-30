@@ -4,7 +4,6 @@ import { USER_COLLECTION_URL_BASE } from '../utils/baseURL'
 import { createContext } from "react";
 import { useContext } from "react";
 import { useStatusMessage } from '../hooks/useStatusMessage'
-import { useEffect } from "react";
 
 const UserContentContext = createContext();
 

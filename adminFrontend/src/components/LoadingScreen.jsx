@@ -1,5 +1,5 @@
 import React from 'react'
-import {BeatLoader, CircleLoader, RotateLoader} from 'react-spinners'
+import {BeatLoader} from 'react-spinners'
 
 const LoadingScreen = () => {
     return (

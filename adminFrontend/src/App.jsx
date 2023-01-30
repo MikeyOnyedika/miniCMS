@@ -13,6 +13,7 @@ import { Collections } from './components/Collections'
 import { CreateCollection } from './components/CreateCollection'
 import { AddCollectionItem } from './components/AddCollectionItem'
 import { CollectionItems } from './components/CollectionItems'
+import { DashboardIndex } from './components/DashboardIndex'
 
 function App() {
   const { isCheckingToken, isTokenValid, retryCheckToken } = useCheckToken();
@@ -50,9 +51,12 @@ function App() {
               <Dashboard isTokenValid={isTokenValid} />
             </ConditionalRoute>)
         }>
-          <Route index element={<Collections />} />
-          <Route path='create' element={<CreateCollection />} />
-          <Route path=':collectionId' element={<CollectionItems />} />
+          <Route path='' element={<DashboardIndex />}>
+            <Route path='' element={<Collections />}>
+              <Route path=':collectionId' element={<CollectionItems />} />
+              <Route path='create' element={<CreateCollection />} />
+            </Route>
+          </Route>
           <Route path=":collectionId/new" element={<AddCollectionItem />} />
         </Route>
 
