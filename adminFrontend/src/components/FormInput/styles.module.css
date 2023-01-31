@@ -1,0 +1,71 @@
+.FormGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.FormGroup___row {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.FormGroup___radioGroup{
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.FormGroup___radioGroup div{
+    display: flex; 
+    gap: 0.4rem;
+}
+
+.FormGroup label {
+    width: 100%;
+    font-size: 1.1rem;
+}
+
+.FormGroup___text input {
+    width: 100%;
+}
+
+.FormGroup input,
+.FormGroup select,
+.FormGroup textarea {
+    padding-inline: 0.5rem;
+    padding-block: 0.5rem;
+    font-size: 1.1rem;
+    transition: all 100ms ease-in-out;
+    border: none;
+    border-radius: 2px;
+    outline: solid var(--accent-clr-light) 2px;
+    background-color: var(--accent-clr-light);
+}
+
+
+.FormGroup input:hover, .FormGroup select:hover, .FormGroup textarea:hover{
+    outline: solid var(--accent-clr) 2px;
+
+}
+
+.FormGroup input[type=checkbox],
+.FormGroup input[type=radio] {
+    outline: none;
+   
+}
+
+.FormGroup textarea {
+    width: 100%;
+    height: 10rem;
+    resize: none;
+}
+
+.FormGroup input[type=submit] {
+    cursor: pointer;
+    background-color: var(--accent-clr);
+    color: var(--primary-clr);
+    padding-inline: 1rem;
+    padding-block: 0.5rem;
+}
+

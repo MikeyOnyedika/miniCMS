@@ -5,11 +5,14 @@ const { getAppropriateModel } = require("../helpers/ContentCollectionUtils")
 
 async function getDbCollections(req, res) {
 	try {
-		const templates = await getContentCollectionsTemplates();
-		const collectionsByName = templates.map(col => ({ collectionName: col.name, collectionId: col._id }))
-		res.status(200).json({ success: true, data: { collections: [...collectionsByName] } })
+		let templates = await getContentCollectionsTemplates();
+		templates = templates.map(template => {
+			return { config: template.config, 'created-at': template.createdAt, fields: template.fields, name: template.name, _id: template._id }
+		})
+
+		res.status(200).json({ success: true, data: { collections: [...templates] } })
 	} catch (err) {
-		res.status(404).json({ success: false, message: "Couldn't get collections" })
+		res.status(404).json({ success: false, message: "Couldn't get collections from database" })
 	}
 }
 
@@ -91,6 +94,7 @@ async function deleteCollection(req, res) {
 		res.status(500).json({ success: false, message: "Couldn't complete deleting the collection: " + err.message })
 	}
 }
+
 
 module.exports = {
 	getDbCollections,

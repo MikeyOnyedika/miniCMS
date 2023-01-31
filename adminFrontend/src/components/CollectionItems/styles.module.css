@@ -1,0 +1,141 @@
+.Wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.Wrapper > header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0;
+    background-color: transparent;
+}
+
+.Wrapper > header div:first-child{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+
+
+.ColConRowWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+
+.CreateBtn, .DeleteBtn{
+    border-radius: 0.5rem;
+    padding-inline: 1rem;
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+    padding-block: 0.5rem;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.CreateBtn{
+    background-color: var(--accent-clr);
+    color: var(--primary-clr);
+    outline: solid var(--accent-clr) 2px;
+}
+
+.CreateBtn:hover {
+    background-color: var(--primary-clr);
+    color: var(--accent-clr);
+}
+
+
+
+
+
+.ColConRow {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    transition: all 200ms ease-in-out;
+    outline: solid var(--accent-clr-light) 2px;
+    max-width: 100%;
+}
+
+
+.ColConRow:hover{
+    outline: solid var(--accent-clr) 2px;
+}
+
+.ColConRow__SettingsPanelWrapper{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: none;
+    border-radius: 0 0 1rem 1rem;
+    padding: 0.5rem;
+    gap: 1rem;
+    justify-content: flex-end;
+    z-index: 9;
+}
+
+
+.ColConRow:hover .ColConRow__SettingsPanelWrapper{
+    display: flex;
+    color: var(--primary-clr);
+
+}
+
+.SettingsPanelWrapper__Background{
+    position: absolute;
+    inset: 0;
+    background-color: var(--accent-clr-light);
+    border-radius: 0 0 1rem 1rem;
+    z-index: 0;
+    opacity: 0.5;
+}
+
+.SettingsPanelWrapper__Panel{
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+
+
+.ColDeleteBtn, .ColEditBtn{
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.ColEditBtn{
+    color: var(--secondary-clr-dark);
+
+}
+
+.ColDeleteBtn{
+    color: var(--error-clr-outline);
+}
+
+
+
+
+
+.DeleteBtn {
+    color: var(--error-clr-outline);
+    outline: solid var(--error-clr) 2px;
+    background-color: var(--primary-clr);
+    font-size: 1rem;
+}
+
+.DeleteBtn:hover {
+    color: var(--primary-clr); 
+    background-color: var(--error-clr-outline);
+}

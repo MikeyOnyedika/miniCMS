@@ -36,9 +36,6 @@ const CountdownToLogout = ({ children }) => {
     }
   }, [remainingTime])
 
-  useEffect(() => {
-    console.log("remainingTime: ", remainingTime)
-  }, [remainingTime])
 
   return (
     <div className={Styles.Countdown}>

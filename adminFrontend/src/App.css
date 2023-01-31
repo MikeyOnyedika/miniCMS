@@ -28,7 +28,9 @@ body {
     --primary-clr: white;
     --secondary-clr: hsl(220, 82%, 43%);
     --secondary-clr-dark: rgb(14, 56, 139);
-    --accent-clr: hsl(220, 82%, 93%);
+    --secondary-clr-light: hsl(220, 82%, 93%);
+    --accent-clr: #FF704A;
+    --accent-clr-light: #ffd7cb;
 
     --error-clr: #FF000080;
     --error-clr-outline: #FF0000;
@@ -43,17 +45,26 @@ header {
     padding-inline: 1.2rem;
     padding-block: 1rem;
     color: var(--secondary-clr);
-    background-color: var(--accent-clr);
-    box-shadow: var(--box-shadow);
+    background-color: var(--secondary-clr-light);
+    align-items: center;
+    justify-content: space-between;
 }
 
 main {
     display: flex;
     flex-direction: column;
+    padding: 1rem;
 }
 
+a {
+    text-decoration: none;
+}
 
-form {
+h1>a {
+    color: var(--secondary-clr);
+}
+
+.auth-form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -104,7 +115,7 @@ textarea {
     transition: all 200ms ease-in-out;
     padding: 0.5rem;
     border: none;
-    outline: 0px solid var(--accent-clr);
+    outline: 0px solid var(--secondary-clr-light);
 }
 
 
@@ -113,20 +124,38 @@ button:focus {
     outline-width: 2px;
 }
 
-form>h2 {
+.auth-form>h2 {
     align-self: center;
 }
 
 button {
     cursor: pointer;
     padding: 0.5rem;
-    background-color: var(--accent-clr);
+    background-color: var(--secondary-clr-light);
     color: var(--secondary-clr);
 }
 
 button:hover {
     background-color: var(--primary-clr);
     color: var(--secondary-clr-dark);
+}
+
+
+.logout {
+    background-color: var(--secondary-clr);
+    color: var(--primary-clr);
+    outline: solid var(--secondary-clr) 2px;
+    padding-inline: 1rem;
+    padding-block: 0.5rem;
+    font-size: 1rem;
+
+
+}
+
+.logout:hover {
+    background-color: var(--secondary-clr-light);
+    outline-color: var(--secondary-clr);
+    color: var(--secondary-clr);
 }
 
 
