@@ -13,9 +13,9 @@ export const useFetch = ({ requestURL, authToken }) => {
     const [postStatus, setPostStatus] = useState(initialState)
     const [putStatus, setPutStatus] = useState(initialState)
     const [delStatus, setDelStatus] = useState(initialState)
-    // TODO: fix the getstatus and of co of this hook
+    // TODO: fix the getstatus and  co of this hook
 
-    async function get(colName = "", useToken = true, responseType = ResponseType.JSON) {
+    async function get(urlExtra = "", useToken = true, responseType = ResponseType.JSON) {
         const options = {
             method: 'GET',
             headers: {
@@ -24,23 +24,13 @@ export const useFetch = ({ requestURL, authToken }) => {
         }
 
         setGetStatus({ isLoading: true, isError: false, errorMsg: null })
-        const response = await _fetch({ url: `${requestURL}/${colName}`, responseType, options })
+        const response = await _fetch({ url: `${requestURL}/${urlExtra}`, responseType, options })
         setGetStatus({ isLoading: false, isError: !response.success, errorMsg: response.message })
 
         return response
     }
 
-    async function post(params) {
-        if (!params?.useToken) {
-            params.useToken = false
-        }
-        if (!params?.responseType) {
-            params.responseType = ResponseType.JSON
-        }
-        if (!params?.body) {
-            params.body = {}
-        }
-        const { useToken, responseType, body } = params
+    async function post(body, urlExtra = "", useToken = true, responseType = ResponseType.JSON) {
         const options = {
             method: 'POST',
             headers: {
@@ -49,9 +39,10 @@ export const useFetch = ({ requestURL, authToken }) => {
             },
             body: JSON.stringify(body)
         }
-        setIsPostLoading(true)
-        const response = await _fetch({ url: requestURL, responseType, options })
-        setIsPostLoading(false)
+        setIsPostLoading({ isLoading: true, isError: false, errorMsg: null })
+        const response = await _fetch({ url: `${requestURL}/${urlExtra}`, responseType, options })
+        setIsPostLoading({ isLoading: false, isError: !response.success, errorMsg: response.message })
+
         return response
     }
 

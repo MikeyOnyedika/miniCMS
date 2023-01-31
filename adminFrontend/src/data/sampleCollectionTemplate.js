@@ -3,7 +3,7 @@ export const template = {
     fields: {
         count: {
             label: 'Count',
-            formInputType: 'tel',
+            formInputType: 'number',
             required: true,
             exampleValue: '3',
             options: null,

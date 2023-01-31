@@ -12,7 +12,7 @@ import Styles from './styles.module.css'
 
 export const AddCollectionItem = () => {
   const { collectionId } = useParams();
-  const { collections } = useUserContentContext()
+  const { collections, addStatusMessage, SUCCESS, FAILED } = useUserContentContext()
   const col = collections.collections.find(col => col.id === collectionId)
   const [formInputs, generateFormInputs] = useCreateFormInputsFromTemplate();
 
@@ -29,12 +29,16 @@ export const AddCollectionItem = () => {
 
     // check for empty field that are required
     const fields = template.fields
-    for (let field in fields){
-      if (form[field].value === ""){
-        
+    for (let field in fields) {
+      // TODO: validate that all  fields are not empty. Then show error message for required fields that are empty or don't have a valid value
+      
+      if (form[field].value === "") {
+        return addStatusMessage({ status: FAILED, message: `${fields[field].label} is empty` })
+
       }
     }
-    console.log("form submitted")
+
+    // TODO: submit the form to create a new item in the collection
   }
 
   return (
