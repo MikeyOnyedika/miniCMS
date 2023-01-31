@@ -4,6 +4,7 @@ export const RequestState = {
     PENDING: 'pending'
 }
 
+
 export const ResponseType = {
     JSON: 'json',
     BLOB: 'blob',

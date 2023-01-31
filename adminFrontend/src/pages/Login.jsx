@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useAuthContext } from '../contexts/AuthProvider';
 import { useUserContentContext } from '../contexts/UserContentProvider';
+import { RequestState } from '../utils/httpConsts';
 
 
 const BTN_STATE = {
@@ -15,7 +16,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [usernameErrorMsg, setUsernameErrorMsg] = useState('');
   const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
-  const { addStatusMessage, SUCCESS, FAILED } = useUserContentContext()
+  const { addStatusMessage } = useUserContentContext()
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -38,10 +39,10 @@ function Login() {
     const result = await attemptLogin({ username, password });
 
     if (result.success === true) {
-      addStatusMessage({ status: SUCCESS, message: 'Signed In' })
+      addStatusMessage({ status: RequestState.SUCCESS, message: 'Signed In' })
     } else {
       addStatusMessage({
-        status: FAILED,
+        status: RequestState.FAILED,
         message: result.message || 'Could not login. Try again...',
       })
     }

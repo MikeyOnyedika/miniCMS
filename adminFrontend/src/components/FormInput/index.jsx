@@ -7,7 +7,7 @@ export function FormInput({
     placeholder,
     fieldName,
     options,
-}) { 
+}) {
     switch (inputType) {
         case 'text':
         case 'email':
@@ -17,11 +17,11 @@ export function FormInput({
         case 'tel':
             return (
                 <div className={`${Styles.FormGroup} ${Styles.FormGroup___text}`}>
-                    <label htmlFor={fieldName}>{`${labelName}${required ? '*': ''}`}</label>
+                    <label htmlFor={fieldName}>{`${labelName}${required ? '*' : ''}`}</label>
                     <input
                         type={inputType}
                         name={fieldName}
-                     id={fieldName}
+                        id={fieldName}
                         placeholder={`e.g ${placeholder}`}
                     />
                 </div>
@@ -29,7 +29,7 @@ export function FormInput({
         case 'textarea':
             return (
                 <div className={Styles.FormGroup}>
-                    <label htmlFor={fieldName}>{`${labelName}${required ? '*': ''}`}</label>
+                    <label htmlFor={fieldName}>{`${labelName}${required ? '*' : ''}`}</label>
                     <textarea
                         id={fieldName}
                         name={fieldName}
@@ -40,7 +40,7 @@ export function FormInput({
         case 'select':
             return (
                 <div className={Styles.FormGroup}>
-                    <label htmlFor={labelName}>{`${labelName}${required ? '*': ''}`}</label>
+                    <label htmlFor={labelName}>{`${labelName}${required ? '*' : ''}`}</label>
                     <select id={labelName} name={fieldName} required={required}>
                         {options.map((option) => (
                             <option key={option.id} value={option.value}>
@@ -53,23 +53,24 @@ export function FormInput({
         case 'checkbox':
             return (
                 <div className={`${Styles.FormGroup} ${Styles.FormGroup___row} `}>
-                    <label htmlFor={fieldName}>{`${labelName}${required ? '*': ''}`}</label>
-                    <input type={inputType} name={fieldName} id={fieldName} />
+                    <label htmlFor={fieldName}>{`${labelName}${required ? '*' : ''}`}</label>
+                    <input type={inputType} name={fieldName} id={fieldName} checked={placeholder === "on" ? true : false}
+                    // value={placeholder === "on" ? true : false} 
+                    />
                 </div>
             );
         case 'date':
         case 'datetime-local':
-        case 'time':
             return (
                 <div className={`${Styles.FormGroup} ${Styles.FormGroup___row} `}>
-                    <label htmlFor={fieldName}>{`${labelName}${required ? '*': ''}`}</label>
+                    <label htmlFor={fieldName}>{`${labelName}${required ? '*' : ''}`}</label>
                     <input type={inputType} name={fieldName} id={fieldName} />
                 </div>
             );
         case 'radio':
             return (
                 <div className={`${Styles.FormGroup} ${Styles.FormGroup___radioGroup}`}>
-                    <label>{`${labelName}${required ? '*': ''}`}</label>
+                    <label>{`${labelName}${required ? '*' : ''}`}</label>
                     {options.map((option) => {
                         const inputId = fieldName + option.id;
                         return (
@@ -85,12 +86,6 @@ export function FormInput({
                             </div>
                         );
                     })}
-                </div>
-            );
-        case 'submit':
-            return (
-                <div className={Styles.FormGroup}>
-                    <input type={inputType} name={fieldName} value={labelName} />
                 </div>
             );
         default:

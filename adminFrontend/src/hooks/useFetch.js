@@ -30,7 +30,7 @@ export const useFetch = ({ requestURL, authToken }) => {
         return response
     }
 
-    async function post(body, urlExtra = "", useToken = true, responseType = ResponseType.JSON) {
+    async function post(urlExtra = "", body, useToken = true, responseType = ResponseType.JSON) {
         const options = {
             method: 'POST',
             headers: {
@@ -39,9 +39,9 @@ export const useFetch = ({ requestURL, authToken }) => {
             },
             body: JSON.stringify(body)
         }
-        setIsPostLoading({ isLoading: true, isError: false, errorMsg: null })
+        setPostStatus({ isLoading: true, isError: false, errorMsg: null })
         const response = await _fetch({ url: `${requestURL}/${urlExtra}`, responseType, options })
-        setIsPostLoading({ isLoading: false, isError: !response.success, errorMsg: response.message })
+        setPostStatus({ isLoading: false, isError: !response.success, errorMsg: response.message })
 
         return response
     }

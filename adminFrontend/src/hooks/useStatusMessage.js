@@ -21,7 +21,7 @@ export function useStatusMessage() {
     }, [statusMessageQueue])
 
     function addStatusMessage(newMessage) {
-        setMessageQueue((prevQueue) => [...prevQueue, newMessage])
+        setMessageQueue((prevQueue) => [newMessage, ...prevQueue])
     }
 
     function removeOldestMessage() {

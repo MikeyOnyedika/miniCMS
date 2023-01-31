@@ -1,13 +1,13 @@
 import React from "react";
 import Styles from "./styles.module.css";
-import { useUserContentContext } from "../../contexts/UserContentProvider";
+import { RequestState } from "../../utils/httpConsts";
 
 function StatusMessage({ status, message }) {
-  const { SUCCESS } = useUserContentContext()
+  console.log("status: ", status, "   message: ", message)
 
   return (
     <div
-      className={`${Styles.Message}   ${status === SUCCESS ? Styles.Message___success : Styles.Message___failed
+      className={`${Styles.Message}   ${status === RequestState.SUCCESS ? Styles.Message___success : Styles.Message___failed
         }`}
     >
       <p>{message}</p>

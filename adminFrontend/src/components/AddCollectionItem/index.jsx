@@ -7,38 +7,56 @@ import capitalize from '../../utils/capitalize'
 import Loading from '../Loading'
 import { useCreateFormInputsFromTemplate } from '../../hooks/useCreateFormInputsFromTemplate'
 import { useEffect } from 'react'
-import { template } from '../../data/sampleCollectionTemplate'
+// import { template } from '../../data/sampleCollectionTemplate'
 import Styles from './styles.module.css'
+import { RequestState } from '../../utils/httpConsts'
+import { FormGroup } from '../FormInput/styles.module.css'
 
 export const AddCollectionItem = () => {
   const { collectionId } = useParams();
-  const { collections, addStatusMessage, SUCCESS, FAILED } = useUserContentContext()
+  const { collections, addStatusMessage, addCollectionContent, postColConStatus } = useUserContentContext()
   const col = collections.collections.find(col => col.id === collectionId)
   const [formInputs, generateFormInputs] = useCreateFormInputsFromTemplate();
+  const submitBtnName = "submitBtn"
 
   useEffect(() => {
-    console.log(col)
     if (col) {
-      generateFormInputs(template.fields)
+      generateFormInputs(col.fields)
+
     }
   }, [col])
 
-  function handleFormSubmit(e) {
+  async function handleFormSubmit(e) {
     e.preventDefault();
     const form = e.target
 
     // check for empty field that are required
-    const fields = template.fields
+    const fields = col.fields
+    const body = {}
     for (let field in fields) {
-      // TODO: validate that all  fields are not empty. Then show error message for required fields that are empty or don't have a valid value
-      
-      if (form[field].value === "") {
-        return addStatusMessage({ status: FAILED, message: `${fields[field].label} is empty` })
+      const currentField = fields[field]
+      const isRequired = currentField['required']
+
+      console.log("isRequired: ", isRequired)
+      if (form[field].value === "" && isRequired) {
+
+        return addStatusMessage({ status: RequestState.FAILED, message: `${currentField.label} is empty` })
 
       }
+
+      body[field] = form[field].value
+
     }
 
     // TODO: submit the form to create a new item in the collection
+
+    await addCollectionContent(col.name, body)
+    // clear input fields once item is added
+    if (postColConStatus.isError === false) {
+      for (let field in body) {
+        form[field].value = ""
+      }
+    }
   }
 
   return (
@@ -56,15 +74,20 @@ export const AddCollectionItem = () => {
 
       <div className={Styles.FormWrapper}>
         <p>Note: * means the field is required</p>
-        <form onSubmit={handleFormSubmit} className={Styles.Form}>
-          {
-            col?.name && (
+        {
+          col?.name ? (
+            <form onSubmit={handleFormSubmit} className={Styles.Form}>
               <>
                 {formInputs}
+                <div className={FormGroup}>
+                  <input type="submit" name={submitBtnName} value={postColConStatus.isLoading === true ? "Loading ...": "+ Create"}
+                    disabled={postColConStatus.isLoading === true ? true : false}
+                  />
+                </div>
               </>
-            )
-          }
-        </form>
+            </form>
+          ) : <Loading />
+        }
       </div>
     </section>
   )

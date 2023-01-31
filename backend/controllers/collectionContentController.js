@@ -64,9 +64,11 @@ async function addContentToCollection(req, res) {
 			}
 		})
 
+		console.log("model.schema.paths: ", appropriateModel.schema.paths)
+
 		// check whether any of the essential fields are missing in the request body
 		for (let field of fieldNames) {
-			if ((req.body.hasOwnProperty(field) === false || req.body[field] === "" || req.body[field] == null) && field !== "_id") {
+			if ((req.body.hasOwnProperty(field) === false || req.body[field] === "" || req.body[field] == null) && field !== "_id" && field.options?.required === true) {
 				return res.status(400).json({ success: false, message: `${field} was not provided or it's value was empty` })
 			}
 		}
