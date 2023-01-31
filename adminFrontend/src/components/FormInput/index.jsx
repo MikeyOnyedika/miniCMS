@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Styles from './styles.module.css';
 
 export function FormInput({
@@ -8,7 +7,7 @@ export function FormInput({
     placeholder,
     fieldName,
     options,
-}) {
+}) { 
     switch (inputType) {
         case 'text':
         case 'email':
@@ -17,12 +16,12 @@ export function FormInput({
         case 'number':
         case 'tel':
             return (
-                <div className={Styles.FormGroup}>
-                    <label htmlFor={fieldName}>{labelName}</label>
+                <div className={`${Styles.FormGroup} ${Styles.FormGroup___text}`}>
+                    <label htmlFor={fieldName}>{`${labelName}${required ? '*': ''}`}</label>
                     <input
                         type={inputType}
                         name={fieldName}
-                        id={fieldName}
+                     id={fieldName}
                         placeholder={`e.g ${placeholder}`}
                     />
                 </div>
@@ -30,7 +29,7 @@ export function FormInput({
         case 'textarea':
             return (
                 <div className={Styles.FormGroup}>
-                    <label htmlFor={fieldName}>{labelName}</label>
+                    <label htmlFor={fieldName}>{`${labelName}${required ? '*': ''}`}</label>
                     <textarea
                         id={fieldName}
                         name={fieldName}
@@ -41,7 +40,7 @@ export function FormInput({
         case 'select':
             return (
                 <div className={Styles.FormGroup}>
-                    <label htmlFor={labelName}>{labelName}</label>
+                    <label htmlFor={labelName}>{`${labelName}${required ? '*': ''}`}</label>
                     <select id={labelName} name={fieldName} required={required}>
                         {options.map((option) => (
                             <option key={option.id} value={option.value}>
@@ -54,7 +53,7 @@ export function FormInput({
         case 'checkbox':
             return (
                 <div className={`${Styles.FormGroup} ${Styles.FormGroup___row} `}>
-                    <label htmlFor={fieldName}>{labelName}</label>
+                    <label htmlFor={fieldName}>{`${labelName}${required ? '*': ''}`}</label>
                     <input type={inputType} name={fieldName} id={fieldName} />
                 </div>
             );
@@ -63,14 +62,14 @@ export function FormInput({
         case 'time':
             return (
                 <div className={`${Styles.FormGroup} ${Styles.FormGroup___row} `}>
-                    <label htmlFor={fieldName}>{labelName}</label>
+                    <label htmlFor={fieldName}>{`${labelName}${required ? '*': ''}`}</label>
                     <input type={inputType} name={fieldName} id={fieldName} />
                 </div>
             );
         case 'radio':
             return (
-                <div className={`${Styles.FormGroup} ${Styles.FormGroup___row}`}>
-                    <label>{labelName}</label>
+                <div className={`${Styles.FormGroup} ${Styles.FormGroup___radioGroup}`}>
+                    <label>{`${labelName}${required ? '*': ''}`}</label>
                     {options.map((option) => {
                         const inputId = fieldName + option.id;
                         return (

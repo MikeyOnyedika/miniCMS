@@ -16,7 +16,6 @@ const ACTION_TYPE = {
 }
 
 function reducerFunction(state, action) {
-    console.log("prevState: ", state)
     const actionType = action.type
     if (actionType === ACTION_TYPE.SET_ALL) {
         return { ...state, collections: [...action.payload], isLoading: false, isError: false }
@@ -38,7 +37,6 @@ export function useUserCollections(url, addStatusMessage) {
         try {
             const response = await get()
             if (response.success === true) {
-                console.log("collections gotten: ", response.data.collections)
                 dispatch({ type: ACTION_TYPE.SET_ALL, payload: response.data.collections })
             } else {
                 dispatch({ type: ACTION_TYPE.SET_REQUEST_ERROR, payload: response.message })

@@ -25,8 +25,6 @@ export const useFetch = ({ requestURL, authToken }) => {
 
         setGetStatus({ isLoading: true, isError: false, errorMsg: null })
         const response = await _fetch({ url: `${requestURL}/${colName}`, responseType, options })
-        console.log(`request url: ${requestURL}/${colName}`)    
-        console.log(response)
         setGetStatus({ isLoading: false, isError: !response.success, errorMsg: response.message })
 
         return response

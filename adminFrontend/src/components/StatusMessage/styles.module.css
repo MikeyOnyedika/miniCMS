@@ -1,4 +1,5 @@
 .Message {
+    margin: 1rem;
     padding-inline: 2rem;
     padding-block: 1rem;
     border: none;
@@ -12,6 +13,7 @@
     transform: translate(0, 0);
     color: var(--secondary-clr-light);
     font-size: 1.2rem;
+    width: fit-content;
     max-width: 500px;
 }
 
@@ -27,6 +29,6 @@
 }
 
 .Message___failed {
-    outline-color: #FF000080;
-    background-color: #FF0000;
+    outline-color: var(--error-clr-outline);
+    background-color: var(--error-clr);
 }

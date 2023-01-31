@@ -6,23 +6,31 @@ export const template = {
             formInputType: 'tel',
             required: true,
             exampleValue: '3',
+            options: null,
+            unique: false
         },
         species: {
             label: 'Species',
             formInputType: 'text',
             required: false,
-            unique: false,
             exampleValue: 'arachnid',
+            unique: false,
+            options: null
         },
         'animal-password': {
             label: 'Animal Password',
             formInputType: 'password',
+            required: false,
             exampleValue: 'ankie901dk',
+            unique: false,
+            options: null
         },
         'eating-habit': {
             label: 'Eating Habit',
             formInputType: 'select',
+            required: false,
             exampleValue: 'select an option',
+            unique: false,
             options: [
                 {
                     id: 0,
@@ -50,22 +58,32 @@ export const template = {
             label: 'Description',
             formInputType: 'textarea',
             exampleValue: 'Some animal description',
+            required: false,
+            unique: false,
+            options: null
         },
         'registration-time': {
             label: 'Registration Time',
             formInputType: 'time',
             exampleValue: '21:00',
+            required: false,
+            unique: false,
+            options: null
         },
         'is-alive': {
             label: 'Is Alive',
             formInputType: 'checkbox',
+            exampleValue: '',
             required: true,
             unique: false,
+            options: null
         },
         gender: {
             label: 'Gender',
             formInputType: 'radio',
             exampleValue: '',
+            required: false,
+            unique: false,
             options: [
                 {
                     id: 0,
@@ -84,6 +102,10 @@ export const template = {
         'create-new': {
             label: '+ Create',
             formInputType: 'submit',
+            exampleValue: '',
+            required: false,
+            unique: false,
+            options: null
         },
     },
     config: {

@@ -2,7 +2,7 @@ import React from 'react'
 import Styles from './styles.module.css'
 import { FaTrash, FaPlus, FaEdit } from 'react-icons/fa'
 import { IconContext } from 'react-icons'
-import { useParams } from 'react-router-dom'
+import { useOutlet, useParams } from 'react-router-dom'
 import { useUserContentContext } from '../../contexts/UserContentProvider'
 import capitalize from '../../utils/capitalize'
 import { Link } from 'react-router-dom'
@@ -14,10 +14,10 @@ import { BackButton } from '../BackButton'
 export const CollectionItems = () => {
   // get the actual collection from it's id
   const { collectionId } = useParams()
-  console.log(collectionId)
   const { collections, getCollections, getCollectionContents, getColConStatus, colContents } = useUserContentContext()
   // TODO: persist collections across page refresh
   const col = collections.collections.find(col => col.id === collectionId)
+  const outlet = useOutlet()
 
   useEffect(() => {
     if (collections.isLoading === false) {
@@ -26,25 +26,24 @@ export const CollectionItems = () => {
   }, [collections.isLoading])
 
 
-  useEffect(() => {
-    console.log("collection items: ", colContents)
-  }, [colContents])
 
   return (
-    <section className={Styles.Wrapper}>
-      {
-        col?.name && (
-          <header>
-            <div>
-              <BackButton to={"/dashboard"} />
-              <h2>{capitalize(col.name)}</h2>
-            </div>
-            <Link className={Styles.CreateBtn} to={`/dashboard/${col.id}/new`}>
-              <FaPlus /> new
-            </Link>
-          </header>
-        )
-      }
+    outlet || <section className={Styles.Wrapper}>
+      <header>
+        <div>
+          <BackButton to={"/dashboard"} />
+          <h2>
+            {
+              col?.name ? capitalize(col.name): <Loading size={20}/>
+            }
+          </h2>
+        </div>
+        <Link className={Styles.CreateBtn}
+          to={col?.name ? `/dashboard/${col.id}/new` : '#'}
+        >
+          <FaPlus /> new
+        </Link>
+      </header>
 
       <div className={Styles.ColConRowWrapper}>
         {
@@ -56,15 +55,14 @@ export const CollectionItems = () => {
             ) : (
               <>
                 {
-                  colContents.map(row => {
-                    console.log("row: ", row)
+                  colContents.map((row, index) => {
                     const propValueArray = []
                     for (let i in row) {
-                      propValueArray.push(<span><span><b>{i.toLocaleLowerCase()}:</b></span> <span>{row[i]}</span></span>)
+                      propValueArray.push(<span key={i+index}><span><b>{i.toLocaleLowerCase()}:</b></span> <span>{row[i]}</span></span>)
                     }
 
                     return (
-                      <div className={Styles.ColConRow}>
+                      <div className={Styles.ColConRow} key={index}>
                         {propValueArray}
                         <div className={Styles.ColConRow__SettingsPanelWrapper}>
                           <div className={Styles.SettingsPanelWrapper__Background}></div>

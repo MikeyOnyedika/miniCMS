@@ -44,7 +44,6 @@ export function useCollectionsContents(baseUrl, addStatusMessage) {
             dispatch({ type: ACTION_TYPE.START_GET_ALL })
             const response = await get(colName)
             if (response.success === true) {
-                console.log("collections gotten: ", response.data)
                 dispatch({ type: ACTION_TYPE.SET_ALL, payload: response.data })
             } else {
                 dispatch({ type: ACTION_TYPE.SET_REQUEST_ERROR, payload: response.message })

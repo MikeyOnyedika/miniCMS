@@ -8,16 +8,18 @@ import { TOKEN_STATE, useCheckToken } from './hooks/useCheckToken';
 import PageNotFound from './pages/PageNotFound';
 import LoadingScreen from './components/LoadingScreen';
 import ConditionalRoute from './components/ConditionalRoute';
-
 import { Collections } from './components/Collections'
 import { CreateCollection } from './components/CreateCollection'
 import { AddCollectionItem } from './components/AddCollectionItem'
 import { CollectionItems } from './components/CollectionItems'
 import { DashboardIndex } from './components/DashboardIndex'
+import { useUserContentContext } from './contexts/UserContentProvider';
+import StatusMessage from './components/StatusMessage';
 
 function App() {
   const { isCheckingToken, isTokenValid, retryCheckToken } = useCheckToken();
   const { token, setStartTokenCheck } = useAuthContext();
+  const { statusMessageQueue } = useUserContentContext()
 
   useEffect(() => {
     retryCheckToken()
@@ -33,6 +35,9 @@ function App() {
 
   return (
     <>
+      <div style={{ position: 'absolute', top: '0', left: '0', right: '0', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {statusMessageQueue.map(sMessage => <StatusMessage key={sMessage.id} message={sMessage.message} status={sMessage.status} />)}
+      </div>
       <Routes>
         <Route path='/' element={(isCheckingToken === true || isTokenValid === TOKEN_STATE.NOT_SET_YET) ? <LoadingScreen /> : isTokenValid === TOKEN_STATE.VALID ? <Navigate to='/dashboard' /> : <Navigate to='/login' />} />
 
@@ -53,11 +58,12 @@ function App() {
         }>
           <Route path='' element={<DashboardIndex />}>
             <Route path='' element={<Collections />}>
-              <Route path=':collectionId' element={<CollectionItems />} />
               <Route path='create' element={<CreateCollection />} />
+              <Route path=':collectionId' element={<CollectionItems />}>
+                <Route path="new" element={<AddCollectionItem />} />
+              </Route>
             </Route>
           </Route>
-          <Route path=":collectionId/new" element={<AddCollectionItem />} />
         </Route>
 
         <Route path='*' element={<PageNotFound />} />

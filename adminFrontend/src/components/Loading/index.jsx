@@ -1,12 +1,14 @@
-import { RotateLoader } from 'react-spinners'
+import { ClipLoader } from 'react-spinners'
 
-const Loading = () => {
+const Loading = ({ size }) => {
     return (
         <div>
-            <RotateLoader
+            <ClipLoader
                 color={'var(--secondary-clr)'}
                 loading={true}
                 cssOverride={{ backgroundColor: 'white' }}
+                size={size || 50}
+
             />
         </div>
     )

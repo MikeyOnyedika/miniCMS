@@ -1,5 +1,12 @@
 const { getAppropriateModel } = require("../helpers/ContentCollectionUtils")
-//this controller provides a general CRUD api used by the contentRoute to serve user content
+//these controllers provide a general CRUD api used by the contentRoute to serve user content
+
+/*
+HOW THIS WORKS IN A NUTSHELL
+ Each collection is assessed using a specific model. Models are created dynamically, then saved in an array as an express variable. 
+ When a request comes in for any collection,the appropriate model for that collection is gotten from the models we have in memory 
+ and that is used to perform the appropriate CRUD operation on that collection
+*/
 
 async function getContentInCollection(req, res) {
 	const models = req.app.get("models")
@@ -9,7 +16,7 @@ async function getContentInCollection(req, res) {
 	}
 
 	try {
-		let itemsInCollection = await appropriateModel.find({}).lean()	
+		let itemsInCollection = await appropriateModel.find({}).lean()
 		// rename _id to id, createdAt to created-at, updatedAt to last-update-at. Delete _v
 		itemsInCollection = itemsInCollection.map(item => {
 			item = { ...item }
@@ -46,7 +53,7 @@ async function addContentToCollection(req, res) {
 	}
 
 	try {
-		// get the field names of the model to be used, so that this can be used to check if the req.body has them
+		//get the name for each field in the schema of the appropriate model
 		let fieldNames = Object.keys(appropriateModel.schema.paths)
 		// filter out some unnecessary fields we don't ever expect user to provide
 		fieldNames = fieldNames.filter(field => {

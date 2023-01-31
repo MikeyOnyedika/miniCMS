@@ -56,15 +56,15 @@ main {
     padding: 1rem;
 }
 
-a{
+a {
     text-decoration: none;
 }
 
-h1 > a{
+h1>a {
     color: var(--secondary-clr);
 }
 
-form {
+.auth-form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -124,7 +124,7 @@ button:focus {
     outline-width: 2px;
 }
 
-form>h2 {
+.auth-form>h2 {
     align-self: center;
 }
 
@@ -141,7 +141,7 @@ button:hover {
 }
 
 
-.logout{
+.logout {
     background-color: var(--secondary-clr);
     color: var(--primary-clr);
     outline: solid var(--secondary-clr) 2px;
@@ -152,7 +152,7 @@ button:hover {
 
 }
 
-.logout:hover{
+.logout:hover {
     background-color: var(--secondary-clr-light);
     outline-color: var(--secondary-clr);
     color: var(--secondary-clr);

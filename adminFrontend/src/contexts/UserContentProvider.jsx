@@ -3,7 +3,7 @@ import { useCollectionsContents } from '../hooks/useCollectionsContents'
 import { USER_COLLECTION_URL_BASE } from '../utils/baseURL'
 import { createContext } from "react";
 import { useContext } from "react";
-import { useStatusMessage } from '../hooks/useStatusMessage'
+import { useStatusMessage, FAILED, SUCCESS } from '../hooks/useStatusMessage'
 
 const UserContentContext = createContext();
 
@@ -20,7 +20,7 @@ function UserContentProvider({ children }) {
     return (
         <UserContentContext.Provider value={{
             collections, getCollections, getCollectionContents,
-            addCollectionContent, updateCollectionContent, deleteCollectionContent, addStatusMessage, statusMessageQueue, getColConStatus, colContents
+            addCollectionContent, updateCollectionContent, deleteCollectionContent, addStatusMessage, statusMessageQueue, SUCCESS, FAILED, getColConStatus, colContents
         }}>
             {children}
         </UserContentContext.Provider>

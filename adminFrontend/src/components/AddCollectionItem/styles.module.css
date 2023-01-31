@@ -1,0 +1,20 @@
+.FormWrapper {
+    display: flex;
+    align-items: center;
+    padding-block: 1rem;
+    flex-direction: column;
+}
+
+.Form {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+
+
+/* .Form input[type=text], .Form input[type=url], .Form input[type=email], .Form input[type=password], .Form input[type=number], .Form input[type=tel], .Form select{
+    width: 100%;
+} */

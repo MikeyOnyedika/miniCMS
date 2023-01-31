@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { useState } from "react";
 
+export const SUCCESS = 'SUCCESS'
+export const FAILED = 'FAILED'
+
 export function useStatusMessage() {
     const [statusMessageQueue, setMessageQueue] = useState([])
 
@@ -14,7 +17,7 @@ export function useStatusMessage() {
 
         return () => {
             clearInterval(intervalId)
-        } 
+        }
     }, [statusMessageQueue])
 
     function addStatusMessage(newMessage) {

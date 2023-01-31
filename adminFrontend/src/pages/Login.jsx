@@ -1,8 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../contexts/AuthProvider';
-import StatusMessage, { FAILED, SUCCESS } from '../components/StatusMessage';
+import { useUserContentContext } from '../contexts/UserContentProvider';
 
 
 const BTN_STATE = {
@@ -16,8 +15,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [usernameErrorMsg, setUsernameErrorMsg] = useState('');
   const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
-  const [message, setMessage] = useState({});
-
+  const { addStatusMessage, SUCCESS, FAILED } = useUserContentContext()
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -40,12 +38,12 @@ function Login() {
     const result = await attemptLogin({ username, password });
 
     if (result.success === true) {
-      setMessage({ success: true, message: 'Signed In' });
+      addStatusMessage({ status: SUCCESS, message: 'Signed In' })
     } else {
-      setMessage({
-        success: false,
+      addStatusMessage({
+        status: FAILED,
         message: result.message || 'Could not login. Try again...',
-      });
+      })
     }
     enableSubmitBtn(e.target.submitBtn);
   }
@@ -115,29 +113,8 @@ function Login() {
             </p>
           </div>
         )}
-        {message.message && (
-          <>
-            <div
-              style={{
-                position: 'fixed',
-                top: '5px',
-                left: '1rem',
-                right: '1rem',
-                display: 'flex',
-                justifyContent: 'center',
-                zIndex: '2222',
-              }}
-            >
-              <StatusMessage
-                status={message.success ? SUCCESS : FAILED}
-                message={message.message}
-                setMessage={setMessage}
-              />
-            </div>
-          </>
-        )}
         <div>
-          <form onSubmit={handleSubmit} autoComplete="off">
+          <form onSubmit={handleSubmit} autoComplete="off" className='auth-form'>
             <h2>Login as Admin</h2>
             <div className="form-group">
               <label htmlFor="username">Username</label>
