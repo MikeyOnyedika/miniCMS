@@ -7,7 +7,7 @@ async function getDbCollections(req, res) {
 	try {
 		let templates = await getContentCollectionsTemplates();
 		templates = templates.map(template => {
-			return { config: template.config, 'date-created': template.createdAt, fields: template.fields, name: template.name, id: template._id  }  
+			return { config: template.config, 'created-at': template.createdAt, fields: template.fields, name: template.name, _id: template._id }
 		})
 
 		res.status(200).json({ success: true, data: { collections: [...templates] } })

@@ -20,15 +20,12 @@ async function getContentInCollection(req, res) {
 		// rename _id to id, createdAt to created-at, updatedAt to last-update-at. Delete _v
 		itemsInCollection = itemsInCollection.map(item => {
 			item = { ...item }
-			const id = item._id
 			const createdAt = item.createdAt;
 			const lastUpdateAt = item.updatedAt;
 			delete item.__v
-			delete item._id
 			delete item.createdAt
 			delete item.updatedAt
 
-			item.id = id;
 			item['created-at'] = createdAt
 			item['last-update-at'] = lastUpdateAt
 

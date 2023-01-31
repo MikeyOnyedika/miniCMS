@@ -14,9 +14,8 @@ import { BackButton } from '../BackButton'
 export const CollectionItems = () => {
   // get the actual collection from it's id
   const { collectionId } = useParams()
-  const { collections, getCollections, getCollectionContents, getColConStatus, colContents } = useUserContentContext()
-  // TODO: persist collections across page refresh
-  const col = collections.collections.find(col => col.id === collectionId)
+  const { collections, getCollections, getCollectionContents, getColConStatus, deleteCollectionContent, delColConStatus, colContents } = useUserContentContext()
+  const col = collections.collections.find(col => col._id === collectionId)
   const outlet = useOutlet()
 
   useEffect(() => {
@@ -25,6 +24,9 @@ export const CollectionItems = () => {
     }
   }, [collections.isLoading])
 
+  function handleDeleteItem(collectionName, itemId) {
+    deleteCollectionContent(collectionName, itemId)
+  }
 
 
   return (
@@ -34,12 +36,12 @@ export const CollectionItems = () => {
           <BackButton to={"/dashboard"} />
           <h2>
             {
-              col?.name ? capitalize(col.name): <Loading size={20}/>
+              col?.name ? capitalize(col.name) : <Loading size={20} />
             }
           </h2>
         </div>
         <Link className={Styles.CreateBtn}
-          to={col?.name ? `/dashboard/${col.id}/new` : '#'}
+          to={col?.name ? `/dashboard/${col._id}/new` : '#'}
         >
           <FaPlus /> new
         </Link>
@@ -58,7 +60,7 @@ export const CollectionItems = () => {
                   colContents.map((row, index) => {
                     const propValueArray = []
                     for (let i in row) {
-                      propValueArray.push(<span key={i+index}><span><b>{i.toLocaleLowerCase()}:</b></span> <span>{row[i]}</span></span>)
+                      propValueArray.push(<span key={i + index}><span><b>{i.toLocaleLowerCase()}:</b></span> <span>{row[i]}</span></span>)
                     }
 
                     return (
@@ -71,7 +73,13 @@ export const CollectionItems = () => {
                               <FaEdit />
                             </IconContext.Provider>
                             <IconContext.Provider value={{ className: Styles.ColDeleteBtn }}>
-                              <FaTrash />
+                              {
+                                delColConStatus.isLoading ? (
+                                  <Loading size={20} />
+                                ) : (
+                                  <FaTrash onClick={() => handleDeleteItem(col.name, row._id)} />
+                                )
+                              }
                             </IconContext.Provider>
                           </div>
                         </div>

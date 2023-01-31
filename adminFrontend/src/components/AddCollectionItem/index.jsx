@@ -15,7 +15,7 @@ import { FormGroup } from '../FormInput/styles.module.css'
 export const AddCollectionItem = () => {
   const { collectionId } = useParams();
   const { collections, addStatusMessage, addCollectionContent, postColConStatus } = useUserContentContext()
-  const col = collections.collections.find(col => col.id === collectionId)
+  const col = collections.collections.find(col => col._id === collectionId)
   const [formInputs, generateFormInputs] = useCreateFormInputsFromTemplate();
   const submitBtnName = "submitBtn"
 

@@ -28,11 +28,11 @@ export const Collections = () => {
             ) : collections.isError === false ? (
               collections.collections.length === 0 ? (
                 <p>No items added to this collection yet</p>
-              ) : (collections.collections.map(collection => {
+              ) : (collections.collections.map(col => {
 
                 return (
-                  <Link to={`/dashboard/${collection.id}`} className={Styles.CollectionBtn} key={collection.id}>
-                    <p>{capitalize(collection.name)}</p>
+                  <Link to={`/dashboard/${col._id}`} className={Styles.CollectionBtn} key={col._id}>
+                    <p>{capitalize(col.name)}</p>
                   </Link >
                 )
               }))

@@ -61,16 +61,16 @@ export const useFetch = ({ requestURL, authToken }) => {
         return response
     }
 
-    async function del({ useToken = true, responseType = ResponseType.JSON, itemId }) {
+    async function del(urlExtra = "", useToken = true, responseType = ResponseType.JSON) {
         const options = {
             method: 'DELETE',
             headers: {
                 Authorization: useToken === true ? `Bearer ${authToken}` : null
             }
         }
-        setIsDelLoading(true)
-        const response = await _fetch({ url: `${requestURL}/${itemId}`, responseType, options })
-        setIsDelLoading(false)
+        setDelStatus({ isLoading: true, isError: false, errorMsg: null })
+        const response = await _fetch({ url: `${requestURL}/${urlExtra}`, responseType, options })
+        setDelStatus({ isLoading: false, isError: !response.success, errorMsg: response.message })
         return response
     }
 
