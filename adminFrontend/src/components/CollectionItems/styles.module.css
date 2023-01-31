@@ -52,9 +52,6 @@
 }
 
 
-
-
-
 .ColConRow {
     position: relative;
     display: flex;
@@ -64,7 +61,8 @@
     border-radius: 1rem;
     transition: all 200ms ease-in-out;
     outline: solid var(--accent-clr-light) 2px;
-    max-width: 100%;
+    max-width: 1000px;
+    width: 100%;
 }
 
 
