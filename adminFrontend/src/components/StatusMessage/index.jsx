@@ -1,6 +1,6 @@
 import React from "react";
 import Styles from "./styles.module.css";
-import { RequestState } from "../../utils/httpConsts";
+import { RequestState } from "../../utils/consts";
 
 function StatusMessage({ status, message }) {
   console.log("status: ", status, "   message: ", message)

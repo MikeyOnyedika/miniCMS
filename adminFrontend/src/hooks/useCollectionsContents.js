@@ -1,6 +1,6 @@
 import { useReducer } from "react";
 import { useFetch } from "./useFetch";
-import { RequestState } from '../utils/httpConsts'
+import { RequestState } from '../utils/consts'
 import { useAuthContext } from '../contexts/AuthProvider'
 
 const initialStatusState = {

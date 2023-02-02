@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useAuthContext } from '../contexts/AuthProvider';
 import { useUserContentContext } from '../contexts/UserContentProvider';
-import { RequestState } from '../utils/httpConsts';
+import { RequestState } from '../utils/consts';
 
 
 const BTN_STATE = {

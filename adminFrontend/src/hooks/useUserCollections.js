@@ -1,5 +1,5 @@
 import { useFetch } from './useFetch'
-import { RequestState } from '../utils/httpConsts'
+import { RequestState } from '../utils/consts'
 import { useReducer } from "react"
 import { useAuthContext } from '../contexts/AuthProvider'
 

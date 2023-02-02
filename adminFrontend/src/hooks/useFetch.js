@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ResponseType } from '../utils/httpConsts'
+import { ResponseType } from '../utils/consts'
 
 export const useFetch = ({ requestURL, authToken }) => {
 
