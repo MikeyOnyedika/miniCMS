@@ -11,6 +11,7 @@ import ConditionalRoute from './components/ConditionalRoute';
 import { Collections } from './components/Collections'
 import { CreateCollection } from './components/CreateCollection'
 import { AddCollectionItem } from './components/AddCollectionItem'
+import { EditCollectionItem } from './components/EditCollectionItem';
 import { CollectionItems } from './components/CollectionItems'
 import { DashboardIndex } from './components/DashboardIndex'
 import { useUserContentContext } from './contexts/UserContentProvider';
@@ -35,7 +36,7 @@ function App() {
 
   return (
     <>
-      <div style={{ position: 'fixed', top: '0.5rem', left: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem',  maxHeight: '50vh', overflowY: 'auto', padding: '0.5rem' }}>
+      <div style={{ position: 'fixed', top: '0.5rem', left: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '50vh', overflowY: 'auto', padding: '0.5rem' }}>
         {statusMessageQueue.map(sMessage => <StatusMessage key={sMessage.id} message={sMessage.message} status={sMessage.status} />)}
       </div>
       <Routes>
@@ -61,6 +62,7 @@ function App() {
               <Route path='create' element={<CreateCollection />} />
               <Route path=':collectionId' element={<CollectionItems />}>
                 <Route path="new" element={<AddCollectionItem />} />
+                <Route path=":itemId" element={<EditCollectionItem />} />
               </Route>
             </Route>
           </Route>

@@ -7,22 +7,21 @@ import capitalize from '../../utils/capitalize'
 import Loading from '../Loading'
 import { useCreateFormInputsFromTemplate } from '../../hooks/useCreateFormInputsFromTemplate'
 import { useEffect } from 'react'
-// import { template } from '../../data/sampleCollectionTemplate'
 import Styles from './styles.module.css'
 import { RequestState } from '../../utils/consts'
 import { FormGroup } from '../FormInput/styles.module.css'
+import { template } from '../../data/sampleCollectionTemplate'
 
 export const AddCollectionItem = () => {
   const { collectionId } = useParams();
   const { collections, addStatusMessage, addCollectionContent, postColConStatus } = useUserContentContext()
   const col = collections.collections.find(col => col._id === collectionId)
-  const [formInputs, generateFormInputs] = useCreateFormInputsFromTemplate();
+  const { formInputs, generateFormInputs, initialFormData } = useCreateFormInputsFromTemplate();
   const submitBtnName = "submitBtn"
 
   useEffect(() => {
-    if (col) {
-      generateFormInputs(col.fields)
-
+    if (col && initialFormData === null) {
+      generateFormInputs(template.fields)
     }
   }, [col])
 
@@ -80,7 +79,7 @@ export const AddCollectionItem = () => {
               <>
                 {formInputs}
                 <div className={FormGroup}>
-                  <input type="submit" name={submitBtnName} value={postColConStatus.isLoading === true ? "Loading ...": "+ Create"}
+                  <input type="submit" name={submitBtnName} value={postColConStatus.isLoading === true ? "Loading ..." : "+ Create"}
                     disabled={postColConStatus.isLoading === true ? true : false}
                   />
                 </div>

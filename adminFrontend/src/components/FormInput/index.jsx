@@ -7,6 +7,8 @@ export function FormInput({
     placeholder,
     fieldName,
     options,
+    onChangeHandler,
+    value
 }) {
     switch (inputType) {
         case 'text':
@@ -23,6 +25,8 @@ export function FormInput({
                         name={fieldName}
                         id={fieldName}
                         placeholder={`e.g ${placeholder}`}
+                        onChange={onChangeHandler}
+                        value={value}
                     />
                 </div>
             );
@@ -34,6 +38,8 @@ export function FormInput({
                         id={fieldName}
                         name={fieldName}
                         placeholder={`e.g ${placeholder}`}
+                        onChange={onChangeHandler}
+                        value={value}
                     ></textarea>
                 </div>
             );
@@ -41,7 +47,10 @@ export function FormInput({
             return (
                 <div className={Styles.FormGroup}>
                     <label htmlFor={labelName}>{`${labelName}${required ? '*' : ''}`}</label>
-                    <select id={labelName} name={fieldName} required={required}>
+                    <select id={labelName} name={fieldName} required={required}
+                        onChange={onChangeHandler}
+                        value={value}
+                    >
                         {options.map((option) => (
                             <option key={option.id} value={option.value}>
                                 {option.text}
@@ -54,8 +63,9 @@ export function FormInput({
             return (
                 <div className={`${Styles.FormGroup} ${Styles.FormGroup___row} `}>
                     <label htmlFor={fieldName}>{`${labelName}${required ? '*' : ''}`}</label>
-                    <input type={inputType} name={fieldName} id={fieldName} checked={placeholder === "on" ? true : false}
-                    // value={placeholder === "on" ? true : false} 
+                    <input type={inputType} name={fieldName} id={fieldName}
+                        onChange={onChangeHandler}
+                        checked={value}
                     />
                 </div>
             );
@@ -64,7 +74,10 @@ export function FormInput({
             return (
                 <div className={`${Styles.FormGroup} ${Styles.FormGroup___row} `}>
                     <label htmlFor={fieldName}>{`${labelName}${required ? '*' : ''}`}</label>
-                    <input type={inputType} name={fieldName} id={fieldName} />
+                    <input type={inputType} name={fieldName} id={fieldName}
+                        onChange={onChangeHandler}
+                        value={value}
+                    />
                 </div>
             );
         case 'radio':
@@ -79,9 +92,10 @@ export function FormInput({
                                 <input
                                     defaultChecked={option.checked}
                                     type={inputType}
-                                    value={option.value}
                                     name={fieldName}
                                     id={`${inputId}`}
+                                    onChange={onChangeHandler}
+                                    value={value}
                                 />
                             </div>
                         );

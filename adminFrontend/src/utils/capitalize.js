@@ -1,4 +1,5 @@
 export default function capitalize(text) {
+  text = text.toLowerCase();
   // split the text into component words
   // splits the text such that delimiting letters are also kept as elements
   let wordArr = text.split(/([A-Z])/g);

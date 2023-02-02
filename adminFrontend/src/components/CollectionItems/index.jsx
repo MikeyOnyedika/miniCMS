@@ -69,9 +69,13 @@ export const CollectionItems = () => {
                         <div className={Styles.ColConRow__SettingsPanelWrapper}>
                           <div className={Styles.SettingsPanelWrapper__Background}></div>
                           <div className={Styles.SettingsPanelWrapper__Panel}>
-                            <IconContext.Provider value={{ className: Styles.ColEditBtn }}>
-                              <FaEdit />
-                            </IconContext.Provider>
+                            <Link to={`/dashboard/${col._id}/${row._id}`}>
+                              <IconContext.Provider value={{ className: Styles.ColEditBtn }}>
+                                {
+                                  <FaEdit />
+                                }
+                              </IconContext.Provider>
+                            </Link>
                             <IconContext.Provider value={{ className: Styles.ColDeleteBtn }}>
                               {
                                 delColConStatus.isLoading ? (

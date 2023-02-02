@@ -69,7 +69,7 @@ export const template = {
         },
         "registration-time": {
             "label": "Registration Time",
-            "formInputType": "time",
+            "formInputType": "datetime-local",
             "exampleValue": "21:00",
             "required": false,
             "unique": false,
