@@ -9,7 +9,7 @@ import { useCreateFormInputsFromTemplate } from '../../hooks/useCreateFormInputs
 import { useEffect } from 'react'
 // import { template } from '../../data/sampleCollectionTemplate'
 import Styles from './styles.module.css'
-import { RequestState } from '../../utils/httpConsts'
+import { RequestState } from '../../utils/consts'
 import { FormGroup } from '../FormInput/styles.module.css'
 
 export const AddCollectionItem = () => {
