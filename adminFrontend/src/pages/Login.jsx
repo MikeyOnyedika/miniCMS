@@ -20,7 +20,6 @@ function Login() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log('submit proceed');
     if (username === '') {
       setUsernameErrorMsg('Username is required');
       return;

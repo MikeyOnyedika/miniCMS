@@ -14,13 +14,13 @@ export function useUserContentContext() {
 function UserContentProvider({ children }) {
     const { addStatusMessage, statusMessageQueue } = useStatusMessage();
     const { collections, getCollections } = useUserCollections(USER_COLLECTION_URL_BASE, addStatusMessage);
-    const { getCollectionContents, addCollectionContent, updateCollectionContent, deleteCollectionContent, getStatus: getColConStatus, colContents, postStatus: postColConStatus, delStatus: delColConStatus } = useCollectionsContents(USER_COLLECTION_URL_BASE, addStatusMessage);
+    const { getCollectionContents, addCollectionContent, updateCollectionContent, deleteCollectionContent, getStatus: getColConStatus, colContents, postStatus: postColConStatus, updateStatus: updateColConStatus, delStatus: delColConStatus } = useCollectionsContents(USER_COLLECTION_URL_BASE, addStatusMessage);
 
 
     return (
         <UserContentContext.Provider value={{
             collections, getCollections, getCollectionContents,
-            addCollectionContent, updateCollectionContent, deleteCollectionContent, addStatusMessage, statusMessageQueue, getColConStatus, postColConStatus, delColConStatus, colContents
+            addCollectionContent, updateCollectionContent, deleteCollectionContent, addStatusMessage, statusMessageQueue, getColConStatus, postColConStatus, updateColConStatus, delColConStatus, colContents
         }}>
             {children}
         </UserContentContext.Provider>

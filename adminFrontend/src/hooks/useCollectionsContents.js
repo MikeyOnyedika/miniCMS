@@ -13,6 +13,7 @@ const initialState = {
     colContents: null,
     getStatus: { ...initialStatusState },
     postStatus: { ...initialStatusState },
+    updateStatus: { ...initialStatusState },
     delStatus: { ...initialStatusState },
 }
 
@@ -49,17 +50,27 @@ function reducerFn(state, action) {
         return { ...state, colContents: [...state.colContents, action.payload], postStatus: { isLoading: false, isError: false, errorMsg: null } }
     } else if (actionType === ACTION_TYPE.POST_CONTENT_FAILED) {
         return { ...state, postStatus: { isLoading: false, isError: true, errorMsg: action.payload } }
-
+    } else if (actionType === ACTION_TYPE.BEGIN_UPDATE_CONTENT) {
+        return { ...state, updateStatus: { ...state.updateStatus, isLoading: true } }
+    } else if (actionType === ACTION_TYPE.UPDATE_CONTENT_SUCCESS) {
+        // replace the old item with the new updated item
+        const copy = state.colContents.map(item => {
+            if (item._id === action.payload._id) {
+                return action.payload
+            }
+            return item;
+        })
+        return { ...state, colContents: [...copy], updateStatus: { isLoading: false, isError: false, errorMsg: null } }
+    } else if (actionType === ACTION_TYPE.UPDATE_CONTENT_FAILED) {
+        return { ...state, updateStatus: { isLoading: false, isError: true, errorMsg: action.payload } }
     } else if (actionType === ACTION_TYPE.BEGIN_DELETE_CONTENT) {
-        console.log("delete started")
+
         return { ...state, delStatus: { ...state.delStatus, isLoading: true } }
     } else if (actionType === ACTION_TYPE.DELETE_CONTENT_SUCCESS) {
-        console.log("content deleted")
         // remove the deleted item from the collection
         const copy = state.colContents.filter(item => item._id !== action.payload._id)
         return { ...state, colContents: [...copy], delStatus: { isLoading: false, isError: false, errorMsg: null } }
     } else if (actionType === ACTION_TYPE.DELETE_CONTENT_FAILED) {
-        console.log("couldn't delete item")
         return { ...state, delStatus: { isLoading: false, isError: true, errorMsg: action.payload } }
     } else {
         throw new Error("Action does not match any known action type")
@@ -104,7 +115,21 @@ export function useCollectionsContents(baseUrl, addStatusMessage) {
         }
     }
 
-    function updateCollectionContent() { }
+    async function updateCollectionContent(colName, itemId, body) {
+        try {
+            dispatch({ type: ACTION_TYPE.BEGIN_UPDATE_CONTENT })
+            const response = await put(`${colName}/${itemId}`, body)
+            if (response.success === true) {
+                dispatch({ type: ACTION_TYPE.UPDATE_CONTENT_SUCCESS, payload: response.data })
+                addStatusMessage({ status: RequestState.SUCCESS, message: "Successfully edited item!" })
+            } else {
+                dispatch({ type: ACTION_TYPE.UPDATE_CONTENT_FAILED, payload: response.message })
+                addStatusMessage({ status: RequestState.FAILED, message: response.message })
+            }
+        } catch (err) {
+            addStatusMessage({ status: RequestState.FAILED, message: err })
+        }
+    }
 
     async function deleteCollectionContent(colName, itemId) {
         try {

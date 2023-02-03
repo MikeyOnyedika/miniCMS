@@ -1,15 +1,12 @@
 import { FormInput } from '../components/FormInput';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export function useCreateFormInputsFromTemplate() {
     const [formInputs, setFormInputs] = useState(null);
-    const [formData, setFormData] = useState({})
-    const [initialFormData, setInitialFormData] = useState(null)
+    const [formData, setFormData] = useState(null)
     const [template, setTemplate] = useState(null)
 
     // changes start here
-
-
     function handleOnChange(e) {
         const name = e.target.name;
         const value = e.target.value
@@ -20,27 +17,18 @@ export function useCreateFormInputsFromTemplate() {
     }
 
     useEffect(() => {
-        if (initialFormData) {
-            console.log(initialFormData)
-            setFormData({ ...initialFormData })
+        if (formData) {
             createFormInputs()
         }
-    }, [initialFormData])
-
-    useEffect(() => {
-        console.log(formData)
     }, [formData])
 
 
-    function createFormInputs() {
+    const createFormInputs = useCallback(() => {
         const fieldNames = Object.keys(template)
-        console.log(formData)
         setFormInputs(
             fieldNames.map((fieldName) => {
                 // looks like this { formInputType: "url", required: true, unique: false }
                 const fieldValueObj = template[fieldName];
-                console.log("fieldValueObj: ", fieldValueObj)
-                console.log("inputType: ", fieldValueObj.formInputType)
                 return (
                     <FormInput
                         key={fieldName}
@@ -56,7 +44,8 @@ export function useCreateFormInputsFromTemplate() {
                 );
             })
         )
-    }
+
+    }, [template, formData])
 
     function generateFormInputs(template, existingFormData) {
         const fieldNames = Object.keys(template);
@@ -68,9 +57,8 @@ export function useCreateFormInputsFromTemplate() {
                 initFormData[fName] = ""
             }
         }
-        console.log(initFormData)
-        setInitialFormData(initFormData)
+        setFormData(initFormData)
     }
 
-    return { formInputs, setInitialFormData, generateFormInputs, formData, initialFormData }
+    return { formInputs, generateFormInputs, formData }
 }

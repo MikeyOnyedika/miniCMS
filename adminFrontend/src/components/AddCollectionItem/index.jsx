@@ -16,14 +16,14 @@ export const AddCollectionItem = () => {
   const { collectionId } = useParams();
   const { collections, addStatusMessage, addCollectionContent, postColConStatus } = useUserContentContext()
   const col = collections.collections.find(col => col._id === collectionId)
-  const { formInputs, generateFormInputs, initialFormData } = useCreateFormInputsFromTemplate();
+  const { formInputs, generateFormInputs, formData } = useCreateFormInputsFromTemplate();
   const submitBtnName = "submitBtn"
 
   useEffect(() => {
-    if (col && initialFormData === null) {
+    if (col && formData === null) {
       generateFormInputs(template.fields)
     }
-  }, [col])
+  }, [col, formData])
 
   async function handleFormSubmit(e) {
     e.preventDefault();
@@ -36,7 +36,6 @@ export const AddCollectionItem = () => {
       const currentField = fields[field]
       const isRequired = currentField['required']
 
-      console.log("isRequired: ", isRequired)
       if (form[field].value === "" && isRequired) {
 
         return addStatusMessage({ status: RequestState.FAILED, message: `${currentField.label} is empty` })

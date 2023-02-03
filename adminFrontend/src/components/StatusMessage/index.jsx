@@ -3,7 +3,6 @@ import Styles from "./styles.module.css";
 import { RequestState } from "../../utils/consts";
 
 function StatusMessage({ status, message }) {
-  console.log("status: ", status, "   message: ", message)
 
   return (
     <div

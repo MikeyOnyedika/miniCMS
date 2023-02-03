@@ -73,13 +73,9 @@ function AuthProvider({ children }) {
                   logoutAdmin();
                 }
               }
-            } else {
-              console.log("can't ask server if token is about to expire because server already told us that")
             }
           }, 5000)
         )
-      } else {
-        console.log("timer already set")
       }
     } else {
       if (timerId !== '') {
@@ -186,7 +182,6 @@ function AuthProvider({ children }) {
       }
       return result;
     } catch (err) {
-      console.log(err);
       return { success: false };
     }
   }

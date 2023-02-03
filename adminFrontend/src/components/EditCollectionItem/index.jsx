@@ -16,25 +16,24 @@ import { useState } from 'react'
 export const EditCollectionItem = () => {
     const { collectionId, itemId } = useParams();
 
-    const { collections, addStatusMessage, addCollectionContent, postColConStatus, colContents } = useUserContentContext()
+    const { collections, addStatusMessage, updateCollectionContent, updateColConStatus, colContents } = useUserContentContext()
     const col = collections.collections.find(col => col._id === collectionId)
-    const { formInputs, generateFormInputs, initialFormData } = useCreateFormInputsFromTemplate();
+    const { formInputs, generateFormInputs, formData } = useCreateFormInputsFromTemplate();
     const submitBtnName = "submitBtn"
     const [itemToEdit, setItemToEdit] = useState(null)
 
     useEffect(() => {
-        if (colContents && initialFormData === null) {
+        if (colContents && formData === null) {
             const item = colContents.find(item => item._id === itemId)
             if (item) {
                 setItemToEdit(item)
             }
         }
-    }, [colContents])
+    }, [colContents, formData])
 
 
     useEffect(() => {
         if (itemToEdit) {
-            console.log("itemToEdit: ", itemToEdit)
             // itemToEdit has to be destructured else most of the fields will be empty strings
             generateFormInputs(template.fields, itemToEdit)
         }
@@ -51,7 +50,6 @@ export const EditCollectionItem = () => {
             const currentField = fields[field]
             const isRequired = currentField['required']
 
-            console.log("isRequired: ", isRequired)
             if (form[field].value === "" && isRequired) {
 
                 return addStatusMessage({ status: RequestState.FAILED, message: `${currentField.label} is empty` })
@@ -62,15 +60,13 @@ export const EditCollectionItem = () => {
 
         }
 
-        // TODO: submit the form to create a new item in the collection
-
-        await addCollectionContent(col.name, body)
+        await updateCollectionContent(col.name, itemToEdit._id, body)
         // clear input fields once item is added
-        if (postColConStatus.isError === false) {
-            for (let field in body) {
-                form[field].value = ""
-            }
-        }
+        // if (updateColConStatus.isError === false) {
+        //     for (let field in body) {
+        //         form[field].value = ""
+        //     }
+        // }
     }
 
     return (
@@ -94,8 +90,8 @@ export const EditCollectionItem = () => {
                             <>
                                 {formInputs}
                                 <div className={FormGroup}>
-                                    <input type="submit" name={submitBtnName} value={postColConStatus.isLoading === true ? "Loading ..." : "+ Create"}
-                                        disabled={postColConStatus.isLoading === true ? true : false}
+                                    <input type="submit" name={submitBtnName} value={updateColConStatus.isLoading === true ? "Loading ..." : "Edit"}
+                                        disabled={updateColConStatus.isLoading === true ? true : false}
                                     />
                                 </div>
                             </>

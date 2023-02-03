@@ -29,7 +29,6 @@ const CountdownToLogout = ({ children }) => {
 
     return () => {
       if (timerId !== "") {
-        console.log("timer stopped")
         clearInterval(timerId)
       }
 
@@ -51,8 +50,6 @@ const CountdownToLogout = ({ children }) => {
             if (response.success === true) {
               setToken(response.data.token)
               resetTokenChecker()
-            } else {
-              console.log(response.message)
             }
             // restart this timer
           }, cancelBtnText: "Leave", cancelBtnOnClick: () => {

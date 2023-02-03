@@ -29,7 +29,6 @@ function App() {
   // this handles starting the token check timer either when user uses the login route or is auto logged in with a still-valid token 
   useEffect(() => {
     if (isTokenValid === TOKEN_STATE.VALID) {
-      console.log("start token check is true")
       setStartTokenCheck(true)
     }
   }, [isTokenValid])

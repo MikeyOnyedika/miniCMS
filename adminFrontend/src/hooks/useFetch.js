@@ -1,19 +1,6 @@
-import { useState } from 'react'
 import { ResponseType } from '../utils/consts'
 
 export const useFetch = ({ requestURL, authToken }) => {
-
-    const initialState = {
-        isLoading: false,
-        isError: false,
-        errorMsg: null
-    }
-
-    const [getStatus, setGetStatus] = useState(initialState)
-    const [postStatus, setPostStatus] = useState(initialState)
-    const [putStatus, setPutStatus] = useState(initialState)
-    const [delStatus, setDelStatus] = useState(initialState)
-    // TODO: fix the getstatus and  co of this hook
 
     async function get(urlExtra = "", useToken = true, responseType = ResponseType.JSON) {
         const options = {
@@ -23,9 +10,7 @@ export const useFetch = ({ requestURL, authToken }) => {
             }
         }
 
-        setGetStatus({ isLoading: true, isError: false, errorMsg: null })
         const response = await _fetch({ url: `${requestURL}/${urlExtra}`, responseType, options })
-        setGetStatus({ isLoading: false, isError: !response.success, errorMsg: response.message })
 
         return response
     }
@@ -39,25 +24,21 @@ export const useFetch = ({ requestURL, authToken }) => {
             },
             body: JSON.stringify(body)
         }
-        setPostStatus({ isLoading: true, isError: false, errorMsg: null })
         const response = await _fetch({ url: `${requestURL}/${urlExtra}`, responseType, options })
-        setPostStatus({ isLoading: false, isError: !response.success, errorMsg: response.message })
 
         return response
     }
 
-    async function put({ useToken = true, responseType = ResponseType.JSON, itemId, updateBody }) {
+    async function put(urlExtra = "", body, useToken = true, responseType = ResponseType.JSON) {
         const options = {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: useToken === true ? `Bearer ${authToken}` : null
             },
-            body: JSON.stringify(updateBody)
+            body: JSON.stringify(body)
         }
-        setIsPutLoading(true)
-        const response = await _fetch({ url: `${requestURL}/${itemId}`, responseType, options })
-        setIsPutLoading(false)
+        const response = await _fetch({ url: `${requestURL}/${urlExtra}`, responseType, options })
         return response
     }
 
@@ -68,9 +49,7 @@ export const useFetch = ({ requestURL, authToken }) => {
                 Authorization: useToken === true ? `Bearer ${authToken}` : null
             }
         }
-        setDelStatus({ isLoading: true, isError: false, errorMsg: null })
         const response = await _fetch({ url: `${requestURL}/${urlExtra}`, responseType, options })
-        setDelStatus({ isLoading: false, isError: !response.success, errorMsg: response.message })
         return response
     }
 
@@ -98,6 +77,6 @@ export const useFetch = ({ requestURL, authToken }) => {
     }
 
     return {
-        get, post, put, del, getStatus, postStatus, putStatus, delStatus
+        get, post, put, del
     }
 }

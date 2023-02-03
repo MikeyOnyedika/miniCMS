@@ -20,7 +20,6 @@ export default function useLocalStorage(key, initialValue = null) {
     } else {
       return initialValue;
     }
-    console.log('nothing fits');
   });
 
   useEffect(() => {
