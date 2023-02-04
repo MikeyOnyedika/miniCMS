@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import { useEffect } from 'react'
 import Loading from '../Loading'
 import { BackButton } from '../BackButton'
+import { parseDateTimeInFormData } from '../../utils/formUtils'
 
 
 export const CollectionItems = () => {
@@ -57,9 +58,11 @@ export const CollectionItems = () => {
             ) : (
               <>
                 {
-                  colContents.map((row, index) => {
+                  colContents.map((r, index) => {
                     const propValueArray = []
+                    const row = parseDateTimeInFormData(col.fields, r)
                     for (let i in row) {
+                    
                       propValueArray.push(<span key={i + index}><span><b>{i.toLocaleLowerCase()}:</b></span> <span>{row[i]}</span></span>)
                     }
 

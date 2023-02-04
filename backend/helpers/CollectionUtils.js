@@ -129,8 +129,8 @@ async function loadCollectionModels(app) {
 	try {
 		//try garbage collecting the models before re-creating them afresh to update the dynamic collections
 		const allAppModels = Object.keys(mongoose.models)
-		for(let modelName of allAppModels){
-			if (modelName !== "Admin" && modelName !== "Collection"){
+		for (let modelName of allAppModels) {
+			if (modelName !== "Admin" && modelName !== "Collection") {
 				delete mongoose.models[modelName]
 			}
 		}
@@ -144,6 +144,7 @@ async function loadCollectionModels(app) {
 
 	return success
 }
+
 
 module.exports = { parseFields, createModelFromTemplate, getContentCollectionsTemplates, getContentCollectionsModels, loadCollectionModels }
 

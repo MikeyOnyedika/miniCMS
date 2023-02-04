@@ -1,5 +1,6 @@
 import { FormInput } from '../components/FormInput';
 import { useState, useEffect, useCallback } from 'react';
+import { parseDateTime, parseDateTimeInFormData } from '../utils/formUtils';
 
 export function useCreateFormInputsFromTemplate() {
     const [formInputs, setFormInputs] = useState(null);
@@ -50,12 +51,15 @@ export function useCreateFormInputsFromTemplate() {
     function generateFormInputs(template, existingFormData) {
         const fieldNames = Object.keys(template);
         setTemplate(template)
-        const initFormData = existingFormData || {}
+        let initFormData = existingFormData || {}
         // do the looping only if the object is empty
         if (Object.keys(initFormData).length === 0) {
             for (let fName of fieldNames) {
                 initFormData[fName] = ""
             }
+        } else {
+            // parse the datetime-local string returned from the database so that the appropriate form input can use it
+            initFormData = parseDateTimeInFormData(template, initFormData)
         }
         setFormData(initFormData)
     }
