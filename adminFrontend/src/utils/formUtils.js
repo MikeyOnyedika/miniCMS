@@ -15,7 +15,6 @@ export function isURLValid(url) {
 
 export function parseDateTime(dateTimeString) {
     const regex = /:[0-9]{2}\.[0-9]{3}/
-    console.log("dateTimestring: ", dateTimeString, "  typeOf date time string: ", typeof dateTimeString)
     // check if the pattern exists in the string
     if (dateTimeString.match(regex) !== null) {
         const parts = dateTimeString.split(regex)
@@ -28,10 +27,9 @@ export function parseDateTime(dateTimeString) {
 export function parseDateTimeInFormData(template, formData) {
     const fieldNames = Object.keys(template)
     const fData = { ...formData }
-    console.log(fData)
     for (let fName of fieldNames) {
         if (template[fName].formInputType === "datetime-local" || template[fName].formInputType === "date") {
-            if (fData[fName] == null) {
+            if (fData[fName] === null || fData[fName] === undefined) {
                 fData[fName] = ""
             } else {
                 fData[fName] = parseDateTime(fData[fName])

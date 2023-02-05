@@ -1,3 +1,4 @@
+const { formatCollectionItem } = require("../helpers/CollectionUtils")
 const { getAppropriateModel } = require("../helpers/ContentCollectionUtils")
 //these controllers provide a general CRUD api used by the contentRoute to serve user content
 
@@ -15,26 +16,20 @@ async function getContentInCollection(req, res) {
 		return res.status(400).json({ success: false, message: "No collection with the specified name exists" })
 	}
 
+
 	try {
 		let itemsInCollection = await appropriateModel.find({}).lean()
-		// rename _id to id, createdAt to created-at, updatedAt to last-update-at. Delete _v
-		itemsInCollection = itemsInCollection.map(item => {
-			item = { ...item }
-			const createdAt = item.createdAt;
-			const lastUpdateAt = item.updatedAt;
-			delete item.__v
-			delete item.createdAt
-			delete item.updatedAt
-
-			item['created-at'] = createdAt
-			item['last-update-at'] = lastUpdateAt
-
+		// rename createdAt to created-at, updatedAt to last-update-at. Delete _v
+		itemsInCollection = itemsInCollection.map(i => {
+			const item = formatCollectionItem(i)
+			console.log(item)	
 			return item
 		})
 
-		console.log(itemsInCollection)
+
 		res.json({ success: true, data: itemsInCollection })
 	} catch (err) {
+		console.log(err.message)
 		res.status(500).json({ success: false, message: "Couldn't complete request, try again" })
 	}
 }
@@ -49,19 +44,15 @@ async function addContentToCollection(req, res) {
 		return res.status(400).json({ success: false, message: "No data was provided to create a new " + req.params.collectionname })
 	}
 
+	// for (let field in req.body) {
+	// 	if (field === "created-at" || field === "last-updated-at") {
+	// 		delete req.body[field]
+	// 	}
+	// }
+
 	try {
 		//get the name for each field in the schema of the appropriate model
 		let fieldNames = Object.keys(appropriateModel.schema.paths)
-		// filter out some unnecessary fields we don't ever expect user to provide
-		fieldNames = fieldNames.filter(field => {
-			if (field === "createdAt" || field === "__v" || field === "updatedAt") {
-				return false
-			} else {
-				return true
-			}
-		})
-
-		console.log("model.schema.paths: ", appropriateModel.schema.paths)
 
 		// check whether any of the essential fields are missing in the request body
 		for (let field of fieldNames) {
@@ -70,8 +61,10 @@ async function addContentToCollection(req, res) {
 			}
 		}
 
-		const newItem = await appropriateModel.create({ ...req.body })
-		res.status(201).json({ success: true, data: newItem })
+		let item = await appropriateModel.create({ ...req.body })
+		item = formatCollectionItem(item.toObject())
+		console.log("item added: ", item)
+		res.status(201).json({ success: true, data: item })
 	} catch (err) {
 		let message;
 		if (err.message.includes("E11000 duplicate key")) {
@@ -93,8 +86,9 @@ async function deleteContentFromCollection(req, res) {
 	}
 
 	try {
-		const deletedItem = await appropriateModel.findByIdAndDelete(itemId)
-		res.status(201).json({ success: true, data: deletedItem })
+		let item = await appropriateModel.findByIdAndDelete(itemId)
+		item = formatCollectionItem(item.toObject())
+		res.status(201).json({ success: true, data: item })
 	} catch (err) {
 		res.status(500).json({ success: false, message: "Couldn't complete request. Try again" })
 	}
@@ -115,8 +109,9 @@ async function updateContentInCollection(req, res) {
 	}
 
 	try {
-		const modifiedItem = await appropriateModel.findByIdAndUpdate(itemId, { ...req.body }, { new: true })
-		res.status(201).json({ success: true, data: modifiedItem })
+		let item = await appropriateModel.findByIdAndUpdate(itemId, { ...req.body }, { new: true })
+		item = formatCollectionItem(item.toObject())
+		res.status(201).json({ success: true, data: item })
 	} catch (err) {
 		res.status(500).json({ success: false, message: "Couldn't complete request. Try again" })
 	}

@@ -145,6 +145,23 @@ async function loadCollectionModels(app) {
 	return success
 }
 
+function toKebabCase(spacedText) {
+	return spacedText.toLowerCase().replace(/[ ]+/g, "-")
+}
 
-module.exports = { parseFields, createModelFromTemplate, getContentCollectionsTemplates, getContentCollectionsModels, loadCollectionModels }
+function formatCollectionItem(item) {
+	const modifiedItem = { ...item }
+	const createdAt = modifiedItem.createdAt;
+	const lastUpdateAt = modifiedItem.updatedAt;
+	delete modifiedItem.__v
+	delete modifiedItem.createdAt
+	delete modifiedItem.updatedAt
+
+	modifiedItem['created-at'] = createdAt
+	modifiedItem['last-update-at'] = lastUpdateAt
+	
+	return modifiedItem 
+}
+
+module.exports = { formatCollectionItem, parseFields, createModelFromTemplate, getContentCollectionsTemplates, getContentCollectionsModels, loadCollectionModels }
 

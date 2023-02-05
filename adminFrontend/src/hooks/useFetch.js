@@ -72,7 +72,7 @@ export const useFetch = ({ requestURL, authToken }) => {
                     throw new Error("Response Type provided does not match any known response type")
             }
         } catch (err) {
-            return { success: false, message: `{ ${err} }` }
+            return { success: false, message: `{ ${err.message} }` }
         }
     }
 

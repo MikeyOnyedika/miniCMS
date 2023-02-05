@@ -29,20 +29,20 @@ export const AddCollectionItem = () => {
     e.preventDefault();
     const form = e.target
 
-    // check for empty field that are required
+    //look through the collection template and check for empty field that are required but isn't provided a value in the form
     const fields = col.fields
     const body = {}
     for (let field in fields) {
       const currentField = fields[field]
+      const fieldValue = formData[field] 
       const isRequired = currentField['required']
 
-      if (form[field].value === "" && isRequired) {
-
+      if (fieldValue === "" && isRequired) {
         return addStatusMessage({ status: RequestState.FAILED, message: `${currentField.label} is empty` })
 
       }
 
-      body[field] = form[field].value
+      body[field] = fieldValue
 
     }
 
@@ -50,7 +50,7 @@ export const AddCollectionItem = () => {
 
     await addCollectionContent(col.name, body)
     // clear input fields once item is added
-    if (postColConStatus.isError === false) {
+    if (postColConStatus.isError === false && postColConStatus.errorMsg !== null ) {
       for (let field in body) {
         form[field].value = ""
       }
