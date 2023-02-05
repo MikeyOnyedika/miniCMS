@@ -10,7 +10,14 @@ export function useCreateFormInputsFromTemplate() {
     // changes start here
     function handleOnChange(e) {
         const name = e.target.name;
-        const value = e.target.value
+        let value
+
+        if (e.target.type === "checkbox" || e.target.type === "radio") {
+            value = e.target.checked
+        } else {
+            value = e.target.value
+        }
+
 
         setFormData((prev) => {
             return { ...prev, [name]: value }

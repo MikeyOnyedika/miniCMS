@@ -15,7 +15,6 @@ import { useState } from 'react'
 
 export const EditCollectionItem = () => {
     const { collectionId, itemId } = useParams();
-
     const { collections, addStatusMessage, updateCollectionContent, updateColConStatus, colContents } = useUserContentContext()
     const col = collections.collections.find(col => col._id === collectionId)
     const { formInputs, generateFormInputs, formData } = useCreateFormInputsFromTemplate();
@@ -48,25 +47,20 @@ export const EditCollectionItem = () => {
         const body = {}
         for (let field in fields) {
             const currentField = fields[field]
+            const fieldValue = formData[field]
             const isRequired = currentField['required']
 
-            if (form[field].value === "" && isRequired) {
+            if (fieldValue === "" && isRequired) {
 
                 return addStatusMessage({ status: RequestState.FAILED, message: `${currentField.label} is empty` })
 
             }
 
-            body[field] = form[field].value
+            body[field] = fieldValue 
 
         }
 
         await updateCollectionContent(col.name, itemToEdit._id, body)
-        // clear input fields once item is added
-        // if (updateColConStatus.isError === false) {
-        //     for (let field in body) {
-        //         form[field].value = ""
-        //     }
-        // }
     }
 
     return (

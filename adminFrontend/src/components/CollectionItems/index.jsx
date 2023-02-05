@@ -63,7 +63,7 @@ export const CollectionItems = () => {
                     const row = parseDateTimeInFormData(col.fields, r)
                     for (let i in row) {
                     
-                      propValueArray.push(<span key={i + index}><span><b>{i.toLocaleLowerCase()}:</b></span> <span>{row[i]}</span></span>)
+                      propValueArray.push(<span key={i + index}><span><b>{i.toLocaleLowerCase()}:</b></span> <span>{row[i].toString()}</span></span>)
                     }
 
                     return (

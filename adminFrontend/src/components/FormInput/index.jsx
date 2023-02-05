@@ -60,6 +60,7 @@ export function FormInput({
                 </div>
             );
         case 'checkbox':
+            
             return (
                 <div className={`${Styles.FormGroup} ${Styles.FormGroup___row} `}>
                     <label htmlFor={fieldName}>{`${labelName}${required ? '*' : ''}`}</label>
