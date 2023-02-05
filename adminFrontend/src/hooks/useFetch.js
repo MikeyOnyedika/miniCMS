@@ -9,7 +9,6 @@ export const useFetch = ({ requestURL, authToken }) => {
                 Authorization: useToken === true ? `Bearer ${authToken}` : null
             }
         }
-
         const response = await _fetch({ url: `${requestURL}/${urlExtra}`, responseType, options })
 
         return response

@@ -13,7 +13,3 @@ export const ResponseType = {
     FORM_DATA: 'form data'
 }
 
-export const Mode = {
-    NEW: 'new',
-    EDIT: 'edit'
-}

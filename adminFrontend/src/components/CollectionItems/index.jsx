@@ -2,7 +2,7 @@ import React from 'react'
 import Styles from './styles.module.css'
 import { FaTrash, FaPlus, FaEdit } from 'react-icons/fa'
 import { IconContext } from 'react-icons'
-import { useOutlet, useParams } from 'react-router-dom'
+import { useNavigate, useOutlet, useParams } from 'react-router-dom'
 import { useUserContentContext } from '../../contexts/UserContentProvider'
 import capitalize from '../../utils/capitalize'
 import { Link } from 'react-router-dom'
@@ -15,18 +15,25 @@ import { parseDateTimeInFormData } from '../../utils/formUtils'
 export const CollectionItems = () => {
   // get the actual collection from it's id
   const { collectionId } = useParams()
-  const { collections, getCollections, getCollectionContents, getColConStatus, deleteCollectionContent, delColConStatus, colContents } = useUserContentContext()
-  const col = collections.collections.find(col => col._id === collectionId)
+  const { collections, getCollectionContents, getColConStatus, deleteCollectionContent, delColConStatus, colContents, delColStatus, deleteCollection } = useUserContentContext()
+  const col = collections?.find(col => col._id === collectionId)
   const outlet = useOutlet()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    if (collections.isLoading === false) {
+    if (collections !== null) {
       getCollectionContents(col?.name)
     }
-  }, [collections.isLoading])
+  }, [collections])
 
   function handleDeleteItem(collectionName, itemId) {
     deleteCollectionContent(collectionName, itemId)
+  }
+
+  async function handleDelCol(collectionId) {
+    console.log("attempt delete")
+    await deleteCollection(collectionId)
+    navigate("/dashboard")
   }
 
 
@@ -50,10 +57,10 @@ export const CollectionItems = () => {
 
       <div className={Styles.ColConRowWrapper}>
         {
-          getColConStatus.isLoading === true ? (
+          colContents === null ? (
             <Loading />
           ) : getColConStatus.isError === false ? (
-            colContents === null ? <Loading /> : colContents.length === 0 ? (
+            colContents.length === 0 ? (
               <p>No items added to this collection yet</p>
             ) : (
               <>
@@ -62,7 +69,7 @@ export const CollectionItems = () => {
                     const propValueArray = []
                     const row = parseDateTimeInFormData(col.fields, r)
                     for (let i in row) {
-                    
+
                       propValueArray.push(<span key={i + index}><span><b>{i.toLocaleLowerCase()}:</b></span> <span>{row[i].toString()}</span></span>)
                     }
 
@@ -105,9 +112,15 @@ export const CollectionItems = () => {
       </div>
 
       <div>
-        <button className={Styles.DeleteBtn}>
-          <FaTrash /> delete
-        </button>
+        {
+          delColStatus?.isLoading ? (
+            <Loading size={20} />
+          ) : (
+            <button className={Styles.DeleteBtn} onClick={() => handleDelCol(col._id)}>
+              <FaTrash /> delete
+            </button>
+          )
+        }
       </div>
     </section >
   )

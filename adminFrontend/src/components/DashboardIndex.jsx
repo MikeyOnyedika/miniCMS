@@ -7,6 +7,7 @@ export const DashboardIndex = () => {
     const { getCollections } = useUserContentContext();
 
     useEffect(() => {
+        console.log("started trying to fetch collections")
         getCollections();
     }, [])
 

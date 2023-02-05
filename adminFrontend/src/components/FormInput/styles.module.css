@@ -19,6 +19,7 @@
 .FormGroup___radioGroup div{
     display: flex; 
     gap: 0.4rem;
+    align-items: flex-start;
 }
 
 .FormGroup label {

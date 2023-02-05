@@ -10,7 +10,7 @@ async function getDbCollections(req, res) {
 			return { config: template.config, 'created-at': template.createdAt, fields: template.fields, name: template.name, _id: template._id }
 		})
 
-		res.status(200).json({ success: true, data: { collections: [...templates] } })
+		res.status(200).json({ success: true, data: [...templates] })
 	} catch (err) {
 		res.status(404).json({ success: false, message: "Couldn't get collections from database" })
 	}
@@ -45,11 +45,9 @@ async function addCollection(req, res) {
 
 		res.json({
 			success: true, data: {
-				collection: {
-					name: modelTemplate.name,
-					fields: modelTemplate.fields,
-					config: modelTemplate.config
-				}
+				name: modelTemplate.name,
+				fields: modelTemplate.fields,
+				config: modelTemplate.config
 			}
 		})
 
@@ -70,6 +68,7 @@ async function addCollection(req, res) {
 async function deleteCollection(req, res) {
 	try {
 		const id = req.params.id
+		console.log(id)
 		let models = req.app.get("models")
 		const collectionTemplateToDelete = await Collection.findById(id)
 		if (collectionTemplateToDelete === null) {

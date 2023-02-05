@@ -32,11 +32,11 @@ export const EditCollectionItem = () => {
 
 
     useEffect(() => {
-        if (itemToEdit) {
+        if (itemToEdit && col) {
             // itemToEdit has to be destructured else most of the fields will be empty strings
-            generateFormInputs(template.fields, itemToEdit)
+            generateFormInputs(col.fields, itemToEdit)
         }
-    }, [itemToEdit])
+    }, [itemToEdit, col])
 
     async function handleFormSubmit(e) {
         e.preventDefault();
@@ -56,7 +56,7 @@ export const EditCollectionItem = () => {
 
             }
 
-            body[field] = fieldValue 
+            body[field] = fieldValue
 
         }
 

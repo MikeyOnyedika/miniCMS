@@ -10,7 +10,6 @@ import { useEffect } from 'react'
 import Styles from './styles.module.css'
 import { RequestState } from '../../utils/consts'
 import { FormGroup } from '../FormInput/styles.module.css'
-import { template } from '../../data/sampleCollectionTemplate'
 
 export const AddCollectionItem = () => {
   const { collectionId } = useParams();
@@ -21,7 +20,7 @@ export const AddCollectionItem = () => {
 
   useEffect(() => {
     if (col && formData === null) {
-      generateFormInputs(template.fields)
+      generateFormInputs(col.fields)
     }
   }, [col, formData])
 
