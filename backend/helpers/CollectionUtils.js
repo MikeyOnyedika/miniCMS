@@ -31,12 +31,16 @@ function parseToSchemaType(type) {
 
 // converts the fields array to an object
 function fieldsArrayToObj(fields){
+
 	const fieldsObj = {}
 	fields = [...fields]
 	fields.forEach(field => {
 		const fieldName = field.name
 		delete field.name
-		fieldsObj[fieldName] = {...field}  
+		// use the defaultValue to set the value of default value for that particular field
+		const defaultValue = field.defaultValue
+		delete field.defaultValue
+		fieldsObj[fieldName] = {...field, ['default']: defaultValue}  
 	})
 	return fieldsObj
 }
