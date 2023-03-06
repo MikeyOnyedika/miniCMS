@@ -1,20 +1,8 @@
 const { default: mongoose } = require("mongoose")
 const Collection = require("../models/collectionModel")
 
-function containsOnlyObjects(fields) {
-	// make sure the value for each property in the fields object is an object
-	const fieldProps = Object.keys(fields)
-	for (let prop of fieldProps) {
-		const propValue = fields[prop]
-		if (propValue instanceof Object === false) {
-			return false
-		}
-	}
-	return true
-}
-
 // takes a string value that specifies the type of data that goes in the field and returns the corresponding mongoose schema type
-function parseFieldType(type) {
+function parseToSchemaType(type) {
 	type = type.toLowerCase();
 	switch (type) {
 		case "string":
@@ -41,52 +29,67 @@ function parseFieldType(type) {
 	}
 }
 
-// checks if the individual field has the necessary values 
-function parseFields(fields) {
-	const parsedFieldsObj = {}
-	if (containsOnlyObjects(fields) === false) {
-		return "One or more provided fields are not valid objects"
-	}
-	const fieldsProps = Object.keys(fields)
+// converts the fields array to an object
+function fieldsArrayToObj(fields){
+	const fieldsObj = {}
+	fields = [...fields]
+	fields.forEach(field => {
+		const fieldName = field.name
+		delete field.name
+		fieldsObj[fieldName] = {...field}  
+	})
+	return fieldsObj
+}
 
-	for (let field of fieldsProps) {
-		// get the object value of that prop
-		const fieldValue = fields[field]
+// checks if the individual fields has the necessary values 
+function parseFields(fields) {
+	const parsedFields = []
+
+	for (let field of fields) {
 		const parsedFieldValue = {}
 
-		// check that field has a 'type' property
-		if (fieldValue.hasOwnProperty("type") === false) {
-			return "A field does not have a 'type' property, but this is required"
+		// check that field is a valid object
+		if (field instanceof Object === false) {
+			return `One or more fields is not a valid object`
 		}
+	
+		// check that field has a name property
+		if (field.hasOwnProperty('name') === false || field.name === ""|| typeof field.name !== "string"){			return `One or more fields do not have a valid 'name' set`
+		}
+		parsedFieldValue.name = field.name
 
+		// check field has a label property
+		if (field.hasOwnProperty("label") === false || field.label === "" || typeof field.label !== "string"){
+			return  `One or more fields do not have a valid value for 'label' `
+		}
+		parsedFieldValue.label = field.label
+
+		// check that field has a 'type' property
+		if (field.hasOwnProperty("type") === false || typeof field.type !== "string") {
+			return `${field.label} field does not have a valid value for 'type' `
+		}
 		// map the string representing the type to an actual mongoose schema type
-		parsedFieldValue.type = parseFieldType(fieldValue.type)
+		parsedFieldValue.type = parseToSchemaType(field.type)
+
+		if (field.hasOwnProperty("defaultValue") === false || field.defaultValue === ""){ 
+			return `${field.label} field does not have a valid value for 'defaultValue' `
+		}
+		parsedFieldValue.defaultValue = field.defaultValue
 
 		//  check for 'required' property
-		if (fieldValue.hasOwnProperty("required") === true) {
-			if (fieldValue.required === true || fieldValue.required === false) {
-				parsedFieldValue.required = fieldValue.required
-			} else {
-				return "A field has a 'required' property whose value is not a valid boolean value"
-			}
+		if (field.hasOwnProperty("required") === false || typeof field.required !== "boolean"){
+			return `${field.label} field does not have a valid value for 'required' `
 		}
+		parsedFieldValue.required = field.required
 
-		// check for 'unique' property
-		if (fieldValue.hasOwnProperty("unique") === true) {
-			if (fieldValue.unique === true || fieldValue.unique === false) {
-				parsedFieldValue.unique = fieldValue.unique
-			} else {
-				return "A field has a 'unique' property whose value is not a valid boolean value"
-			}
-		}
 
-		parsedFieldsObj[field] = {
-			...parsedFieldValue
-		}
+		// parse other properties which are specific to a type
+		//
 
+		parsedFields.push(parsedFieldValue)
 	}
 
-	return parsedFieldsObj
+	return parsedFields
 }
 
 
@@ -96,12 +99,13 @@ async function getContentCollectionsTemplates() {
 }
 
 // creates a model from a collection template provided
-function createModelFromTemplate({ collectionName, fields, config }) {
+function createModelFromTemplate({ name, fields, config }) {
+   fields = fieldsArrayToObj(fields)
 	const modelSchema = new mongoose.Schema(fields, {
-		timestamps: config.includeTimeStamps || true
+		timestamps: config.timestamps
 	})
 
-	return mongoose.model(collectionName, modelSchema)
+	return mongoose.model(name, modelSchema)
 }
 
 // gets the models for all the dynamic collections
@@ -109,13 +113,12 @@ async function getContentCollectionsModels() {
 	let templates = await getContentCollectionsTemplates();
 
 	if (typeof templates === "string") {
-		throw new Error("One or more templates from db is corrupt")
+		throw new Error("One or more templates from db has been tampered therefore corrupt")
 	}
 	const models = {}
-
 	for (let temp of templates) {
 		temp.fields = parseFields(temp.fields)
-		const model = createModelFromTemplate({ collectionName: temp.name, fields: temp.fields, config: temp.config })
+		const model = createModelFromTemplate({ name: temp.name, fields: temp.fields, config: temp.config })
 		models[temp.name] = model
 	}
 
@@ -125,7 +128,7 @@ async function getContentCollectionsModels() {
 
 async function loadCollectionModels(app) {
 	let success = false
-	// create database models from the collection templates and hold them in the models object which is then set as an express variable so it can be accessed from other places in our app
+	// create collection models from the templates and hold them in the models object which is then set as an express variable so it can be accessed from other places in our app
 	try {
 		//try garbage collecting the models before re-creating them afresh to update the dynamic collections
 		const allAppModels = Object.keys(mongoose.models)

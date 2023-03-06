@@ -13,8 +13,8 @@ import { FormGroup } from '../FormInput/styles.module.css'
 
 export const AddCollectionItem = () => {
   const { collectionId } = useParams();
-  const { collections, addStatusMessage, addCollectionContent, postColConStatus } = useUserContentContext()
-  const col = collections.collections.find(col => col._id === collectionId)
+  const { collections, addStatusMessage, addCollectionContent, addColConStatus } = useUserContentContext()
+  const col = collections.find(col => col._id === collectionId)
   const { formInputs, generateFormInputs, formData } = useCreateFormInputsFromTemplate();
   const submitBtnName = "submitBtn"
 
@@ -49,7 +49,7 @@ export const AddCollectionItem = () => {
 
     await addCollectionContent(col.name, body)
     // clear input fields once item is added
-    if (postColConStatus.isError === false && postColConStatus.errorMsg !== null ) {
+    if (addColConStatus.isError === false && addColConStatus.errorMsg !== null ) {
       for (let field in body) {
         form[field].value = ""
       }
@@ -77,8 +77,8 @@ export const AddCollectionItem = () => {
               <>
                 {formInputs}
                 <div className={FormGroup}>
-                  <input type="submit" name={submitBtnName} value={postColConStatus.isLoading === true ? "Loading ..." : "+ Create"}
-                    disabled={postColConStatus.isLoading === true ? true : false}
+                  <input type="submit" name={submitBtnName} value={addColConStatus.isLoading === true ? "Loading ..." : "+ Create"}
+                    disabled={addColConStatus.isLoading === true ? true : false}
                   />
                 </div>
               </>

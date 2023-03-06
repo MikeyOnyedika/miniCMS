@@ -19,12 +19,12 @@ async function getDbCollections(req, res) {
 async function addCollection(req, res) {
 	try {
 		// only permit frontend to be able to set some configs like timestamps. Which means not all sent config value will be passed to mongoose
-		if (!req.body.collectionName || !req.body.fields || Object.keys(req.body.fields).length === 0) {
+		if (!req.body.name || !req.body.fields || req.body.fields.length === 0) {
 			return res.status(400).json({ success: false, message: "Collection name or fields are missing" })
 		}
 
-		let { collectionName, fields, config } = req.body
-		// make sure fields is an object with field objects that can be used to make a schema for a model 
+		let { name, fields, config } = req.body
+		// make sure fields is an array with field objects that can be used to make a schema for a model 
 		const pFields = parseFields(fields)
 		// fields is a string if it's an error message
 		if (typeof pFields === "string") {
@@ -32,22 +32,23 @@ async function addCollection(req, res) {
 		}
 
 		// save the template used to create the collection's model. Use the fields instead of pFields since pFields is parsed to use types that are actual mongoose schema types
-		const modelTemplate = await Collection.create({
-			name: collectionName,
+		const collectionTemplate = await Collection.create({
+			name,
 			fields,
-			config: { timestamps: config.includeTimeStamps || true }
+			config: { timestamps: config.timestamps === undefined ? true: config.timestamps }
 		})
 
-		// reinflate models from their template for all dynamic collection, that should also include the newly added template
+		// reinflate models from collection template for all dynamic collection, that should also include the newly added template
 		if (await loadCollectionModels(req.app) === false) {
 			process.exit(1)
 		}
 
 		res.json({
-			success: true, data: {
-				name: modelTemplate.name,
-				fields: modelTemplate.fields,
-				config: modelTemplate.config
+			success: true, 
+			data: {
+				name: collectionTemplate.name,
+				fields: collectionTemplate.fields,
+				config: collectionTemplate.config
 			}
 		})
 

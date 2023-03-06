@@ -1,6 +1,6 @@
 import { FormInput } from '../components/FormInput';
 import { useState, useEffect, useCallback } from 'react';
-import { parseDateTime, parseDateTimeInFormData } from '../utils/formUtils';
+import {  parseDateTimeInFormData } from '../utils/formUtils';
 
 export function useCreateFormInputsFromTemplate() {
     const [formInputs, setFormInputs] = useState(null);
@@ -17,7 +17,6 @@ export function useCreateFormInputsFromTemplate() {
         } else {
             value = e.target.value
         }
-
 
         setFormData((prev) => {
             return { ...prev, [name]: value }
@@ -37,11 +36,12 @@ export function useCreateFormInputsFromTemplate() {
             fieldNames.map((fieldName) => {
                 // looks like this { formInputType: "url", required: true, unique: false }
                 const fieldValueObj = template[fieldName];
+					console.log("formInput Type: ", fieldValueObj.formInputType)
                 return (
                     <FormInput
                         key={fieldName}
                         labelName={fieldValueObj.label}
-                        inputType={fieldValueObj.formInputType}
+                        inputType={fieldValueObj.formInputType.trim()}
                         required={fieldValueObj.required}
                         placeholder={fieldValueObj.exampleValue}
                         options={fieldValueObj.options}

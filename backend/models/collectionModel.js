@@ -5,7 +5,7 @@ const collectionSchema = new Schema({
 		type: String,
 		unique: true
 	},
-	fields: {},
+	fields: [],
 	config: {}
 }, {
 	timestamps: true

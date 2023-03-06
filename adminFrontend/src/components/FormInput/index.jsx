@@ -10,7 +10,7 @@ export function FormInput({
     onChangeHandler,
     value
 }) {
-    switch (inputType) {
+    switch (inputType.trim()) {
         case 'text':
         case 'email':
         case 'password':
@@ -82,6 +82,7 @@ export function FormInput({
                 </div>
             );
         case 'radio':
+			 console.log("matching inputType:", inputType)
             return (
                 <div className={`${Styles.FormGroup} ${Styles.FormGroup___radioGroup}`}>
                     <label>{`${labelName}${required ? '*' : ''}`}</label>
