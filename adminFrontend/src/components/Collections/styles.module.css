@@ -17,6 +17,20 @@
     background-color: white;
 }
 
+.BtnNew{
+    color: var(--secondary-clr);
+    border: 2px solid var(--secondary-clr);
+    border-radius: 5px;
+    padding-inline: 1rem;
+    padding-block: 0.5rem;
+    text-transform: capitalize;
+}
+
+.BtnNew:hover{
+    color: var(--primary-clr);
+    background: var(--secondary-clr);
+}
+
 .Collections {
     display: flex;
     gap: 1rem;

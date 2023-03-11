@@ -125,17 +125,32 @@
 }
 
 
-
-
+.BtnGroup {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    font-size: 1rem;
+}
 
 .DeleteBtn {
     color: var(--error-clr-outline);
     outline: solid var(--error-clr) 2px;
     background-color: var(--primary-clr);
-    font-size: 1rem;
 }
 
 .DeleteBtn:hover {
     color: var(--primary-clr);
     background-color: var(--error-clr-outline);
+}
+
+.EditBtn {
+    padding-inline: 1rem;
+    padding-block: 0.5rem;
+    color: var(--secondary-clr);
+    outline: solid var(--secondary-clr) 2px;
+    background-color: var(--primary-clr);
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }

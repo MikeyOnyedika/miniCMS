@@ -33,7 +33,7 @@ export const CollectionItems = () => {
   async function handleDelCol(collectionId) {
     console.log("attempt delete")
     await deleteCollection(collectionId)
-    navigate("/dashboard")
+    navigate("/dashboard/collections")
   }
 
 
@@ -41,7 +41,7 @@ export const CollectionItems = () => {
     outlet || <section className={Styles.Wrapper}>
       <header>
         <div>
-          <BackButton to={"/dashboard"} />
+          <BackButton to={"/dashboard/collections"} />
           <h2>
             {
               col?.name ? capitalize(col.name) : <Loading size={20} />
@@ -49,7 +49,7 @@ export const CollectionItems = () => {
           </h2>
         </div>
         <Link className={Styles.CreateBtn}
-          to={col?.name ? `/dashboard/${col._id}/new` : '#'}
+          to={col?.name ? `/dashboard/collections/${col._id}/new` : '#'}
         >
           <FaPlus /> new
         </Link>
@@ -65,12 +65,20 @@ export const CollectionItems = () => {
             ) : (
               <>
                 {
-                  colContents.map((r, index) => {
+                  colContents.map((row, index) => {
                     const propValueArray = []
-                    const row = parseDateTimeInFormData(col.fields, r)
-                    for (let i in row) {
-
-                      propValueArray.push(<span key={i + index}><span><b>{i.toLocaleLowerCase()}:</b></span> <span>{row[i].toString()}</span></span>)
+                    const parsedRow = parseDateTimeInFormData(col.fields, row)
+                    for (let prop in parsedRow) {
+                      propValueArray.push(
+                        <span key={prop + index}>
+                          <span>
+                            <b>{prop.toLocaleLowerCase()}:</b>
+                          </span>
+                          <span>
+                            {parsedRow[prop].toString()}
+                          </span>
+                        </span>
+                      )
                     }
 
                     return (
@@ -79,7 +87,7 @@ export const CollectionItems = () => {
                         <div className={Styles.ColConRow__SettingsPanelWrapper}>
                           <div className={Styles.SettingsPanelWrapper__Background}></div>
                           <div className={Styles.SettingsPanelWrapper__Panel}>
-                            <Link to={`/dashboard/${col._id}/${row._id}`}>
+                            <Link to={`/dashboard/collections/${col._id}/edit/${parsedRow._id}`}>
                               <IconContext.Provider value={{ className: Styles.ColEditBtn }}>
                                 {
                                   <FaEdit />
@@ -91,7 +99,7 @@ export const CollectionItems = () => {
                                 delColConStatus.isLoading ? (
                                   <Loading size={20} />
                                 ) : (
-                                  <FaTrash onClick={() => handleDeleteItem(col.name, row._id)} />
+                                  <FaTrash onClick={() => handleDeleteItem(col.name, parsedRow._id)} />
                                 )
                               }
                             </IconContext.Provider>
@@ -111,7 +119,10 @@ export const CollectionItems = () => {
         }
       </div>
 
-      <div>
+      <div className={Styles.BtnGroup}>
+        <Link to={`/dashboard/collections/edit/${collectionId}`} className={Styles.EditBtn}>
+         <FaEdit/> Edit
+        </Link>
         {
           delColStatus?.isLoading ? (
             <Loading size={20} />

@@ -25,19 +25,25 @@ export function parseDateTime(dateTimeString) {
 }
 
 export function parseDateTimeInFormData(template, formData) {
-    const fieldNames = Object.keys(template)
     const fData = { ...formData }
-    for (let fName of fieldNames) {
-        if (template[fName].formInputType === "datetime-local" || template[fName].formInputType === "date") {
+    template.forEach(field => {
+        if (field.type === "date") {
+            const fName = field.name
             if (fData[fName] === null || fData[fName] === undefined) {
                 fData[fName] = ""
             } else {
                 fData[fName] = parseDateTime(fData[fName])
             }
         }
+    })
+
+    if (fData['created-at']) {
+        fData['created-at'] = parseDateTime(fData['created-at'])
     }
-    fData['created-at'] = parseDateTime(fData['created-at'])
-    fData['last-update-at'] = parseDateTime(fData['last-update-at'])
+
+    if (fData['last-update-at']) {
+        fData['last-update-at'] = parseDateTime(fData['last-update-at'])
+    }
     return fData
 }
 

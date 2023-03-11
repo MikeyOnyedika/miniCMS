@@ -1,23 +1,18 @@
 .Wrapper {
-    padding: 0.5rem;
-    color: var(--accent-clr);
     width: 2rem;
     height: 2rem;
-    border-radius: 50%;
-    transition: all 50ms ease-in-out;
-    border-width: 2px;
-    outline-style: solid;
-    outline-width: 0px;
-    /* border-style: solid; */
 }   
 
-.Wrapper:hover {
+.Arrow:hover {
     outline-color: var(--accent-clr);
     outline-width: 2px;
 }
 
 .Arrow{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    outline-style: solid;
+    outline-width: 1px;
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    padding: 0.5rem;
 }

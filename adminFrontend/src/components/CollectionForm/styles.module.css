@@ -1,0 +1,16 @@
+h2{
+    text-transform: capitalize;
+}
+h2 span{
+    text-transform: lowercase;
+    color: var(--accent-clr);
+}
+
+.Form{
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    max-width: 1000px;
+}

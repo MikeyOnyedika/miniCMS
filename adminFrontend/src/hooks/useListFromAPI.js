@@ -89,7 +89,7 @@ export function useListFromAPI(baseUrl, addStatusMessage, token) {
             dispatch({ type: ACTION_TYPE.BEGIN_GET_CONTENT })
             const response = await get(colName)
             if (response.success === true) {
-                console.log("response: ", response.data)
+                // console.log("response: ", response.data)
                 dispatch({ type: ACTION_TYPE.GET_CONTENT_SUCCESS, payload: response.data })
             } else {
                 dispatch({ type: ACTION_TYPE.GET_CONTENT_FAILED, payload: response.message })
@@ -104,8 +104,10 @@ export function useListFromAPI(baseUrl, addStatusMessage, token) {
     async function addItemToList(colName, body) {
         try {
             dispatch({ type: ACTION_TYPE.BEGIN_POST_CONTENT })
+            console.log("reqbody: ", body)
             const response = await post(colName, body)
             if (response.success === true) {
+                console.log("added item: ", response.data)
                 dispatch({ type: ACTION_TYPE.POST_CONTENT_SUCCESS, payload: response.data })
                 addStatusMessage({ status: RequestState.SUCCESS, message: "Successfully added new item!" })
             } else {

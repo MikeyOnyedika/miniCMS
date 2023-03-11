@@ -6,8 +6,6 @@ import Loading from '../Loading'
 
 export const Collections = () => {
   const { collections, getColStatus } = useUserContentContext()
-  console.log("collections: ", collections)
-  console.log("getColStatus: ", getColStatus)
 
   const outlet = useOutlet()
 
@@ -18,7 +16,7 @@ export const Collections = () => {
           <header className={Styles.Header}>
             <h2>Collections</h2>
             <div>
-              <button> + new</button>
+              <Link to={'/dashboard/collections/new'} className={Styles.BtnNew}> + new</Link>
             </div>
           </header>
 
@@ -32,7 +30,7 @@ export const Collections = () => {
                     <p>No items added to this collection yet</p>
                   ) : (collections.map(col => {
                     return (
-                      <Link to={`/dashboard/${col._id}`} className={Styles.CollectionBtn} key={col._id}>
+                      <Link to={`/dashboard/collections/${col._id}`} className={Styles.CollectionBtn} key={col._id}>
                         <p>{capitalize(col.name)}</p>
                       </Link >
                     )

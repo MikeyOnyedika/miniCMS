@@ -9,9 +9,8 @@ import PageNotFound from './pages/PageNotFound';
 import LoadingScreen from './components/LoadingScreen';
 import ConditionalRoute from './components/ConditionalRoute';
 import { Collections } from './components/Collections'
-import { CreateCollection } from './components/CreateCollection'
-import { AddCollectionItem } from './components/AddCollectionItem'
-import { EditCollectionItem } from './components/EditCollectionItem';
+import { CollectionForm } from './components/CollectionForm'
+import { CollectionItemForm } from './components/CollectionItemForm'
 import { CollectionItems } from './components/CollectionItems'
 import { DashboardIndex } from './components/DashboardIndex'
 import { useUserContentContext } from './contexts/UserContentProvider';
@@ -39,16 +38,16 @@ function App() {
         {statusMessageQueue.map(sMessage => <StatusMessage key={sMessage.id} message={sMessage.message} status={sMessage.status} />)}
       </div>
       <Routes>
-        <Route path='/' element={(isCheckingToken === true || isTokenValid === TOKEN_STATE.NOT_SET_YET) ? <LoadingScreen /> : isTokenValid === TOKEN_STATE.VALID ? <Navigate to='/dashboard' /> : <Navigate to='/login' />} />
+        <Route path='/' element={(isCheckingToken === true || isTokenValid === TOKEN_STATE.NOT_SET_YET) ? <LoadingScreen /> : isTokenValid === TOKEN_STATE.VALID ? <Navigate to='/dashboard/collections' /> : <Navigate to='/login' />} />
 
         <Route path='/login' element={
           isCheckingToken === true ? <LoadingScreen /> : (
-            <ConditionalRoute renderIf={isTokenValid === TOKEN_STATE.INVALID} go={{ to: '/dashboard', if: isTokenValid === TOKEN_STATE.VALID }}>
+            <ConditionalRoute renderIf={isTokenValid === TOKEN_STATE.INVALID} go={{ to: '/dashboard/collections', if: isTokenValid === TOKEN_STATE.VALID }}>
               <Login />
             </ConditionalRoute>
           )} />
 
-        <Route path="/dashboard" element={
+        <Route path="/dashboard/collections" element={
           isCheckingToken === true ? <LoadingScreen /> : (
             <ConditionalRoute renderIf={isTokenValid === TOKEN_STATE.VALID}
               go={{ to: '/login', if: isTokenValid === TOKEN_STATE.INVALID }}
@@ -58,10 +57,12 @@ function App() {
         }>
           <Route path='' element={<DashboardIndex />}>
             <Route path='' element={<Collections />}>
-              <Route path='create' element={<CreateCollection />} />
+              <Route path='new' element={<CollectionForm />} />
+              <Route path='edit/:collectionId' element={<CollectionForm />} />
+
               <Route path=':collectionId' element={<CollectionItems />}>
-                <Route path="new" element={<AddCollectionItem />} />
-                <Route path=":itemId" element={<EditCollectionItem />} />
+                <Route path='new' element={<CollectionItemForm />} />
+                <Route path="edit/:itemId" element={<CollectionItemForm />} />
               </Route>
             </Route>
           </Route>

@@ -11,27 +11,15 @@ function parseToSchemaType(type) {
 			return mongoose.Schema.Types.Number
 		case "date":
 			return mongoose.Schema.Types.Date
-		case "buffer":
-			return mongoose.Schema.Types.Buffer
 		case "boolean":
 			return mongoose.Schema.Types.Boolean
-		case "objectid":
-			return mongoose.Schema.Types.ObjectId
-		case "array":
-		case "[]":
-			return mongoose.Schema.Types.Array
-		case "decimal128":
-			return mongoose.Schema.Types.Decimal128
-		case "mixed":
-			return mongoose.Schema.Types.Mixed
 		default:
 			throw new Error("'type' does not match any mongoose schema type")
 	}
 }
 
 // converts the fields array to an object
-function fieldsArrayToObj(fields){
-
+function fieldsArrayToObj(fields) {
 	const fieldsObj = {}
 	fields = [...fields]
 	fields.forEach(field => {
@@ -40,12 +28,13 @@ function fieldsArrayToObj(fields){
 		// use the defaultValue to set the value of default value for that particular field
 		const defaultValue = field.defaultValue
 		delete field.defaultValue
-		fieldsObj[fieldName] = {...field, ['default']: defaultValue}  
+		fieldsObj[fieldName] = { ...field, ['default']: defaultValue }
 	})
 	return fieldsObj
 }
 
-// checks if the individual fields has the necessary values 
+// convert fields to a format that can be used by the ORM/ODM to represent the fields of the collection
+// acts as a parser for the different content types and their expected properties
 function parseFields(fields) {
 	const parsedFields = []
 
@@ -56,15 +45,16 @@ function parseFields(fields) {
 		if (field instanceof Object === false) {
 			return `One or more fields is not a valid object`
 		}
-	
+
 		// check that field has a name property
-		if (field.hasOwnProperty('name') === false || field.name === ""|| typeof field.name !== "string"){			return `One or more fields do not have a valid 'name' set`
+		if (field.hasOwnProperty('name') === false || field.name === "" || typeof field.name !== "string") {
+			return `One or more fields do not have a valid 'name' set`
 		}
 		parsedFieldValue.name = field.name
 
 		// check field has a label property
-		if (field.hasOwnProperty("label") === false || field.label === "" || typeof field.label !== "string"){
-			return  `One or more fields do not have a valid value for 'label' `
+		if (field.hasOwnProperty("label") === false || field.label === "" || typeof field.label !== "string") {
+			return `One or more fields do not have a valid value for 'label' `
 		}
 		parsedFieldValue.label = field.label
 
@@ -75,25 +65,53 @@ function parseFields(fields) {
 		// map the string representing the type to an actual mongoose schema type
 		parsedFieldValue.type = parseToSchemaType(field.type)
 
-		if (field.hasOwnProperty("defaultValue") === false || field.defaultValue === ""){ 
-			return `${field.label} field does not have a valid value for 'defaultValue' `
-		}
-		parsedFieldValue.defaultValue = field.defaultValue
 
 		//  check for 'required' property
-		if (field.hasOwnProperty("required") === false || typeof field.required !== "boolean"){
+		if (field.hasOwnProperty("required") === false || typeof field.required !== "boolean") {
 			return `${field.label} field does not have a valid value for 'required' `
 		}
 		parsedFieldValue.required = field.required
 
 
 		// parse other properties which are specific to a type
-		//
+
+		// check for defaultValue property on 'string', 'number', 'boolean', 'date' types
+		// defaultValue is required when that field's value is not required. default value just serves as something to use instead of just having an empty value 
+		if (field.type === "string" || field.type === "number" || field.type === "boolean" || field.type === "date") {
+			if (!hasValidDefaultValue(field) && field.required === false) {
+				return `${field.label} field does not have a valid value for 'defaultValue' `
+			}
+			parsedFieldValue.defaultValue = field.defaultValue
+		}
+
+		// check for placeholder property on 'string' or 'number' type
+		if (field.type === "string" || field.type === "number") {
+			if (!hasValidPlaceholder(field)) {
+				return `${field.label} field does not have a valid value for 'placeholder' `
+			}
+			parsedFieldValue.placeholder = field.placeholder
+		}
 
 		parsedFields.push(parsedFieldValue)
 	}
 
 	return parsedFields
+}
+
+function hasValidDefaultValue(field) {
+	if (field.hasOwnProperty("defaultValue") === false || field.defaultValue === "") {
+		return false
+	} else {
+		return true
+	}
+}
+
+function hasValidPlaceholder(field) {
+	if (field.hasOwnProperty("placeholder") === false || field.placeholder === "") {
+		return false
+	} else {
+		return true
+	}
 }
 
 
@@ -104,7 +122,7 @@ async function getContentCollectionsTemplates() {
 
 // creates a model from a collection template provided
 function createModelFromTemplate({ name, fields, config }) {
-   fields = fieldsArrayToObj(fields)
+	fields = fieldsArrayToObj(fields)
 	const modelSchema = new mongoose.Schema(fields, {
 		timestamps: config.timestamps
 	})
@@ -152,6 +170,7 @@ async function loadCollectionModels(app) {
 	return success
 }
 
+// not used yet
 function toKebabCase(spacedText) {
 	return spacedText.toLowerCase().replace(/[ ]+/g, "-")
 }
@@ -166,8 +185,8 @@ function formatCollectionItem(item) {
 
 	modifiedItem['created-at'] = createdAt
 	modifiedItem['last-update-at'] = lastUpdateAt
-	
-	return modifiedItem 
+
+	return modifiedItem
 }
 
 module.exports = { formatCollectionItem, parseFields, createModelFromTemplate, getContentCollectionsTemplates, getContentCollectionsModels, loadCollectionModels }

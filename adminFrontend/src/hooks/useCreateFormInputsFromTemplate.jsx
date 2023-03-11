@@ -1,11 +1,14 @@
-import { FormInput } from '../components/FormInput';
 import { useState, useEffect, useCallback } from 'react';
-import {  parseDateTimeInFormData } from '../utils/formUtils';
+import { parseDateTimeInFormData } from '../utils/formUtils';
+import { TextInput } from '../components/FormInput/TextInput'
+import { NumberInput } from '../components/FormInput/NumberInput'
+import { CheckBoxInput } from '../components/FormInput/CheckBoxInput';
+import { DateInput } from '../components/FormInput/DateInput'
 
 export function useCreateFormInputsFromTemplate() {
     const [formInputs, setFormInputs] = useState(null);
     const [formData, setFormData] = useState(null)
-    const [template, setTemplate] = useState(null)
+    const [fields, setFields] = useState(null)
 
     // changes start here
     function handleOnChange(e) {
@@ -29,47 +32,78 @@ export function useCreateFormInputsFromTemplate() {
         }
     }, [formData])
 
-
     const createFormInputs = useCallback(() => {
-        const fieldNames = Object.keys(template)
         setFormInputs(
-            fieldNames.map((fieldName) => {
-                // looks like this { formInputType: "url", required: true, unique: false }
-                const fieldValueObj = template[fieldName];
-					console.log("formInput Type: ", fieldValueObj.formInputType)
-                return (
-                    <FormInput
-                        key={fieldName}
-                        labelName={fieldValueObj.label}
-                        inputType={fieldValueObj.formInputType.trim()}
-                        required={fieldValueObj.required}
-                        placeholder={fieldValueObj.exampleValue}
-                        options={fieldValueObj.options}
-                        fieldName={fieldName}
-                        onChangeHandler={handleOnChange}
-                        value={formData ? formData[fieldName] : ""}
-                    />
-                );
+            fields.map((field, index) => {
+                switch (field.type) {
+                    case 'string':
+                        return (
+                            <TextInput
+                                key={field.name + index}
+                                label={field.label}
+                                required={field.required}
+                                placeholder={field.placeholder}
+                                name={field.name}
+                                onChangeHandler={handleOnChange}
+                                value={formData ? formData[field.name] : ""}
+                            />
+
+                        )
+                    case 'number':
+                        return (
+                            <NumberInput
+                                key={field.name + index}
+                                label={field.label}
+                                required={field.required}
+                                placeholder={field.placeholder}
+                                name={field.name}
+                                onChangeHandler={handleOnChange}
+                                value={formData ? formData[field.name] : ""}
+                            />
+                        )
+                    case "boolean":
+                        return (
+                            <CheckBoxInput
+                                key={field.name + index}
+                                label={field.label}
+                                required={field.required}
+                                name={field.name}
+                                onChangeHandler={handleOnChange}
+                                value={formData ? formData[field.name] : ""}
+                            />
+                        )
+                    case "date":
+                        return (
+                            <DateInput
+                                key={field.name + index}
+                                label={field.label}
+                                required={field.required}
+                                name={field.name}
+                                onChangeHandler={handleOnChange}
+                                value={formData ? formData[field.name] : ""}
+                            />
+                        )
+                    default:
+                        throw new Error("No matching content type")
+                }
             })
         )
+    }, [fields, formData])
 
-    }, [template, formData])
-
-    function generateFormInputs(template, existingFormData) {
-        const fieldNames = Object.keys(template);
-        setTemplate(template)
+    function generateFormInputs(fields, existingFormData) {
+        setFields(fields)
         let initFormData = existingFormData || {}
         // do the looping only if the object is empty
         if (Object.keys(initFormData).length === 0) {
-            for (let fName of fieldNames) {
-                initFormData[fName] = ""
-            }
+            fields.forEach(field => {
+                initFormData[field.name] = ""
+            })
         } else {
-            // parse the datetime-local string returned from the database so that the appropriate form input can use it
-            initFormData = parseDateTimeInFormData(template, initFormData)
+            // parse the datetime-local or date string returned from the database so that the appropriate form input can use it since rows of data may have a timestamp like created-at
+            initFormData = parseDateTimeInFormData(fields, initFormData)
         }
         setFormData(initFormData)
     }
 
-    return { formInputs, generateFormInputs, formData }
+    return { formInputs, generateFormInputs, formData, setFormData }
 }
