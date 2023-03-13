@@ -3,45 +3,46 @@ import { useCreateFormInputsFromTemplate } from "../../../../hooks/useCreateForm
 import Styles from './styles.module.css'
 
 export const Field = ({ updateFieldsData, data }) => {
-    const { formData, setFormData, formInputs, generateFormInputs } = useCreateFormInputsFromTemplate()
+    const { formData, formInputs, generateFormInputs } = useCreateFormInputsFromTemplate()
 
     useEffect(() => {
-        updateFieldsData((prev) => {
-            // const appropriateField = prev.find((field) => field.name ===  )
+        // runs once to render fields with their initial data
+        if (data != null && formData == null) {
+            generateFormInputs([
+                {
+                    name: "name",
+                    label: "Name",
+                    required: true,
+                    type: "string",
+                    placeholder: "",
+                },
+                {
+                    name: "label",
+                    label: "Label",
+                    required: true,
+                    type: "string",
+                    placeholder: "",
+                }
+            ], data)
+        }
+    }, [data])
 
-            // make a copy of the array
-            const fieldsCopy = [...prev]
 
-       //    find a reference to the appropriate field from the fields copy
-           // const appropriateField = fieldsCopy.find((field) => field._id  === formData._id)
-
-   //         return [...prev, {  }]
-        })
+    useEffect(() => {
+        if (formData != null) {
+            updateFieldsData((prev) => {
+                //  have add an extra _id property on a field to be used to identify a field
+                return prev.map((field) => {
+                    if (field._id === formData._id) {
+                        return { ...formData }
+                    } else {
+                        return field
+                    }
+                })
+            })
+        }
     }, [formData])
 
-    useEffect(() => {
-        console.log("field form data: ", formData)
-    }, [formData])
-
-
-    useEffect(() => {
-        generateFormInputs([
-            {
-                name: "name",
-                label: "Name",
-                required: true,
-                type: "string",
-                placeholder: "",
-            },
-            {
-                name: "label",
-                label: "Label",
-                required: true,
-                type: "string",
-                placeholder: "",
-            }
-        ])
-    }, [])
 
     return (
         <div className={Styles.Wrapper}>

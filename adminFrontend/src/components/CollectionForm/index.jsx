@@ -37,6 +37,7 @@ export const CollectionForm = () => {
   async function handleFormSubmit(e) {
     e.preventDefault()
     // console.log(formData)
+    console.log(formData)
   }
 
 
