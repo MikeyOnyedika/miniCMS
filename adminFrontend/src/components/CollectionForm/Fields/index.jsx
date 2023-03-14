@@ -26,20 +26,9 @@ export const Fields = ({ updateOverallFormData, fields }) => {
     function addField() {
         // add a new field object which will map to a new field input
         setFormData(prev => {
-            return [...prev, { _id: uuidv4(), name: "", label: "" }]
+            return [...prev, { _id: uuidv4(), name: "", label: "", required: false, type: "", placeholder: "" }]
         })
     }
-
-
-
-
-
-    // updating overall form data using the local form data whenever the local form data changes
-    // useEffect(() => {
-    //     updateOverallFormData((prev) => {
-    //         return { ...prev, fields: formData }
-    //     })
-    // }, [formData])
 
     return (
         <section className={Styles.SectionWrapper}>

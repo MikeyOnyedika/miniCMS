@@ -14,15 +14,41 @@ export const Field = ({ updateFieldsData, data }) => {
                     label: "Name",
                     required: true,
                     type: "string",
-                    placeholder: "",
+                    placeholder: "title",
                 },
                 {
                     name: "label",
                     label: "Label",
                     required: true,
                     type: "string",
-                    placeholder: "",
-                }
+                    placeholder: "Title",
+                },
+                {
+                    name: "required",
+                    label: "Required",
+                    required: true,
+                    type: "boolean",
+                },
+                {
+                    name: "type",
+                    label: "Content Type",
+                    required: true,
+                    type: "drop-down-list",
+                    options: [
+                        { value: "", label: "Select a conent type" },
+                        { value: "string", label: "String" },
+                        { value: "date", label: "Date" },
+                        { value: "number", label: "Number" },
+                        { value: "boolean", label: "Boolean" },
+                    ]
+                },
+                {
+                    name: "placeholder",
+                    label: "Placeholder Text",
+                    required: true,
+                    type: "string",
+                    placeholder: "placeholder text",
+                },
             ], data)
         }
     }, [data])
@@ -46,7 +72,10 @@ export const Field = ({ updateFieldsData, data }) => {
 
     return (
         <div className={Styles.Wrapper}>
-            {formInputs}
+            <div className={Styles.Field}>
+                {formInputs}
+            </div>
+            <div className={Styles.Line}></div>
         </div>
     )
 }

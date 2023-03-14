@@ -1,4 +1,22 @@
-.Wrapper{
+.Wrapper {
     display: flex;
+    flex-direction: column;
     gap: 1rem;
+}
+
+.Field {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+/* .Field>div {
+   flex-basis: 1;
+} */
+
+.Line {
+    height: 0.2rem;
+    width: 100%;
+    background-color: var(--secondary-clr-light);
 }

@@ -4,12 +4,14 @@ import { useEffect } from "react";
 
 export const DashboardIndex = () => {
 
-    const { getCollections } = useUserContentContext();
+    const { getCollections, collections } = useUserContentContext();
 
     useEffect(() => {
-        console.log("started trying to fetch collections")
-        getCollections();
-    }, [])
+        if (collections == null) {
+            console.log("fetching collections ")
+            getCollections();
+        }
+    }, [collections])
 
 
     return (

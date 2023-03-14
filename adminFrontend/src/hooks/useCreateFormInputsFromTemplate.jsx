@@ -4,6 +4,7 @@ import { TextInput } from '../components/FormInput/TextInput'
 import { NumberInput } from '../components/FormInput/NumberInput'
 import { CheckBoxInput } from '../components/FormInput/CheckBoxInput';
 import { DateInput } from '../components/FormInput/DateInput'
+import { DropDownListInput } from '../components/FormInput/DropDownListInput';
 
 export function useCreateFormInputsFromTemplate() {
     const [formInputs, setFormInputs] = useState(null);
@@ -83,6 +84,19 @@ export function useCreateFormInputsFromTemplate() {
                                 value={formData ? formData[field.name] : ""}
                             />
                         )
+                    case "drop-down-list":
+                        return (
+                            <DropDownListInput
+                                key={field.name + index}
+                                label={field.label}
+                                required={field.required}
+                                name={field.name}
+                                onChangeHandler={handleOnChange}
+                                options={field.options}
+                                value={formData ? formData[field.name] : ""}
+                            />
+                        )
+
                     default:
                         throw new Error("No matching content type")
                 }

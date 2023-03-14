@@ -25,11 +25,18 @@ export const CollectionItemForm = () => {
 
 
   const { collections, addStatusMessage, addCollectionContent, updateCollectionContent, addColConStatus, updateColConStatus, colContents } = useUserContentContext()
-  const col = collections.find(col => col._id === collectionId)
+  const [col, setCol] = useState(null)
+
   const { formInputs, generateFormInputs, formData, setFormData } = useCreateFormInputsFromTemplate();
   const submitBtnName = "submitBtn"
 
   const [itemToEdit, setItemToEdit] = useState(null)
+
+  useEffect(() => {
+    if (collections instanceof Array) {
+      setCol(collections.find(col => col._id === collectionId))
+    }
+  }, [collections])
 
   useEffect(() => {
     if (path === "new") {

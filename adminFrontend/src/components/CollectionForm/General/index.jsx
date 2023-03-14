@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import Styles from '../Config/styles.module.css'
 
 export const General = ({ updateOverallFormData, name }) => {
-    const { formInputs, generateFormInputs, formData, setFormData } = useCreateFormInputsFromTemplate()
+    const { formInputs, generateFormInputs, formData } = useCreateFormInputsFromTemplate()
 
     // updating overall form data using the local form data whenever the local form data changes
     useEffect(() => {
@@ -12,7 +12,7 @@ export const General = ({ updateOverallFormData, name }) => {
         })
 
         // runs once to generate forminputs while setting their initial state
-        if (name && formData === null) {
+        if (name != null && formData === null) {
             generateFormInputs([
                 {
                     name: "name",

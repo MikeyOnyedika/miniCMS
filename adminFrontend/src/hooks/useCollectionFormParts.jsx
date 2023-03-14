@@ -9,7 +9,7 @@ export const useCollectionFormParts = () => {
     const [formParts, setFormParts] = useState([])
 
     useEffect(() => {
-        if (formData.config && formData.name && formData.fields) {
+        if (formData.config != null && formData.name != null && formData.fields != null) {
             setFormParts([
                 <General updateOverallFormData={setFormData} name={formData.name} />,
                 <Fields updateOverallFormData={setFormData} fields={formData.fields} />,
@@ -19,19 +19,22 @@ export const useCollectionFormParts = () => {
     }, [formData])
 
     function generateFormParts(existingCollectionData) {
-        const initFormData = existingCollectionData || {}
+        let initFormData = existingCollectionData || {}
         if (Object.keys(initFormData).length === 0) {
             initFormData.name = ""
             initFormData.fields = []
             initFormData.config = { timestamps: false }
+
         }
-        // include an _id property to identify each field
-        const initFormDataWithIdForFields = {
-            ...initFormData, fields: initFormData.fields.map(field => {
-                return { _id: uuidv4(), ...field }
-            })
+        if (initFormData.fields.length > 0) {
+            // include an _id property to identify each field
+            initFormData = {
+                ...initFormData, fields: initFormData.fields.map(field => {
+                    return { _id: uuidv4(), ...field }
+                })
+            }
         }
-        setFormData(initFormDataWithIdForFields)
+        setFormData(initFormData)
     }
 
     return {
