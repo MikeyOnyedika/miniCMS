@@ -1,3 +1,4 @@
+import React from 'react'
 import { useEffect, useState } from "react"
 import Styles from '../Config/styles.module.css'
 import { Field } from "./Field"
@@ -26,7 +27,7 @@ export const Fields = ({ updateOverallFormData, fields }) => {
     function addField() {
         // add a new field object which will map to a new field input
         setFormData(prev => {
-            return [...prev, { _id: uuidv4(), name: "", label: "", required: false, type: "", placeholder: "" }]
+            return [...prev, { _id: uuidv4(), name: "", label: "", required: false, type: "", placeholder: "", defaultValue: "" }]
         })
     }
 

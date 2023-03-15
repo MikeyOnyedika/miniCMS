@@ -7,10 +7,11 @@ export const TextInput = ({
     placeholder,
     name,
     onChangeHandler,
-    value
+    value,
+    hidden
 }) => {
     return (
-        <div className={`${BaseStyles.FormGroup} ${BaseStyles.FormGroup___text}`}>
+        <div className={`${BaseStyles.FormGroup} ${BaseStyles.FormGroup___text} ${hidden === true ? 'hidden' : ''}`}>
             <label htmlFor={name}>{`${label}${required ? '*' : ''}`}</label>
             <input
                 type={inputType}

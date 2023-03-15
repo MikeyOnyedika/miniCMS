@@ -41,8 +41,6 @@ export const CollectionForm = () => {
   }
 
 
-  const name = "Project"
-
   return (
     <section className={Wrapper}>
       <header>
@@ -55,14 +53,14 @@ export const CollectionForm = () => {
                   <>
                     create new Collection: {" "}
                   </>
-                  <span>{name}</span>
+                  <span>{formData.name}</span>
                 </>
               ) : (
                 <>
                   <>
                     edit collection: {" "}
                   </>
-                  <span>{name}</span>
+                  <span>{formData.name}</span>
                 </>
               )
             }
@@ -72,7 +70,7 @@ export const CollectionForm = () => {
 
       <div className={Styles.FormWrapper}>
         <form onSubmit={handleFormSubmit} className={Styles.Form}>
-          {formParts}
+          {formParts?.map((formPart, index) => <React.Fragment key={index}>{formPart}</React.Fragment>)}
 
           <section className={Styles.Form__section}>
             <div>

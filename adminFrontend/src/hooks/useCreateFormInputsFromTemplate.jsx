@@ -10,11 +10,16 @@ export function useCreateFormInputsFromTemplate() {
     const [formInputs, setFormInputs] = useState(null);
     const [formData, setFormData] = useState(null)
     const [fields, setFields] = useState(null)
+    const [lastUpdatedInput, setLastUpdatedInput] = useState(null)
 
     // changes start here
     function handleOnChange(e) {
         const name = e.target.name;
         let value
+        // make sure we update the lastUpdatedInput only when the last updated input actually becomes a different value and not just whenever formData changes
+        if (lastUpdatedInput !== name) {
+            setLastUpdatedInput(name)
+        }
 
         if (e.target.type === "checkbox" || e.target.type === "radio") {
             value = e.target.checked
@@ -47,6 +52,7 @@ export function useCreateFormInputsFromTemplate() {
                                 name={field.name}
                                 onChangeHandler={handleOnChange}
                                 value={formData ? formData[field.name] : ""}
+                                hidden={field.hidden || false}
                             />
 
                         )
@@ -119,5 +125,5 @@ export function useCreateFormInputsFromTemplate() {
         setFormData(initFormData)
     }
 
-    return { formInputs, generateFormInputs, formData, setFormData }
+    return { formInputs, generateFormInputs, formData, setFormData, lastUpdatedInput }
 }

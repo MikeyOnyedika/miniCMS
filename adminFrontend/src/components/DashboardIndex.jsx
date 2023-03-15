@@ -8,7 +8,6 @@ export const DashboardIndex = () => {
 
     useEffect(() => {
         if (collections == null) {
-            console.log("fetching collections ")
             getCollections();
         }
     }, [collections])

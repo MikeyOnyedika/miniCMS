@@ -160,6 +160,9 @@ button:hover {
     color: var(--secondary-clr);
 }
 
+.hidden{
+    display: none !important;
+}
 
 /* .btn--red {
     color: green;
