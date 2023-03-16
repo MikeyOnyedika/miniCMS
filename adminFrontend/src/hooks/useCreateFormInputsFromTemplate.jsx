@@ -23,6 +23,9 @@ export function useCreateFormInputsFromTemplate() {
 
         if (e.target.type === "checkbox" || e.target.type === "radio") {
             value = e.target.checked
+        } else if (e.target.type === "date") {
+            console.log("date value: ", e.target.value)
+            value = e.target.value ?? ""
         } else {
             value = e.target.value
         }

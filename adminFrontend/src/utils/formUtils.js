@@ -64,3 +64,53 @@ export function isEmailValid(email) {
         }
     }
 }
+
+export function checkObjectsEqual(objA, objB) {
+    if (objA instanceof Object === false || objA instanceof Object === false) {
+        throw new Error("Make sure both values are objects")
+    }
+    let objAKeys = Object.keys(objA)
+    let objBKeys = Object.keys(objB)
+
+    // if they don't have the same number of properties, they cannot be equal
+    if (objAKeys.length !== objBKeys.length) {
+        return false
+    }
+
+    // sort the arrays alphabetically
+    objAKeys.sort(function (a, b) {
+        const nameA = a.toLowerCase(), nameB = b.toLowerCase();
+        if (nameA < nameB) //sort string ascending
+            return -1;
+        if (nameA > nameB)
+            return 1;
+        return 0; //default return value (no sorting)
+    });
+
+    objBKeys.sort(function (a, b) {
+        const nameA = a.toLowerCase(), nameB = b.toLowerCase();
+        if (nameA < nameB) //sort string ascending
+            return -1;
+        if (nameA > nameB)
+            return 1;
+        return 0; //default return value (no sorting)
+    });
+
+    // since they have same number of properties, compare the property names and property values
+    for (let i = 0; i < objAKeys.length; i++) {
+        const propA = objAKeys[i]
+        const propB = objBKeys[i]
+        // console.log("propA: ", propA, "  propB: ", propB)
+        if (propA !== propB) {
+            return false
+        }
+
+        // console.log(`${propA}:  ${objA[propA]}`, "   ", `${propB}:  ${objB[propB]}`)
+        if (objA[propA] !== objB[propB]) {
+            return false
+        }
+    }
+    console.log('')
+    //  if everything passes, they are equal
+    return true
+}

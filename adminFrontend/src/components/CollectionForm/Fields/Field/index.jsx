@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { useCreateFormInputsFromTemplate } from "../../../../hooks/useCreateFormInputsFromTemplate"
 import Styles from './styles.module.css'
+import { checkObjectsEqual } from "../../../../utils/formUtils"
 
 export const Field = ({ updateFieldsData, data }) => {
     const { formData, formInputs, generateFormInputs, lastUpdatedInput } = useCreateFormInputsFromTemplate()
@@ -59,39 +60,47 @@ export const Field = ({ updateFieldsData, data }) => {
                     required: false,
                     type: "string",
                     placeholder: "enter default value",
-                    hidden: true
+                    hidden: false
                 },
             ], data)
         }
+
     }, [data, formData])
 
-
     useEffect(() => {
         if (formData != null) {
-            updateFieldsData((prev) => {
-                //  have add an extra _id property on a field to be used to identify a field
-                return prev.map((field) => {
-                    if (field._id === formData._id) {
-                        return { ...formData }
-                    } else {
-                        return field
-                    }
+            // only update the parent data if it's n0t the same as the form Data
+            if (checkObjectsEqual(formData, data) === false) {
+                // make sure the last updated property of this field  is 'type' 
+                if (lastUpdatedInput === "type") {
+                    generateFieldInputs(formData)
+                }
+                // console.log(checkObjectsEqual(formData, data))
+                // update the formData from the parent component 
+                console.log("do some update")
+                updateFieldsData((prev) => {
+                    // console.log("i")
+                    //  have add an extra _id property on a field to be used to identify a field
+                    return prev.map((field) => {
+                        if (field._id === formData._id) {
+                            return { ...formData }
+                        } else {
+                            return field
+                        }
+                    })
                 })
-            })
-        }
-
-    }, [formData])
-
-    useEffect(() => {
-        if (formData != null) {
-            // make sure the last updated property of this field  was 'type' 
-            // TODO: INFINITE RENDERING HERE. FIX IT
-            if (lastUpdatedInput === "type") {
-                generateFieldInputs(formData)
-                console.log(formData)
+            } else {
+                // console.log("they are equal, no update")
             }
         }
-    }, [lastUpdatedInput])
+    }, [lastUpdatedInput, formData, data])
+
+
+    useEffect(() => { console.log("data changed") }, [data])
+    useEffect(() => { console.log("formData changed") }, [formData])
+    useEffect(() => { console.log("lastUpdatedINput changed") }, [lastUpdatedInput])
+
+
 
     function generateFieldInputs(fData) {
         if (fData.type === "") {
@@ -128,7 +137,10 @@ export const Field = ({ updateFieldsData, data }) => {
                     name: "defaultValue",
                     label: "Default Value",
                     required: false,
-                    type: "date",
+                    type: "drop-down-list",
+                    options: [
+                        { value: "{CURRENT_TIMESTAMP}", label: "CURRENT_TIMESTAMP" }
+                    ],
                     hidden: false,
                 },
             ], fData)
@@ -156,10 +168,7 @@ export const Field = ({ updateFieldsData, data }) => {
                     return false
                 }
             })
-            // console.log(prev)
-            return prev
         })
-        // console.log(data)
     }
 
 
