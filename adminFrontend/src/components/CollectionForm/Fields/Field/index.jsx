@@ -69,7 +69,7 @@ export const Field = ({ updateFieldsData, data }) => {
 
     useEffect(() => {
         if (formData != null) {
-            // only update the parent data if it's n0t the same as the form Data
+            // only update the parent data if it's n0t the same as the form Data. I.e only if an actul prop in formData has a different value
             if (checkObjectsEqual(formData, data) === false) {
                 // make sure the last updated property of this field  is 'type' 
                 if (lastUpdatedInput === "type") {
@@ -94,13 +94,6 @@ export const Field = ({ updateFieldsData, data }) => {
             }
         }
     }, [lastUpdatedInput, formData, data])
-
-
-    useEffect(() => { console.log("data changed") }, [data])
-    useEffect(() => { console.log("formData changed") }, [formData])
-    useEffect(() => { console.log("lastUpdatedINput changed") }, [lastUpdatedInput])
-
-
 
     function generateFieldInputs(fData) {
         if (fData.type === "") {

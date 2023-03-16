@@ -100,17 +100,14 @@ export function checkObjectsEqual(objA, objB) {
     for (let i = 0; i < objAKeys.length; i++) {
         const propA = objAKeys[i]
         const propB = objBKeys[i]
-        // console.log("propA: ", propA, "  propB: ", propB)
         if (propA !== propB) {
             return false
         }
 
-        // console.log(`${propA}:  ${objA[propA]}`, "   ", `${propB}:  ${objB[propB]}`)
         if (objA[propA] !== objB[propB]) {
             return false
         }
     }
-    console.log('')
     //  if everything passes, they are equal
     return true
 }
