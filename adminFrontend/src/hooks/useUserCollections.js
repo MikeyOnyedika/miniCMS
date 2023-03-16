@@ -7,9 +7,13 @@ export function useUserCollections(baseUrl, addStatusMessage) {
 
     const { getListItems, deleteListItem, addItemToList, updateListItem, state } = useListFromAPI(baseUrl, addStatusMessage, token)
 
+    async function addCollection(body) {
+        return await addItemToList("", body)
+    }
+
     return {
         getCollections: getListItems,
-        addCollection: addItemToList,
+        addCollection,
         updateCollection: updateListItem,
         deleteCollection: deleteListItem,
         collections: state.primaryState,

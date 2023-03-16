@@ -5,8 +5,11 @@ import { useParams } from 'react-router-dom'
 import Styles from './styles.module.css'
 import { useCollectionFormParts } from '../../hooks/useCollectionFormParts'
 import { useUserContentContext } from '../../contexts/UserContentProvider'
+import { useNavigate } from 'react-router-dom'
+import { RequestState } from '../../utils/consts'
 
 export const CollectionForm = () => {
+  const navigate = useNavigate()
   const urlParams = useParams();
   let path;
 
@@ -16,10 +19,12 @@ export const CollectionForm = () => {
     path = urlParams.collectionId
   }
 
-  const { collections } = useUserContentContext()
+  const { collections, updateCollection, updateColStatus, addCollection, addColStatus, addStatusMessage } = useUserContentContext()
   const { formParts, formData, generateFormParts } = useCollectionFormParts()
 
   useEffect(() => {
+    console.log("collections: ", collections)
+
     if (path === "new") {
       generateFormParts()
     } else {
@@ -28,7 +33,7 @@ export const CollectionForm = () => {
         if (col != null) {
           generateFormParts(col)
         } else {
-          // TODO: STATUS OUT THAT COLLECTION DOES NOT EXIST AND GIVE US A 404
+          navigate("/404")
         }
       }
     }
@@ -37,7 +42,53 @@ export const CollectionForm = () => {
   async function handleFormSubmit(e) {
     e.preventDefault()
     // console.log(formData)
-    console.log(formData)
+
+    // validate inputs first
+    if (formData.name === "") {
+      addStatusMessage({ status: RequestState.FAILED, message: `Collection name is not provided` })
+      return;
+    }
+
+    if (formData.fields.length === 0) {
+      addStatusMessage({ status: RequestState.FAILED, message: `At least one field must be added to continue` })
+      return;
+    }
+
+    for (let field of formData.fields) {
+      // make sure the required properties are provided
+      const name = field.name;
+      const label = field.label;
+      const contentType = field.type
+
+      if (name === "") {
+        addStatusMessage({ status: RequestState.FAILED, message: `One of the fields does not have a valid value for 'Name'` })
+        return
+      }
+      if (label === "") {
+        addStatusMessage({ status: RequestState.FAILED, message: `One of the fields does not have a valid value for 'Label'` })
+        return
+      }
+      if (contentType === "") {
+        addStatusMessage({ status: RequestState.FAILED, message: `One of the fields does not have a valid value for 'Content Type'` })
+        return
+      }
+
+      // check for props specific to certain content types
+      if (contentType === "string") {
+        if (field.placeholder === "") {
+          addStatusMessage({ status: RequestState.FAILED, message: `One of the fields does not have a valid value for 'Placeholder'` })
+          return
+        }
+      }
+
+    }
+
+    // TODO: clear form inputs once new collection is added to database 
+    if (path === "new") {
+      await addCollection(formData)
+    } else {
+
+    }
   }
 
 

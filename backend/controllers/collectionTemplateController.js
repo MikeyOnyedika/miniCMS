@@ -35,7 +35,7 @@ async function addCollection(req, res) {
 		const collectionTemplate = await Collection.create({
 			name,
 			fields,
-			config: { timestamps: config.timestamps === undefined ? true: config.timestamps }
+			config: { timestamps: config.timestamps === undefined ? true : config.timestamps }
 		})
 
 		// reinflate models from collection template for all dynamic collection, that should also include the newly added template
@@ -43,13 +43,11 @@ async function addCollection(req, res) {
 			process.exit(1)
 		}
 
-		res.json({
-			success: true, 
-			data: {
-				name: collectionTemplate.name,
-				fields: collectionTemplate.fields,
-				config: collectionTemplate.config
-			}
+		const col = await Collection.findOne({ name })
+
+		res.status(201).json({
+			success: true,
+			data: col
 		})
 
 	} catch (err) {

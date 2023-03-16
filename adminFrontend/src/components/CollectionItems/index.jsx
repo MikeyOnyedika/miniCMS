@@ -23,6 +23,8 @@ export const CollectionItems = () => {
   useEffect(() => {
     if (collections !== null) {
       getCollectionContents(col?.name)
+    }else{
+      navigate("/404")
     }
   }, [collections])
 

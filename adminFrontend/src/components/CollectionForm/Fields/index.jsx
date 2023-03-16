@@ -36,7 +36,7 @@ export const Fields = ({ updateOverallFormData, fields }) => {
             <h3>Fields</h3>
             <div className={Styles.SectionWrapper__FormInputs}>
                 {formInputs}
-                <button onClick={addField}>
+                <button onClick={addField} type='button'>
                     Add New Field
                 </button>
             </div>
