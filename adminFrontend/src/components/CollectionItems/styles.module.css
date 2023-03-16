@@ -62,7 +62,7 @@
     border-radius: 1rem;
     transition: all 200ms ease-in-out;
     outline: solid var(--accent-clr-light) 2px;
-    max-width: 1000px;
+    max-width: 1240px;
     width: 100%;
 }
 

@@ -111,3 +111,36 @@ export function checkObjectsEqual(objA, objB) {
     //  if everything passes, they are equal
     return true
 }
+
+
+export function toCamelCase(text) {
+    // split the text into words
+    let words = text.split(" ")
+    // to continue camelCasing, there has to be a min of 2 words in the text that is space separated
+    if (words.length < 2) {
+        return text
+    }
+
+    // make sure the array is not a word and an empty string. that crashes the function
+    if (words.length === 2 && words[1] === ""){
+        return text
+    }
+
+    // separate the first word from the array of words and ensure it's lowercase
+    let firstWord = words.shift()
+
+    // capitalise the first letter of each word in the array
+    words = words.map((word) => {
+        // break word down to letters
+        const letters = word.split("")
+
+        // separate the first letter from the letters array and capitalise it
+        const firstLetter = letters.shift().toUpperCase()
+
+        // join all the letters into a single array and turn that array into a string
+        return [firstLetter, ...letters].join("")
+    })
+
+    //  join the first word and the remanining words into an array and turn that array into a string
+    return [firstWord, ...words].join("")
+}

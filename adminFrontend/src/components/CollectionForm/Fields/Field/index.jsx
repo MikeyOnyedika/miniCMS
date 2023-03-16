@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useCreateFormInputsFromTemplate } from "../../../../hooks/useCreateFormInputsFromTemplate"
 import Styles from './styles.module.css'
-import { checkObjectsEqual } from "../../../../utils/formUtils"
+import { checkObjectsEqual, toCamelCase } from "../../../../utils/formUtils"
 
 export const Field = ({ updateFieldsData, data }) => {
     const { formData, formInputs, generateFormInputs, lastUpdatedInput } = useCreateFormInputsFromTemplate()
@@ -33,36 +33,27 @@ export const Field = ({ updateFieldsData, data }) => {
             required: true,
             type: "drop-down-list",
             options: [
-                { value: "", label: "Select a conent type" },
+                { value: "", label: "Select a content type" },
                 { value: "string", label: "String" },
                 { value: "date", label: "Date" },
                 { value: "number", label: "Number" },
                 { value: "boolean", label: "Boolean" },
             ]
         },
-        {
-            name: "placeholder",
-            label: "Placeholder Text",
-            required: true,
-            type: "string",
-            placeholder: "placeholder text",
-        },
     ]
+
+    const placeholderInit = {
+        name: "placeholder",
+        label: "Placeholder Text",
+        required: true,
+        type: "string",
+        placeholder: "placeholder text",
+    }
 
     useEffect(() => {
         // runs once to render fields while also setting the initial value for formData through the generateFormInputs() 
         if (data != null && formData == null) {
-            generateFormInputs([
-                ...formInputsInit,
-                {
-                    name: "defaultValue",
-                    label: "Default Value",
-                    required: false,
-                    type: "string",
-                    placeholder: "enter default value",
-                    hidden: false
-                },
-            ], data)
+            generateFieldInputs(data)
         }
 
     }, [data, formData])
@@ -74,12 +65,13 @@ export const Field = ({ updateFieldsData, data }) => {
                 // make sure the last updated property of this field  is 'type' 
                 if (lastUpdatedInput === "type") {
                     generateFieldInputs(formData)
+                } else if (lastUpdatedInput === "name") {
+                    const nameInCamelCase = toCamelCase(formData.name)
+                    generateFieldInputs({ ...formData, name: nameInCamelCase })
                 }
-                // console.log(checkObjectsEqual(formData, data))
+
                 // update the formData from the parent component 
-                console.log("do some update")
                 updateFieldsData((prev) => {
-                    // console.log("i")
                     //  have add an extra _id property on a field to be used to identify a field
                     return prev.map((field) => {
                         if (field._id === formData._id) {
@@ -107,23 +99,26 @@ export const Field = ({ updateFieldsData, data }) => {
                     name: "defaultValue",
                     label: "Default Value",
                     required: false,
-                    type: "boolean",
-                    hidden: false
+                    type: "drop-down-list",
+                    options: [
+                        { value: "TRUE", label: "TRUE" },
+                        { value: "FALSE", label: "FALSE" }
+                    ],
                 },
             ], fData)
         } else if (fData.type === "string") {
             generateFormInputs([
                 ...formInputsInit,
+                placeholderInit,
                 {
                     name: "defaultValue",
                     label: "Default Value",
                     required: false,
                     type: "string",
-                    hidden: false,
                     placeholder: "some default value"
                 },
             ], fData)
-        } else if (formData.type === "date") {
+        } else if (fData.type === "date") {
             generateFormInputs([
                 ...formInputsInit,
                 {
@@ -132,21 +127,21 @@ export const Field = ({ updateFieldsData, data }) => {
                     required: false,
                     type: "drop-down-list",
                     options: [
-                        { value: "{CURRENT_TIMESTAMP}", label: "CURRENT_TIMESTAMP" }
+                        { value: "NONE", label: "NONE" },
+                        { value: "CURRENT_TIMESTAMP", label: "CURRENT_TIMESTAMP" }
                     ],
-                    hidden: false,
                 },
             ], fData)
         } else if (fData.type === "number") {
             generateFormInputs([
                 ...formInputsInit,
+                placeholderInit,
                 {
                     name: "defaultValue",
                     label: "Default Value",
                     required: false,
                     type: "number",
                     placeholder: "enter default number",
-                    hidden: false,
                 },
             ], fData)
         }

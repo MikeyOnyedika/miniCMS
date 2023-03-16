@@ -29,6 +29,7 @@
 
 .FormGroup___text input {
     width: 100%;
+    max-width: 100%;
 }
 
 .FormGroup input,
