@@ -6,7 +6,7 @@ function StatusMessage({ status, message }) {
 
   return (
     <div
-      className={`${Styles.Message}   ${status === RequestState.SUCCESS ? Styles.Message___success : Styles.Message___failed
+      className={`${Styles.Message}  ${status === RequestState.SUCCESS ? Styles.Message___success : Styles.Message___failed
         }`}
     >
       <p>{message}</p>
