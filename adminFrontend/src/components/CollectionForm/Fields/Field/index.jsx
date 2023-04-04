@@ -163,7 +163,7 @@ export const Field = ({ updateFieldsData, data }) => {
     return (
         <div className={Styles.Wrapper}>
             <div className={Styles.Field}>
-                <button onClick={removeField}>-</button>
+                <button onClick={removeField} type="button">-</button>
                 <div className={Styles.FieldInputs}>
                     {formInputs}
                 </div>

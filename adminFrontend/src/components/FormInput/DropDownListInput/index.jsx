@@ -7,8 +7,7 @@ export const DropDownListInput = ({
     onChangeHandler,
     options,
     value,
-}
-) => {
+}) => {
     return (
         <div className={`${BaseStyles.FormGroup} ${BaseStyles.FormGroup___text}`}>
             <label htmlFor={name}>{`${label}${required ? '*' : ''}`}</label>

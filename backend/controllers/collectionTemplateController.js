@@ -7,7 +7,7 @@ async function getDbCollections(req, res) {
 	try {
 		let templates = await getContentCollectionsTemplates();
 		templates = templates.map(template => {
-			return { config: template.config, 'created-at': template.createdAt, fields: template.fields, name: template.name, _id: template._id }
+			return { config: template.config, 'created-at': template.createdAt, fields: template.fields, name: template.name.toLowerCase(), _id: template._id }
 		})
 
 		res.status(200).json({ success: true, data: [...templates] })
@@ -24,8 +24,14 @@ async function addCollection(req, res) {
 		}
 
 		let { name, fields, config } = req.body
+
+		// convert name to lowercase because it is used as the name of the model and reference path whenever a document referencing is made
+		name = name.toLowerCase()
+
+		// get modelNames for the parseFields() from the app.get() expressjs variable
+		const modelNames = Object.keys(req.app.get('models'))
 		// make sure fields is an array with field objects that can be used to make a schema for a model 
-		const pFields = parseFields(fields)
+		const pFields = parseFields(modelNames, fields)
 		// fields is a string if it's an error message
 		if (typeof pFields === "string") {
 			return res.status(400).json({ success: false, message: pFields })
@@ -59,7 +65,7 @@ async function addCollection(req, res) {
 		} else {
 			message = err.message
 		}
-		res.status(500).json({ success: false, message })
+		res.status(400).json({ success: false, message })
 		//res.status(500).json({ success: false, message: "An error occured, couldn't complete request" })	
 	}
 }

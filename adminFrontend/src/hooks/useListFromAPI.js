@@ -94,8 +94,10 @@ export function useListFromAPI(baseUrl, addStatusMessage, token) {
                 dispatch({ type: ACTION_TYPE.GET_CONTENT_FAILED, payload: response.message })
                 addStatusMessage({ status: RequestState.FAILED, message: response.message })
             }
+            return response
         } catch (err) {
             addStatusMessage({ status: RequestState.FAILED, message: err })
+            return { success: RequestState.FAILED, message: err }
         }
     }
 
@@ -111,8 +113,10 @@ export function useListFromAPI(baseUrl, addStatusMessage, token) {
                 dispatch({ type: ACTION_TYPE.POST_CONTENT_FAILED, payload: response.message })
                 addStatusMessage({ status: RequestState.FAILED, message: response.message.toString() })
             }
+            return response
         } catch (err) {
             addStatusMessage({ status: RequestState.FAILED, message: err })
+            return { success: RequestState.FAILED, message: err }
         }
     }
 
@@ -127,8 +131,10 @@ export function useListFromAPI(baseUrl, addStatusMessage, token) {
                 dispatch({ type: ACTION_TYPE.UPDATE_CONTENT_FAILED, payload: response.message })
                 addStatusMessage({ status: RequestState.FAILED, message: response.message })
             }
+            return response
         } catch (err) {
             addStatusMessage({ status: RequestState.FAILED, message: err })
+            return { success: RequestState.FAILED, message: err }
         }
     }
 
@@ -143,8 +149,10 @@ export function useListFromAPI(baseUrl, addStatusMessage, token) {
                 dispatch({ type: ACTION_TYPE.DELETE_CONTENT_FAILED, payload: response.message })
                 addStatusMessage({ status: RequestState.FAILED, message: response.message.toString() })
             }
+            return response
         } catch (err) {
             addStatusMessage({ status: RequestState.FAILED, message: err })
+            return { success: RequestState.FAILED, message: err }
         }
     }
 

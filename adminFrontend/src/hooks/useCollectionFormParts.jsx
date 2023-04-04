@@ -24,7 +24,6 @@ export const useCollectionFormParts = () => {
             initFormData.name = ""
             initFormData.fields = []
             initFormData.config = { timestamps: false }
-
         }
         if (initFormData.fields.length > 0) {
             // include an _id property to identify each field
@@ -34,6 +33,7 @@ export const useCollectionFormParts = () => {
                 })
             }
         }
+
         setFormData(initFormData)
     }
 

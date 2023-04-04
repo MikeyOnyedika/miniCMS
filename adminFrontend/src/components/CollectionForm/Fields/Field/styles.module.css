@@ -9,10 +9,6 @@
     align-items: center;
 }
 
-.Field:hover {
-    /* background-color: var(--secondary-clr-light); */
-}
-
 .Field button {
     align-self: flex-start;
     width: fit-content;
@@ -23,7 +19,7 @@
 
 
 .Field:not(:hover) button {
-    display: none;
+    opacity: 0;
 }
 
 .FieldInputs {

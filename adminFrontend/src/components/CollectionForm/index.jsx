@@ -23,7 +23,6 @@ export const CollectionForm = () => {
   const { formParts, formData, generateFormParts } = useCollectionFormParts()
 
   useEffect(() => {
-    console.log("collections: ", collections)
 
     if (path === "new") {
       generateFormParts()
@@ -80,12 +79,18 @@ export const CollectionForm = () => {
           return
         }
       }
-
     }
 
     // TODO: clear form inputs once new collection is added to database 
     if (path === "new") {
-      await addCollection(formData)
+      const response = await addCollection(formData)
+      console.log(response)
+      if (response.success === true) {
+        console.log("Ressetting inputs")
+        // TODO: FIND OUT what populates formData again after it is cleared
+        // TODO: why doesn't this clear the input fields????!!!   
+        generateFormParts()
+      }
     } else {
 
     }

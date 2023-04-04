@@ -1,5 +1,5 @@
 const { formatCollectionItem } = require("../helpers/CollectionUtils")
-const { getAppropriateModel } = require("../helpers/ContentCollectionUtils")
+const { getAppropriateModel, getReferenceFieldsInModel } = require("../helpers/ContentCollectionUtils")
 //these controllers provide a general CRUD api used by the contentRoute to serve user content
 
 /*
@@ -18,19 +18,25 @@ async function getContentInCollection(req, res) {
 
 
 	try {
-		let itemsInCollection = await appropriateModel.find({}).lean()
+		// populate all reference fields
+		const refs = getReferenceFieldsInModel(appropriateModel)
+
+		// somehow, adding 'await' to the model function call causes lean() to fail
+		// console.log("find stareted")
+		let itemsInCollection = await appropriateModel.find({}).lean().populate(...refs)
+
 		// rename createdAt to created-at, updatedAt to last-update-at. Delete _v
 		itemsInCollection = itemsInCollection.map(i => {
 			const item = formatCollectionItem(i)
-			console.log(item)	
+			console.log(item)
 			return item
 		})
-
 
 		res.json({ success: true, data: itemsInCollection })
 	} catch (err) {
 		console.log(err.message)
-		res.status(500).json({ success: false, message: "Couldn't complete request, try again" })
+		// res.status(500).json({ success: false, message: "Couldn't complete request, try again" })
+		res.status(500).json({ success: false, message: err.message })
 	}
 }
 
@@ -61,9 +67,38 @@ async function addContentToCollection(req, res) {
 			}
 		}
 
+		// get all referenced fields
+		const refFields = getReferenceFieldsInModel(appropriateModel)
+
+		// Make sure that the value passed for any referenced field is valid. e.g if we have an 'book_author' field which
+		//  references the 'author' collection, then we should make sure that the value passed to the 'book_author' field is an
+		//  _id pointing to an actual author document in the 'author' collection and not just some arbitrary _id value 
+
+
+		// proceed to add the new item in the collection, only if we're sure that all of it's reference properties have a value
+		//  that points to valid values of that referenced collection
+		for (let refField of refFields) {
+
+			// get the name of the  collection that the  reference field points to
+			const refCol = appropriateModel.schema.paths[refField].options.ref
+
+			// using the name of the referenced collection, get the model for that collection
+			const refColModel = getAppropriateModel(refCol, models)
+
+			if (await isRefValueValid(refColModel, req.body[refField]) === false) {
+				return res.status(400).json({ success: false, message: `the value provided for "${refField}" does not reference a valid item from "${refCol}" collection` })
+			}
+		}
+
 		let item = await appropriateModel.create({ ...req.body })
+
+		// populate all referenced fields with actual values
+		for (let refField of refFields) {
+			item = await item.populate(refField)
+		}
+
 		item = formatCollectionItem(item.toObject())
-		console.log("item added: ", item)
+
 		res.status(201).json({ success: true, data: item })
 	} catch (err) {
 		let message;
@@ -75,6 +110,14 @@ async function addContentToCollection(req, res) {
 		res.status(500).json({ success: false, message })
 	}
 }
+
+
+// make sure there's an entry whose _id matches refValue inside the reference collection
+async function isRefValueValid(model, refValue) {
+	const valueExists = await model.exists({ _id: refValue })
+	return valueExists === null ? false : true
+}
+
 
 async function deleteContentFromCollection(req, res) {
 	const models = req.app.get("models")

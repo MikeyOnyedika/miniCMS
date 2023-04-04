@@ -13,6 +13,8 @@ function parseToSchemaType(type) {
 			return mongoose.Schema.Types.Date
 		case "boolean":
 			return mongoose.Schema.Types.Boolean
+		case "reference":
+			return mongoose.Schema.Types.ObjectId
 		default:
 			throw new Error("'type' does not match any mongoose schema type")
 	}
@@ -35,8 +37,9 @@ function fieldsArrayToObj(fields) {
 
 // convert fields to a format that can be used by the ORM/ODM to represent the fields of the collection
 // acts as a parser for the different content types and their expected properties
-function parseFields(fields) {
+function parseFields(modelNames, fields) {
 	const parsedFields = []
+
 
 	for (let field of fields) {
 		const parsedFieldValue = {}
@@ -92,10 +95,42 @@ function parseFields(fields) {
 			parsedFieldValue.placeholder = field.placeholder
 		}
 
+		// check for the 'of' property on 'reference' type
+		if (field.type === "reference") {
+			if (!hasValidOf(field)) {
+				return `${field.label} field does not have a valid value for 'of' `
+			}
+
+			field.of = field.of.toLowerCase()
+			if (!isRefModelExists(modelNames, field.of)) {
+				return `reference type used in ${field.label} field does not exist yet. It should be created first`
+			}
+
+			parsedFieldValue.ref = field.of
+		}
+
 		parsedFields.push(parsedFieldValue)
 	}
 
 	return parsedFields
+}
+
+function hasValidOf(field) {
+	if (field.hasOwnProperty("of") === false || field.of === "") {
+		return false
+	} else {
+		return true
+	}
+}
+
+// check to make sure a model exists for the collection name to be used as reference type. This prevents crashing of the server when it tries to run createModelFromTemplate() 
+function isRefModelExists(modelNames, ref) {
+	for (let name of modelNames) {
+		if (name.toLowerCase() === ref) {
+			return true
+		}
+	}
+	return false
 }
 
 function hasValidDefaultValue(field) {
@@ -127,6 +162,8 @@ function createModelFromTemplate({ name, fields, config }) {
 		timestamps: config.timestamps
 	})
 
+	// convert name to lowercase so both this name and the name passed as reference if this collection is referenced from a different collection, will match exactly
+	name = name.toLowerCase()
 	return mongoose.model(name, modelSchema)
 }
 
@@ -139,9 +176,11 @@ async function getContentCollectionsModels() {
 	}
 	const models = {}
 	for (let temp of templates) {
-		temp.fields = parseFields(temp.fields)
+		const modelNames = templates.map(temp => temp.name )
+		temp.fields = parseFields(modelNames, temp.fields)
 		const model = createModelFromTemplate({ name: temp.name, fields: temp.fields, config: temp.config })
-		models[temp.name] = model
+		// convert the model name to lowercase to avoid case issues later
+		models[temp.name.toLowerCase()] = model
 	}
 
 	return models
@@ -160,7 +199,7 @@ async function loadCollectionModels(app) {
 			}
 		}
 
-		const models = await getContentCollectionsModels()
+		const models = await getContentCollectionsModels(app)
 		app.set("models", models)
 		success = true
 	} catch (err) {
