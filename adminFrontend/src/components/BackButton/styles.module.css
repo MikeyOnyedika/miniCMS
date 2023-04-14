@@ -4,7 +4,7 @@
 }   
 
 .Arrow:hover {
-    outline-color: var(--accent-clr);
+    outline-color: var(--secondary-clr);
     outline-width: 2px;
 }
 

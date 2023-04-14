@@ -25,7 +25,7 @@ async function addCollection(req, res) {
 
 		let { name, fields, config } = req.body
 
-		// convert name to lowercase because it is used as the name of the model and reference path whenever a document referencing is made
+		// convert name to lowercase because it is used as the name of the model and reference path whenever a document referencing is made. This is to avoid case sensitivity
 		name = name.toLowerCase()
 
 		// get modelNames for the parseFields() from the app.get() expressjs variable
@@ -44,7 +44,7 @@ async function addCollection(req, res) {
 			config: { timestamps: config.timestamps === undefined ? true : config.timestamps }
 		})
 
-		// reinflate models from collection template for all dynamic collection, that should also include the newly added template
+		// reinflate models from collection template for all dynamic collection, that should also include the newly added template since loadCollectionModels() get's the collection templates it uses directly from the database
 		if (await loadCollectionModels(req.app) === false) {
 			process.exit(1)
 		}

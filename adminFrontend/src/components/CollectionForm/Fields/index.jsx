@@ -27,7 +27,7 @@ export const Fields = ({ updateOverallFormData, fields }) => {
     function addField() {
         // add a new field object which will map to a new field input
         setFormData(prev => {
-            return [...prev, { _id: uuidv4(), name: "", label: "", required: false, type: "", placeholder: "", defaultValue: "" }]
+            return [...prev, { _id: uuidv4(), name: "", label: "", required: false, type: "", placeholder: "", defaultValue: "", of: "" }]
         })
     }
 

@@ -7,8 +7,8 @@ export function BackButton({ to }) {
     return (
         <div className={Styles.Wrapper}>
             <Link to={to}>
-                <IconContext.Provider value={{ color: 'var(--accent-clr)', className: Styles.Arrow }} >
-                    <FaArrowLeft/>
+                <IconContext.Provider value={{ color: 'var(--secondary-clr)', className: Styles.Arrow }} >
+                    <FaArrowLeft />
                 </IconContext.Provider>
             </Link>
         </div>

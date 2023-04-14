@@ -2,9 +2,11 @@ import { useEffect } from "react"
 import { useCreateFormInputsFromTemplate } from "../../../../hooks/useCreateFormInputsFromTemplate"
 import Styles from './styles.module.css'
 import { checkObjectsEqual, toCamelCase } from "../../../../utils/formUtils"
+import { useUserContentContext } from '../../../../contexts/UserContentProvider'
 
 export const Field = ({ updateFieldsData, data }) => {
     const { formData, formInputs, generateFormInputs, lastUpdatedInput } = useCreateFormInputsFromTemplate()
+    const { collections } = useUserContentContext()
 
     const formInputsInit = [
         {
@@ -38,6 +40,7 @@ export const Field = ({ updateFieldsData, data }) => {
                 { value: "date", label: "Date" },
                 { value: "number", label: "Number" },
                 { value: "boolean", label: "Boolean" },
+                { value: "reference", label: "Reference" },
             ]
         },
     ]
@@ -60,7 +63,7 @@ export const Field = ({ updateFieldsData, data }) => {
 
     useEffect(() => {
         if (formData != null) {
-            // only update the parent data if it's n0t the same as the form Data. I.e only if an actul prop in formData has a different value
+            // only update the parent data if it's not the same as the form Data. I.e only if an actul prop in formData has a different value
             if (checkObjectsEqual(formData, data) === false) {
                 // make sure the last updated property of this field  is 'type' 
                 if (lastUpdatedInput === "type") {
@@ -82,7 +85,7 @@ export const Field = ({ updateFieldsData, data }) => {
                     })
                 })
             } else {
-                // console.log("they are equal, no update")
+                // console.log("they are the same, no update")
             }
         }
     }, [lastUpdatedInput, formData, data])
@@ -144,8 +147,27 @@ export const Field = ({ updateFieldsData, data }) => {
                     placeholder: "enter default number",
                 },
             ], fData)
+        } else if (fData.type === "reference") {
+            generateFormInputs([
+                ...formInputsInit,
+                placeholderInit,
+                {
+                    name: "of",
+                    label: "Of",
+                    required: true,
+                    type: "drop-down-list",
+                    options: (
+                        [
+                            { value: "", label: "Select a collection" },
+                            ...collections.map(col => ({ value: col.name, label: col.name }))
+                        ]
+                    ),
+                },
+            ], fData)
         }
     }
+    // { value: "author", label: "Author" },
+    // { value: "book", label: "Book" }
 
     function removeField() {
         updateFieldsData((prev) => {

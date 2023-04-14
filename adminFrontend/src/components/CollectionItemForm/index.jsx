@@ -71,6 +71,9 @@ export const CollectionItemForm = () => {
     const fields = col.fields
     const body = {}
 
+    console.log(fields)
+    console.log(formData)
+
     for (let field of fields) {
       const fieldValue = formData[field.name]
       const isRequired = field.required

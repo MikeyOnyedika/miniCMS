@@ -13,7 +13,9 @@
     gap: 1rem;
 }
 
-
+.Form div:first-of-type{
+    width: 100%;
+}
 
 /* .Form input[type=text], .Form input[type=url], .Form input[type=email], .Form input[type=password], .Form input[type=number], .Form input[type=tel], .Form select{
     width: 100%;

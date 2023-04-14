@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+    position: relative;
 }
 
 .FormGroup___row {
@@ -35,19 +36,20 @@
 .FormGroup input,
 .FormGroup select,
 .FormGroup textarea {
+    position: relative;
     padding-inline: 0.5rem;
     padding-block: 0.5rem;
     font-size: 1.1rem;
     transition: all 100ms ease-in-out;
     border: none;
     border-radius: 2px;
-    outline: solid var(--accent-clr-light) 2px;
-    background-color: var(--accent-clr-light);
+    outline: solid var(--secondary-clr) 1px;
+    /* background-color: var(--secondary-clr-light); */
 }
 
 
 .FormGroup input:hover, .FormGroup select:hover, .FormGroup textarea:hover{
-    outline: solid var(--accent-clr) 2px;
+    outline: solid var(--secondary-clr) 2px;
 
 }
 
@@ -69,5 +71,14 @@
     color: var(--primary-clr);
     padding-inline: 1rem;
     padding-block: 0.5rem;
+    outline: solid var(--accent-clr) 1px;
 }
 
+.FormGroup input[type=submit]:hover{
+    outline: solid var(--accent-clr) 2px;
+}
+
+/* for the <div> inside a <select> when the item is loading */
+.Loading {
+    /* position: absol */
+}

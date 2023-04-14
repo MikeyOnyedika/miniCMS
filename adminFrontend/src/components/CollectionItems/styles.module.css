@@ -61,14 +61,14 @@
     padding: 1.5rem;
     border-radius: 1rem;
     transition: all 200ms ease-in-out;
-    outline: solid var(--accent-clr-light) 2px;
+    outline: solid var(--secondary-clr-light) 2px;
     max-width: 1240px;
     width: 100%;
 }
 
 
 .ColConRow:hover {
-    outline: solid var(--accent-clr) 2px;
+    outline: solid var(--secondary-clr) 2px;
 }
 
 .ColConRow__SettingsPanelWrapper {

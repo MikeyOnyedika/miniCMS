@@ -35,11 +35,10 @@ function fieldsArrayToObj(fields) {
 	return fieldsObj
 }
 
-// convert fields to a format that can be used by the ORM/ODM to represent the fields of the collection
+// convert fields to a format that can be used by mongoose to represent the fields of the collection
 // acts as a parser for the different content types and their expected properties
 function parseFields(modelNames, fields) {
 	const parsedFields = []
-
 
 	for (let field of fields) {
 		const parsedFieldValue = {}

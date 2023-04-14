@@ -1,0 +1,58 @@
+.Wrapper{
+	position: relative;
+	display: flex;
+	gap: 0.1rem;
+}
+
+.SearchInputContainer{
+    display: flex;
+    width: 100%;
+}
+
+.EditBtn{
+	border-radius: 0 3px 3px 0;
+	outline: 2px solid var(--secondary-clr);
+}
+
+.SearchControls{
+	display: flex;
+	width: 100%;
+}
+
+.SearchInput{
+	border-radius: 5px ;
+	width: 100%;
+	padding: 0.4rem 1rem;
+	font-size: 1rem;
+}
+
+.Results{
+	width: 100%;
+	max-height: 10rem;
+	overflow-y: auto;
+	border: 1px solid var(--secondary-clr-light);
+	display: grid;
+	grid-template-columns: 1fr;
+}
+
+.ResultItem{
+	display: flex;
+	flex-direction: column;
+	padding: 0.5rem;
+	font-weight: 400;
+	gap: 0;
+	cursor: pointer;
+}
+
+.ResultItem:hover{
+	background-color: var(--secondary-clr-light);	
+}
+
+.ResultItem .PrimaryValue{
+	font-size: 1rem;	
+}
+
+.ResultItem .ItemId{
+	font-size: 0.8rem;	
+}
+

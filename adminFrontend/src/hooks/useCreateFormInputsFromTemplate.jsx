@@ -5,6 +5,7 @@ import { NumberInput } from '../components/FormInput/NumberInput'
 import { CheckBoxInput } from '../components/FormInput/CheckBoxInput';
 import { DateInput } from '../components/FormInput/DateInput'
 import { DropDownListInput } from '../components/FormInput/DropDownListInput';
+import { ReferenceInput } from '../components/FormInput/ReferenceInput';
 
 export function useCreateFormInputsFromTemplate() {
 	const [formInputs, setFormInputs] = useState(null);
@@ -12,22 +13,38 @@ export function useCreateFormInputsFromTemplate() {
 	const [fields, setFields] = useState(null)
 	const [lastUpdatedInput, setLastUpdatedInput] = useState(null)
 
-	// changes start here
-	function handleOnChange(e) {
-		const name = e.target.name;
+
+	// handleOnChange(e) - htmlinput element. the value is gotten from e
+	// handleOnChange(e, val) - e is the name of the input (an ordinary string value), val is the value 
+	function handleOnChange(e, val) {
+		let name
+
+		if (typeof e === "string") {
+			name = e
+		// } else if (e.nativeEvent instanceof InputEvent) { //it is a reactjs input event
+		}else if (typeof e === "object" && e.hasOwnProperty("target")){
+			name = e.target.name;
+		} else {
+			throw new Error("The value of 'e' passed to the event handler isn't a string or an input element")
+		}
+
 		let value
 		// make sure we update the lastUpdatedInput only when the last updated input actually becomes a different value and not just whenever formData changes
 		if (lastUpdatedInput !== name) {
 			setLastUpdatedInput(name)
 		}
 
-		if (e.target.type === "checkbox" || e.target.type === "radio") {
-			value = e.target.checked
-		} else if (e.target.type === "date") {
-			console.log("date value: ", e.target.value)
-			value = e.target.value ?? ""
+		if (val != undefined) {
+			value = val
 		} else {
-			value = e.target.value
+			if (e.target.type === "checkbox" || e.target.type === "radio") {
+				value = e.target.checked
+			} else if (e.target.type === "date") {
+				console.log("date value: ", e.target.value)
+				value = e.target.value ?? ""
+			} else {
+				value = e.target.value
+			}
 		}
 
 		setFormData((prev) => {
@@ -102,6 +119,19 @@ export function useCreateFormInputsFromTemplate() {
 								name={field.name}
 								onChangeHandler={handleOnChange}
 								options={field.options}
+								value={formData ? formData[field.name] : ""}
+							/>
+						)
+					case "reference":
+						return (
+							<ReferenceInput
+								key={field.name + index}
+								label={field.label}
+								required={field.required}
+								name={field.name}
+								onChangeHandler={handleOnChange}
+								placeholder={field.placeholder}
+								of={field.of}
 								value={formData ? formData[field.name] : ""}
 							/>
 						)

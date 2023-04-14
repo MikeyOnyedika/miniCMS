@@ -27,11 +27,12 @@ body {
 
 :root {
     --primary-clr: white;
-    --secondary-clr: hsl(220, 82%, 43%);
-    --secondary-clr-dark: rgb(14, 56, 139);
-    --secondary-clr-light: hsl(220, 82%, 93%);
-    --accent-clr: #FF704A;
-    --accent-clr-light: #ffd7cb;
+    --accent-clr: hsl(220, 82%, 43%);
+    --accent-clr-dark: rgb(14, 56, 139);
+    --accent-clr-light: hsl(220, 82%, 93%);
+
+    --secondary-clr: #FF704A;
+    --secondary-clr-light: #ffd7cb;
 
     --error-clr: #FF000080;
     --error-clr-outline: #FF0000;

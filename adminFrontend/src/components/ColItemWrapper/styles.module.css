@@ -1,0 +1,15 @@
+.ColItem{
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.ColItem__PropValue{
+	display: flex;
+	gap: 0.5rem;
+}
+
+.PropValue__Prop{
+	font-weight: bold;
+}
+

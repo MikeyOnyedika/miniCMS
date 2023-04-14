@@ -153,6 +153,16 @@ async function updateContentInCollection(req, res) {
 
 	try {
 		let item = await appropriateModel.findByIdAndUpdate(itemId, { ...req.body }, { new: true })
+
+
+		// get all referenced fields
+		const refFields = getReferenceFieldsInModel(appropriateModel)
+
+		// populate all referenced fields with actual values
+		for (let refField of refFields) {
+			item = await item.populate(refField)
+		}
+
 		item = formatCollectionItem(item.toObject())
 		res.status(201).json({ success: true, data: item })
 	} catch (err) {
