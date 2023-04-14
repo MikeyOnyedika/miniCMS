@@ -175,7 +175,7 @@ async function getContentCollectionsModels() {
 	}
 	const models = {}
 	for (let temp of templates) {
-		const modelNames = templates.map(temp => temp.name )
+		const modelNames = templates.map(temp => temp.name)
 		temp.fields = parseFields(modelNames, temp.fields)
 		const model = createModelFromTemplate({ name: temp.name, fields: temp.fields, config: temp.config })
 		// convert the model name to lowercase to avoid case issues later
@@ -227,5 +227,18 @@ function formatCollectionItem(item) {
 	return modifiedItem
 }
 
-module.exports = { formatCollectionItem, parseFields, createModelFromTemplate, getContentCollectionsTemplates, getContentCollectionsModels, loadCollectionModels }
+
+function isPrimaryFieldValid(primaryField, fields) {
+	for (let field of fields) {
+		if (primaryField === field.name && field.type !== "reference") {
+			// yep! definitely valid, since it (primaryField) matches the value of this field.name and this field isn't a reference field
+			return true
+		}
+	}
+
+	return false
+}
+
+module.exports = { formatCollectionItem, parseFields, createModelFromTemplate, getContentCollectionsTemplates, getContentCollectionsModels, loadCollectionModels, isPrimaryFieldValid }
+
 

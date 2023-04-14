@@ -1,4 +1,4 @@
-const { parseFields, createModelFromTemplate, getContentCollectionsTemplates, loadCollectionModels } = require("../helpers/CollectionUtils")
+const { parseFields, createModelFromTemplate, getContentCollectionsTemplates, loadCollectionModels, isPrimaryFieldValid } = require("../helpers/CollectionUtils")
 const Collection = require("../models/collectionModel")
 const { getAppropriateModel } = require("../helpers/ContentCollectionUtils")
 
@@ -7,7 +7,7 @@ async function getDbCollections(req, res) {
 	try {
 		let templates = await getContentCollectionsTemplates();
 		templates = templates.map(template => {
-			return { config: template.config, 'created-at': template.createdAt, fields: template.fields, name: template.name.toLowerCase(), _id: template._id }
+			return { config: template.config, 'created-at': template.createdAt, fields: template.fields, name: template.name.toLowerCase(), primaryField: template.primaryField, _id: template._id }
 		})
 
 		res.status(200).json({ success: true, data: [...templates] })
@@ -19,14 +19,27 @@ async function getDbCollections(req, res) {
 async function addCollection(req, res) {
 	try {
 		// only permit frontend to be able to set some configs like timestamps. Which means not all sent config value will be passed to mongoose
-		if (!req.body.name || !req.body.fields || req.body.fields.length === 0) {
-			return res.status(400).json({ success: false, message: "Collection name or fields are missing" })
+		if (!req.body.name) {
+			return res.status(400).json({ success: false, message: "Collection name is empty or isn't provided" })
 		}
 
-		let { name, fields, config } = req.body
+		if (!req.body.primaryField) {
+			return res.status(400).json({ success: false, message: "Primary Field is empty or isn't provided" })
+		}
+
+		if (!req.body.fields || req.body.fields.length === 0) {
+			return res.status(400).json({ success: false, message: "No field was provided, atlest 1 is needed" })
+		}
+
+		let { name, primaryField, fields, config } = req.body
 
 		// convert name to lowercase because it is used as the name of the model and reference path whenever a document referencing is made. This is to avoid case sensitivity
 		name = name.toLowerCase()
+
+		// make sure the value of primaryField actually corresponds to the value of a name property of one of the fields
+		if (isPrimaryFieldValid(primaryField, fields) === false) {
+			return res.status(400).json({ success: false, message: "Primary Field does not match any field or it's matching a field whose content type is 'reference'" })
+		}
 
 		// get modelNames for the parseFields() from the app.get() expressjs variable
 		const modelNames = Object.keys(req.app.get('models'))
@@ -40,6 +53,7 @@ async function addCollection(req, res) {
 		// save the template used to create the collection's model. Use the fields instead of pFields since pFields is parsed to use types that are actual mongoose schema types
 		const collectionTemplate = await Collection.create({
 			name,
+			primaryField,
 			fields,
 			config: { timestamps: config.timestamps === undefined ? true : config.timestamps }
 		})

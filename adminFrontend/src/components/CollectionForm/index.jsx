@@ -40,11 +40,16 @@ export const CollectionForm = () => {
 
   async function handleFormSubmit(e) {
     e.preventDefault()
-    // console.log(formData)
+    console.log(formData)
 
     // validate inputs first
     if (formData.name === "") {
       addStatusMessage({ status: RequestState.FAILED, message: `Collection name is not provided` })
+      return;
+    }
+
+    if (formData.primaryField === ""){
+      addStatusMessage({ status: RequestState.FAILED, message: `Primary Field is not provided` })
       return;
     }
 

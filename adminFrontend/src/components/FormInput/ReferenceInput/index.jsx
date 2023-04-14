@@ -10,8 +10,9 @@ export const ReferenceInput = ({ name, label, required, placeholder, of, value, 
     const [focused, setFocused] = useState(false)
     const [selectedItem, setSelectedItem] = useState(null)
     const [timeoutId, setTimeoutId] = useState(null)
+    const [primaryField, setPrimaryField] = useState(null)
 
-    const { addStatusMessage } = useUserContentContext()
+    const { addStatusMessage, collections } = useUserContentContext()
     // Notice how colContents is gotten directly from useCollectionsContents() instead of the usual 
     // useUserContentContext() which exposes a useCollectionsContents() but is in the global context? We need colContents whose scope 
     // is in the context of this component as opposed a global colContents. This is because if colContents is modified here using the 
@@ -29,9 +30,23 @@ export const ReferenceInput = ({ name, label, required, placeholder, of, value, 
 
 
     useEffect(() => {
-        // get the items of that collection
+        // get the items of the collection
         getCollectionContents(of)
-    }, [of])
+
+        // get the reference collection
+        if (collections !== null && primaryField === null) {
+            const refCol = collections.find(col => col.name === of)
+            // TODO: check to MAKE SURE A PRIMARY FIELD PROPERTY EXISTS IN THE COLLECTION
+            if (refCol !== null) {
+                setPrimaryField(refCol.primaryField)
+            }else{
+                // not yet exactly sure what to do if the collection cant be found
+            }
+        }
+
+    }, [of, collections, primaryField])
+
+    useEffect(() => console.log("primaryField: ", primaryField), [primaryField])
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -45,9 +60,6 @@ export const ReferenceInput = ({ name, label, required, placeholder, of, value, 
         }
     }, [search])
 
-
-    // TODO: MAKE SURE TO CHANGE THE SOURCE OF PRIMARYfIELD so that it comes from THE TEMPLATE OF A COLLECTION
-    const primaryField = "name"
 
     function handleItemSelect(name, item) {
         setSelectedItem(item)

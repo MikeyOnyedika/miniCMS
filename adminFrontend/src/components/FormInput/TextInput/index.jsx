@@ -12,12 +12,6 @@ export const TextInput = ({
     hidden
 }) => {
 
-    useEffect(() => {
-        console.log("name: ", name)
-        console.log("value: ", value)
-        console.log("label: ", label)
-    }, [])
-
     return (
         <div className={`${BaseStyles.FormGroup} ${BaseStyles.FormGroup___text} ${hidden === true ? 'hidden' : ''}`}>
             <label htmlFor={name}>{`${label}${required ? '*' : ''}`}</label>
@@ -25,7 +19,7 @@ export const TextInput = ({
                 type={inputType}
                 name={name}
                 id={name}
-                placeholder={`e.g ${placeholder}`}
+                placeholder={placeholder}
                 onChange={onChangeHandler}
                 value={value}
             />

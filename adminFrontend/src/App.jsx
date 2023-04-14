@@ -34,7 +34,7 @@ function App() {
 
   return (
     <>
-      <div style={{ position: 'fixed', top: '0.5rem', left: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '50vh', overflowY: 'auto', padding: '0.5rem' }}>
+      <div style={{ position: 'fixed', top: '0.5rem', left: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '50vh', overflowY: 'auto', padding: '0.5rem', zIndex: '200' }}>
         {statusMessageQueue.map(sMessage => <StatusMessage key={sMessage.id} message={sMessage.message} status={sMessage.status} />)}
       </div>
       <Routes>

@@ -134,6 +134,11 @@ export function toCamelCase(text) {
         // break word down to letters
         const letters = word.split("")
 
+        // return an empty string if letters is totally empty, you don't want to try capitalising 
+        if (letters <=0){
+            return ""
+        }
+
         // separate the first letter from the letters array and capitalise it
         const firstLetter = letters.shift().toUpperCase()
 

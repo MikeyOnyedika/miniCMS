@@ -14,7 +14,7 @@ export const ColItem = ({ item }) => {
                 (item[prop] instanceof Object && item[prop] instanceof Array === false) ?
                   (
                     <details>
-                      <summary>{"Object"}</summary>
+                      <summary>{"Reference"}</summary>
                       <ColItem item={item[prop]} />
                     </details>
                   ) :

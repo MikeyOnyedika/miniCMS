@@ -13,11 +13,10 @@ function Dashboard({ isTokenValid }) {
         <CountdownToLogout hide={() => setShowCountdown(false)} />
       )}
 
-
       <header>
         <h1><a href='/'>Dashboard</a></h1>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <p style={{ color: "var(--accent-clr)", fontWeight: 'bold' }}>{adminUsername}</p>
+          <p style={{ color: "var(--accent-clr)", fontSize: "1.1rem", textTransform: 'capitalize' }}>{adminUsername}</p>
           <button
             className='logout'
             onClick={logoutAdmin}
