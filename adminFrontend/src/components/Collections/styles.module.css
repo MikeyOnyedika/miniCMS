@@ -6,6 +6,8 @@
     flex-direction: column;
     box-shadow: none;
     border: none;
+    gap: 2rem;
+    padding-inline: 2rem;
 }
 
 .Header {
@@ -33,25 +35,32 @@
 
 .Collections {
     display: flex;
+    flex-direction: column;
     gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    max-width: var(--section-max-width);
+    width: 100%;
 }
 
 .CollectionBtn {
-    aspect-ratio: 1;
-    width: 10rem;
-    background-color: var(--secondary-clr);
-    color: var(--primary-clr);
+    width: 100%;
+    color: var(--secondary-clr);
     border-radius: 0.5rem;
     padding: 1rem;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     text-decoration: none;
     justify-content: center;
     align-items: center;
     display: flex;
     transition: scale 100ms ease-in-out;
+    outline: 3px solid var(--secondary-clr);
+
 }
 
 .CollectionBtn:hover {
     scale: 1.05;
     box-shadow: var(--box-shadow);
+    color: var(--primary-clr);
+    background-color: var(--secondary-clr);
 }

@@ -102,6 +102,7 @@ async function deleteCollection(req, res) {
 		const result = await appropriateModel.collection.drop();
 		//  then delete the template for the model of that collection
 		const deletedCollectionTemplate = await Collection.findByIdAndDelete(id)
+
 		// reload collection models so as to delete the model for the collection which the app still has in memory or die trying.
 		if (await loadCollectionModels(req.app) === false) {
 			process.exit(1)

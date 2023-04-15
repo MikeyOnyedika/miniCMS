@@ -1,6 +1,7 @@
 .Wrapper {
     display: flex;
     flex-direction: column;
+    padding: 1rem;
 }
 
 .Wrapper>header {
@@ -62,7 +63,7 @@
     border-radius: 1rem;
     transition: all 200ms ease-in-out;
     outline: solid var(--secondary-clr-light) 2px;
-    max-width: 1240px;
+    max-width: var(--section-max-width);
     width: 100%;
 }
 

@@ -8,7 +8,7 @@ export const Collections = () => {
   const { collections, getColStatus } = useUserContentContext()
 
   const outlet = useOutlet()
-
+ 
   return (
     <>
       {
@@ -27,7 +27,7 @@ export const Collections = () => {
               ) : (
                 getColStatus.isError === false ? (
                   collections.length === 0 ? (
-                    <p>No items added to this collection yet</p>
+                    <p>No collections created yet</p>
                   ) : (collections.map(col => {
                     return (
                       <Link to={`/dashboard/collections/${col._id}`} className={Styles.CollectionBtn} key={col._id}>

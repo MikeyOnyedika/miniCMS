@@ -7,7 +7,7 @@
 
 .Form {
     width: 100%;
-    max-width: 1240px;
+    max-width: var(--section-max-width);
     display: flex;
     flex-direction: column;
     gap: 1rem;

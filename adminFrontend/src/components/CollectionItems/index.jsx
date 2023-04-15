@@ -29,7 +29,6 @@ export const CollectionItems = () => {
 	}, [collections])
 
 	async function handleDelCol(collectionId) {
-		console.log("attempt delete")
 		await deleteCollection(collectionId)
 		navigate("/dashboard/collections")
 	}
@@ -54,7 +53,7 @@ export const CollectionItems = () => {
 					<FaPlus /> new
 				</Link>
 			</header>
-
+ 
 			<div className={Styles.ColConRowWrapper}>
 				{
 					getColConStatus.isLoading ? (
