@@ -39,7 +39,7 @@ function tokenAboutToExpire(decodedToken) {
 
     const remainingTimeInSec = Math.round(Math.abs(nowInSec - expTimeInSec))
 
-    console.log("remainingTime", remainingTimeInSec)
+    // console.log("remainingTime", remainingTimeInSec)
     if (remainingTimeInSec < 120) {
         return true;
     }

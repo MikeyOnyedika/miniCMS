@@ -37,12 +37,12 @@ export function parseDateTimeInFormData(template, formData) {
         }
     })
 
-    if (fData['created-at']) {
-        fData['created-at'] = parseDateTime(fData['created-at'])
+    if (fData['createdAt']) {
+        fData['createdAt'] = parseDateTime(fData['createdAt'])
     }
 
-    if (fData['last-update-at']) {
-        fData['last-update-at'] = parseDateTime(fData['last-update-at'])
+    if (fData['updatedAt']) {
+        fData['updatedAt'] = parseDateTime(fData['updatedAt'])
     }
     return fData
 }

@@ -7,14 +7,20 @@ function getAppropriateModel(collectionName, models) {
 }
 
 
-// return all field of a collection that has a ref so that they can be populated
-function getReferenceFieldsInModel(model) {
-    // console.log(model.schema.obj)
+// return a list of all fields in the model that are a reference to item in another collection
+async function getReferenceFieldsInModel(model) {
     const fields = model.schema.obj
     const fieldNames = Object.keys(fields)
-    return fieldNames.filter(
+    const refFieldNames = fieldNames.filter(
         fieldName => fields[fieldName].ref !== undefined
     )
+
+    return refFieldNames.map(fieldName => {
+        return {
+            collectionName: fields[fieldName].ref,
+            fieldName,
+        }
+    } )
 }
 
 

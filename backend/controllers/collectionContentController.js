@@ -1,5 +1,7 @@
 const { formatCollectionItem } = require("../helpers/CollectionUtils")
 const { getAppropriateModel, getReferenceFieldsInModel } = require("../helpers/ContentCollectionUtils")
+const Collection = require("../models/collectionModel")
+const mongoose = require("mongoose")
 //these controllers provide a general CRUD api used by the contentRoute to serve user content
 
 /*
@@ -16,28 +18,57 @@ async function getContentInCollection(req, res) {
 		return res.status(400).json({ success: false, message: "No collection with the specified name exists" })
 	}
 
-
 	try {
-		// populate all reference fields
-		const refs = getReferenceFieldsInModel(appropriateModel)
-
-		// somehow, adding 'await' to the model function call causes lean() to fail
-		// console.log("find stareted")
-		let itemsInCollection = await appropriateModel.find({}).lean().populate(...refs)
-
-		// rename createdAt to created-at, updatedAt to last-update-at. Delete _v
-		itemsInCollection = itemsInCollection.map(i => {
-			const item = formatCollectionItem(i)
-			console.log(item)
-			return item
-		})
-
+		// const itemsInCollection = await recursivelyPopulate(appropriateModel)
+		const itemsInCollection = await getItems(appropriateModel, models)
 		res.json({ success: true, data: itemsInCollection })
 	} catch (err) {
 		console.log(err.message)
 		// res.status(500).json({ success: false, message: "Couldn't complete request, try again" })
 		res.status(500).json({ success: false, message: err.message })
 	}
+}
+
+
+
+async function getItems(appropriateModel, models) {
+	let items = await appropriateModel.find({})
+
+	items = await recursivelyPopulateItems(items, appropriateModel, models)
+	return items;
+
+}
+
+async function recursivelyPopulateItems(items, appropriateModel, models) {
+
+	const pItems = []
+	for (let item of items) {
+		const pItem = await recursivelyPopulate(item, appropriateModel, models)
+		pItems.push(pItem)
+	}
+
+	return pItems
+}
+
+async function recursivelyPopulate(item, appropriateModel, models) {
+	// return a list of reference fields inside the model.
+	const refFields = await getReferenceFieldsInModel(appropriateModel)
+
+	// populate all reference fields in the current item using the list of ref Fields gotten from getReferenceFieldsInModel()
+	const itemWithPopulatedRefFields = (await item.populate(...refFields.map(refField => refField.fieldName)))._doc
+
+	// iterate through all refFields so we can iterate through each field of the object each refField contains in search of all reference fields which may exist within the newly populated object of that refField
+	for (let refField of refFields) {
+		// get the model for that collection
+		const appropriateModel = getAppropriateModel(refField.collectionName, models)
+
+		console.log("next obj: ", itemWithPopulatedRefFields[refField.fieldName])
+
+		itemWithPopulatedRefFields[refField.fieldName] = await recursivelyPopulate(itemWithPopulatedRefFields[refField.fieldName], appropriateModel)
+	}
+
+	return itemWithPopulatedRefFields;
+
 }
 
 async function addContentToCollection(req, res) {
@@ -50,11 +81,6 @@ async function addContentToCollection(req, res) {
 		return res.status(400).json({ success: false, message: "No data was provided to create a new " + req.params.collectionname })
 	}
 
-	// for (let field in req.body) {
-	// 	if (field === "created-at" || field === "last-updated-at") {
-	// 		delete req.body[field]
-	// 	}
-	// }
 
 	try {
 		//get the name for each field in the schema of the appropriate model
@@ -68,11 +94,13 @@ async function addContentToCollection(req, res) {
 		}
 
 		// get all referenced fields
-		const refFields = getReferenceFieldsInModel(appropriateModel)
+		const refFields = await getReferenceFieldsInModel(appropriateModel)
 
 		// Make sure that the value passed for any referenced field is valid. e.g if we have an 'book_author' field which
 		//  references the 'author' collection, then we should make sure that the value passed to the 'book_author' field is an
 		//  _id pointing to an actual author document in the 'author' collection and not just some arbitrary _id value 
+
+		console.log(refFields)
 
 
 		// proceed to add the new item in the collection, only if we're sure that all of it's reference properties have a value
@@ -154,9 +182,8 @@ async function updateContentInCollection(req, res) {
 	try {
 		let item = await appropriateModel.findByIdAndUpdate(itemId, { ...req.body }, { new: true })
 
-
 		// get all referenced fields
-		const refFields = getReferenceFieldsInModel(appropriateModel)
+		const refFields = await getReferenceFieldsInModel(appropriateModel)
 
 		// populate all referenced fields with actual values
 		for (let refField of refFields) {

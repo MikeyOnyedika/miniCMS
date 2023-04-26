@@ -58,8 +58,6 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
-    padding: 1.5rem;
     border-radius: 1rem;
     transition: all 200ms ease-in-out;
     outline: solid var(--secondary-clr-light) 2px;
@@ -73,36 +71,24 @@
 }
 
 .ColConRow__SettingsPanelWrapper {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: none;
+    display: flex;
     border-radius: 0 0 1rem 1rem;
     padding: 0.5rem;
     gap: 1rem;
     justify-content: flex-end;
     z-index: 9;
+    visibility: hidden;
 }
 
 
 .ColConRow:hover .ColConRow__SettingsPanelWrapper {
-    display: flex;
     color: var(--primary-clr);
-
+    visibility: visible;
+    background-color: var(--secondary-clr-light);
 }
 
-.SettingsPanelWrapper__Background {
-    position: absolute;
-    inset: 0;
-    background-color: var(--accent-clr-light);
-    border-radius: 0 0 1rem 1rem;
-    z-index: 0;
-    opacity: 0.5;
-}
 
 .SettingsPanelWrapper__Panel {
-    z-index: 1;
     display: flex;
     align-items: center;
     gap: 1rem;

@@ -58,7 +58,6 @@ export const CollectionItemForm = () => {
   useEffect(() => {
     if (path !== "new") {
       if (itemToEdit && col) {
-        // itemToEdit has to be destructured else most of the fields will be empty strings
         generateFormInputs(col.fields, itemToEdit)
       }
     }
@@ -70,9 +69,6 @@ export const CollectionItemForm = () => {
     //look through the collection template and check for empty field that are required but isn't provided a value in the form
     const fields = col.fields
     const body = {}
-
-    console.log(fields)
-    console.log(formData)
 
     for (let field of fields) {
       const fieldValue = formData[field.name]

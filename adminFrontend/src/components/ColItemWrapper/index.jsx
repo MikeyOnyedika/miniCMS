@@ -21,7 +21,6 @@ export const ColItemWrapper = ({ item, index, col }) => {
         isItemEmpty === false && <ColItem item={item} />
       }
       <div className={Styles.ColConRow__SettingsPanelWrapper}>
-        <div className={Styles.SettingsPanelWrapper__Background}></div>
         <div className={Styles.SettingsPanelWrapper__Panel}>
           <Link to={`/dashboard/collections/${col._id}/edit/${item._id}`}>
             <IconContext.Provider value={{ className: Styles.ColEditBtn }}>

@@ -22,12 +22,13 @@ function parseToSchemaType(type) {
 
 // converts the fields array to an object
 function fieldsArrayToObj(fields) {
+	// TODO: generate the _id for each field object here using `new ObjectId()` or maybe somehwere before here, so that the version of the template that would be saved to the database will also have the generated _id property on it
 	const fieldsObj = {}
 	fields = [...fields]
 	fields.forEach(field => {
 		const fieldName = field.name
 		delete field.name
-		// use the defaultValue to set the value of default value for that particular field
+		// use the defaultValue to set the value of `default` for that particular field
 		const defaultValue = field.defaultValue
 		delete field.defaultValue
 		fieldsObj[fieldName] = { ...field, ['default']: defaultValue }
@@ -64,6 +65,7 @@ function parseFields(modelNames, fields) {
 		if (field.hasOwnProperty("type") === false || typeof field.type !== "string") {
 			return `${field.label} field does not have a valid value for 'type' `
 		}
+
 		// map the string representing the type to an actual mongoose schema type
 		parsedFieldValue.type = parseToSchemaType(field.type)
 
@@ -75,15 +77,14 @@ function parseFields(modelNames, fields) {
 		parsedFieldValue.required = field.required
 
 
-		// parse other properties which are specific to a type
+		// parse other properties which are specific to a content type
 
 		// check for defaultValue property on 'string', 'number', 'boolean', 'date' types
-		// defaultValue is required when that field's value is not required. default value just serves as something to use instead of just having an empty value 
+		// defaultValue is optional
 		if (field.type === "string" || field.type === "number" || field.type === "boolean" || field.type === "date") {
-			if (!hasValidDefaultValue(field) && field.required === false) {
-				return `${field.label} field does not have a valid value for 'defaultValue' `
+			if (field.hasOwnProperty("defaultValue") === true && field.defaultValue !== "") {
+				parsedFieldValue.defaultValue = field.defaultValue
 			}
-			parsedFieldValue.defaultValue = field.defaultValue
 		}
 
 		// check for placeholder property on 'string' or 'number' type
@@ -98,14 +99,14 @@ function parseFields(modelNames, fields) {
 		if (field.type === "reference") {
 			if (!hasValidOf(field)) {
 				return `${field.label} field does not have a valid value for 'of' `
+			} else {
+				field.of = field.of.toLowerCase()
+				// TODO:  add a check so that if the ref collection name (i.e the ref model) to be used is the same as the name of the collection, then it passes. This will allow say using `user` as a reference collection to a field inside the `user` model
+				if (!isRefModelExists(modelNames, field.of)) {
+					return `reference type used in ${field.label} field does not exist yet. It should be created first`
+				}
+				parsedFieldValue.ref = field.of
 			}
-
-			field.of = field.of.toLowerCase()
-			if (!isRefModelExists(modelNames, field.of)) {
-				return `reference type used in ${field.label} field does not exist yet. It should be created first`
-			}
-
-			parsedFieldValue.ref = field.of
 		}
 
 		parsedFields.push(parsedFieldValue)
@@ -122,7 +123,7 @@ function hasValidOf(field) {
 	}
 }
 
-// check to make sure a model exists for the collection name to be used as reference type. This prevents crashing of the server when it tries to run createModelFromTemplate() 
+// check to make sure a model exists for the collection name to be used as reference type. This prevents crashing the server when it tries to run createModelFromTemplate() 
 function isRefModelExists(modelNames, ref) {
 	for (let name of modelNames) {
 		if (name.toLowerCase() === ref) {
@@ -130,14 +131,6 @@ function isRefModelExists(modelNames, ref) {
 		}
 	}
 	return false
-}
-
-function hasValidDefaultValue(field) {
-	if (field.hasOwnProperty("defaultValue") === false || field.defaultValue === "") {
-		return false
-	} else {
-		return true
-	}
 }
 
 function hasValidPlaceholder(field) {
@@ -176,7 +169,13 @@ async function getContentCollectionsModels() {
 	const models = {}
 	for (let temp of templates) {
 		const modelNames = templates.map(temp => temp.name)
-		temp.fields = parseFields(modelNames, temp.fields)
+
+		const pFields = parseFields(modelNames, temp.fields)
+		if (typeof pFields === "string") {
+			console.log("pFields: ", pFields)
+			throw new Error(pFields)
+		}
+		temp.fields = pFields;
 		const model = createModelFromTemplate({ name: temp.name, fields: temp.fields, config: temp.config })
 		// convert the model name to lowercase to avoid case issues later
 		models[temp.name.toLowerCase()] = model
@@ -197,7 +196,6 @@ async function loadCollectionModels(app) {
 				delete mongoose.models[modelName]
 			}
 		}
-
 		const models = await getContentCollectionsModels(app)
 		app.set("models", models)
 		success = true
@@ -215,14 +213,7 @@ function toKebabCase(spacedText) {
 
 function formatCollectionItem(item) {
 	const modifiedItem = { ...item }
-	const createdAt = modifiedItem.createdAt;
-	const lastUpdateAt = modifiedItem.updatedAt;
 	delete modifiedItem.__v
-	delete modifiedItem.createdAt
-	delete modifiedItem.updatedAt
-
-	modifiedItem['created-at'] = createdAt
-	modifiedItem['last-update-at'] = lastUpdateAt
 
 	return modifiedItem
 }
@@ -239,6 +230,14 @@ function isPrimaryFieldValid(primaryField, fields) {
 	return false
 }
 
-module.exports = { formatCollectionItem, parseFields, createModelFromTemplate, getContentCollectionsTemplates, getContentCollectionsModels, loadCollectionModels, isPrimaryFieldValid }
 
+// delete all fields in any collection template that uses the specified collection as reference type. This is done because the collection used as reference type is about to be deleted
+async function deleteRefFieldsUsingCol(delColName) {
+	// loop through all collection templates
+	let colTemplates = await getContentCollectionsTemplates()
+	colTemplates = colTemplates.map((col) => {
+		const colFieldNames = Object.keys(col)
 
+	})
+}
+module.exports = { formatCollectionItem, parseFields, createModelFromTemplate, getContentCollectionsTemplates, getContentCollectionsModels, loadCollectionModels, isPrimaryFieldValid, deleteRefFieldsUsingCol }

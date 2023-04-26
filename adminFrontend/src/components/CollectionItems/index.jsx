@@ -33,8 +33,9 @@ export const CollectionItems = () => {
 		navigate("/dashboard/collections")
 	}
 
-	console.log(colContents)
-
+	useEffect(() => {
+		console.log(colContents)
+	}, [colContents])
 
 	return (
 		outlet || <section className={Styles.Wrapper}>
@@ -58,7 +59,7 @@ export const CollectionItems = () => {
 				{
 					getColConStatus.isLoading ? (
 						<Loading />
-					) : (getColConStatus.isError === false && colContents !== null)? (
+					) : ((getColConStatus.isError === false && colContents !== null)? (
 						colContents.length === 0 ? (
 							<p>No items added to this collection yet</p>
 						) : (
@@ -69,8 +70,9 @@ export const CollectionItems = () => {
 						)
 					)
 						: (
+
 							<h3>Sorry something went wrong: {getColConStatus.errorMsg}</h3>
-						)
+						))
 
 				}
 			</div>
